@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "299432086695",
+    "project_id": "tracktraillogin",
+    "storage_bucket": "tracktraillogin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:299432086695:android:9d3f8fd9877e70c3129f82",
+        "android_client_info": {
+          "package_name": "com.app.tracktrail"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMVvMtzVFVV305bvv16Td6TNBUC6EVfPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
