@@ -14,6 +14,24 @@ class FirebaseAuthDataSource {
     return UserModel.fromUserCredential(userCredentials);
   }
 
+  Future<UserModel> register(String email, String password) async {
+    try {
+      UserCredential userCredentials = await auth
+          .createUserWithEmailAndPassword(email: email, password: password);
+      return UserModel.fromUserCredential(userCredentials);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        throw Exception('Este correo ya está registrado.');
+      } else if (e.code == 'weak-password') {
+        throw Exception('La contraseña es demasiado débil.');
+      } else {
+        throw Exception('Error al registrar: ${e.message}');
+      }
+    } catch (e) {
+      throw Exception('Error inesperado: ${e.toString()}');
+    }
+  }
+
   Future<UserModel> signInWithGoogle() async {
     if (kIsWeb) {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();

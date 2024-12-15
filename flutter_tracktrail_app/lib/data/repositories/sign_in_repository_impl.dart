@@ -24,6 +24,30 @@ class SignInRepositoryImpl implements SignInRepository {
   }
 
   @override
+  Future<Either<Failure, UserEntity>> signInNormal(
+      String email, String password) async {
+    try {
+      UserModel user = await dataSource.signIn(email, password);
+      return Right(user.toEntity());
+    } catch (e) {
+      print(e);
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> register(
+      String email, String password) async {
+    try {
+      UserModel user = await dataSource.register(email, password);
+      return Right(user.toEntity());
+    } catch (e) {
+      print(e);
+      return Left(AuthFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, String>> isLoggedIn() async {
     try {
       String? user = dataSource.getCurrentUser();

@@ -22,15 +22,14 @@ class LoginTextField extends StatelessWidget {
       alignment: Alignment.center,
       padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.05),
       decoration: BoxDecoration(
-        color: Colors.black
-            .withOpacity(0.6), // Fondo más oscuro para mayor contraste
+        color: Colors.black.withOpacity(0.6),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
             spreadRadius: 2,
             blurRadius: 5,
-            offset: Offset(0, 3), // Shadow direction
+            offset: const Offset(0, 3),
           ),
         ],
       ),
@@ -38,7 +37,7 @@ class LoginTextField extends StatelessWidget {
         controller: controller,
         obscureText: isPassword,
         style: const TextStyle(
-          color: Colors.white, // Color del texto blanco para contraste
+          color: Colors.white,
         ),
         decoration: InputDecoration(
           prefixIcon: Icon(
@@ -48,8 +47,7 @@ class LoginTextField extends StatelessWidget {
           border: InputBorder.none,
           hintText: hintText,
           hintStyle: TextStyle(
-            color:
-                Colors.white.withOpacity(0.7), // Color más claro para el hint
+            color: Colors.white.withOpacity(0.7),
           ),
         ),
       ),

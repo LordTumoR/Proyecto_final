@@ -1,9 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class LoginButton extends StatelessWidget {
+class RegisterButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const LoginButton({super.key, required this.onPressed});
+  const RegisterButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +17,11 @@ class LoginButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.8,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 60, 83, 63).withOpacity(0.5),
+          color: const Color.fromARGB(255, 35, 36, 36).withOpacity(0.5),
           borderRadius: BorderRadius.circular(20),
         ),
         child: const Text(
-          'Login',
+          'Register',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,

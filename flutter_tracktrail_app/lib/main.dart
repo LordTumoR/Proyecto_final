@@ -5,6 +5,7 @@ import 'package:flutter_tracktrail_app/config/router/routes.dart';
 import 'package:flutter_tracktrail_app/firebase_options.dart';
 import 'package:flutter_tracktrail_app/injection.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/screens/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

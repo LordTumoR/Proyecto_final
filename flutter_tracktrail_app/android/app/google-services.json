@@ -12,7 +12,20 @@
           "package_name": "com.app.tracktrail"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "299432086695-h5lshjo7kfdmj776cfih1ab072em9nqc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.tracktrail",
+            "certificate_hash": "d5875eab31714ede5a3dbc4582123547513e71fc"
+          }
+        },
+        {
+          "client_id": "299432086695-o05f1v7ci5a175c15m33muk2mv57ff5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAMVvMtzVFVV305bvv16Td6TNBUC6EVfPA"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "299432086695-o05f1v7ci5a175c15m33muk2mv57ff5t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "299432086695-453po6eeanki1bf9jllmvk62t3a1vkek.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterFirebaseLogin"
+              }
+            }
+          ]
         }
       }
     }

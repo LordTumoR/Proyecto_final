@@ -2,6 +2,8 @@ import 'package:flutter_tracktrail_app/data/datasources/firebase_auth_datasource
 import 'package:flutter_tracktrail_app/data/repositories/sign_in_repository_impl.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
@@ -13,7 +15,7 @@ final GetIt sl = GetIt.instance;
 void configureDependencies() {
   // BLocs
   sl.registerFactory<LoginBloc>(
-    () => LoginBloc(sl(), sl(), sl()),
+    () => LoginBloc(sl(), sl(), sl(), sl(), sl()),
   );
 
   // Instancia de Firebase Auth
@@ -38,5 +40,11 @@ void configureDependencies() {
   );
   sl.registerLazySingleton<GetCurrentUserUseCase>(
     () => GetCurrentUserUseCase(sl()),
+  );
+  sl.registerLazySingleton<SigninNormalUserUseCase>(
+    () => SigninNormalUserUseCase(sl()),
+  );
+  sl.registerLazySingleton<RegisterUserUseCase>(
+    () => RegisterUserUseCase(sl()),
   );
 }
