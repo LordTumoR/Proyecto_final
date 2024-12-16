@@ -10,14 +10,19 @@ import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dar
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
 
-void configureDependencies() {
+Future<void> configureDependencies() async {
   // BLocs
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl()),
   );
+
+  // SharedPreferences
+  final sharedPreferences = await SharedPreferences.getInstance();
+  sl.registerLazySingleton(() => sharedPreferences);
 
   // Instancia de Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
@@ -29,7 +34,8 @@ void configureDependencies() {
 
   // Repositorios
   sl.registerLazySingleton<SignInRepository>(
-    () => SignInRepositoryImpl(sl<FirebaseAuthDataSource>()),
+    () => SignInRepositoryImpl(
+        sl<FirebaseAuthDataSource>(), sl<SharedPreferences>()),
   );
 
   // Casos de uso

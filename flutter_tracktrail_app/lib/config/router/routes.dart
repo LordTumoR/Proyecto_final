@@ -1,4 +1,3 @@
-// Define the routes using go_router
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/injection.dart';
 import 'package:flutter_tracktrail_app/presentation/screens/login_page.dart';
