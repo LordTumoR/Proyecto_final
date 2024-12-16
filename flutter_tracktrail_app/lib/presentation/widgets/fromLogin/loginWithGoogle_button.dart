@@ -29,7 +29,7 @@ class GoogleRegisterButton extends StatelessWidget {
             ),
             SizedBox(width: 10),
             Text(
-              'Register with G',
+              'Login with G',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 13,

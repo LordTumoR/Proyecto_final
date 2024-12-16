@@ -3,6 +3,7 @@ import 'package:flutter_tracktrail_app/data/repositories/sign_in_repository_impl
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
@@ -15,7 +16,7 @@ final GetIt sl = GetIt.instance;
 void configureDependencies() {
   // BLocs
   sl.registerFactory<LoginBloc>(
-    () => LoginBloc(sl(), sl(), sl(), sl(), sl()),
+    () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl()),
   );
 
   // Instancia de Firebase Auth
@@ -46,5 +47,8 @@ void configureDependencies() {
   );
   sl.registerLazySingleton<RegisterUserUseCase>(
     () => RegisterUserUseCase(sl()),
+  );
+  sl.registerLazySingleton<RestorePasswordUseCase>(
+    () => RestorePasswordUseCase(sl()),
   );
 }

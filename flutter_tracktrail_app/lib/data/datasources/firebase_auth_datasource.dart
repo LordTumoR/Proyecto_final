@@ -14,6 +14,16 @@ class FirebaseAuthDataSource {
     return UserModel.fromUserCredential(userCredentials);
   }
 
+  Future<void> restorePassword(String email) async {
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      print("Correo de restablecimiento enviado a $email");
+    } on FirebaseAuthException catch (e) {
+      print("Error al intentar restablecer la contraseña: ${e.message}");
+      throw Exception(e.message);
+    }
+  }
+
   Future<UserModel> register(String email, String password) async {
     try {
       UserCredential userCredentials = await auth

@@ -4,11 +4,13 @@ class LoginState {
   final bool isLoading;
   final String? email;
   final String? errorMessage;
+  final bool isRegisterMode;
 
   const LoginState({
     this.isLoading = false,
     this.email,
     this.errorMessage,
+    this.isRegisterMode = false,
   });
 
   // Método copyWith
@@ -16,11 +18,13 @@ class LoginState {
     bool? isLoading,
     String? email,
     String? errorMessage,
+    bool? isRegisterMode,
   }) {
     return LoginState(
       isLoading: isLoading ?? this.isLoading,
       email: email ?? this.email,
       errorMessage: errorMessage ?? this.errorMessage,
+      isRegisterMode: isRegisterMode ?? this.isRegisterMode,
     );
   }
 

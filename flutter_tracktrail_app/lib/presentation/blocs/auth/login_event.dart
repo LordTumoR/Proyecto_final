@@ -38,3 +38,14 @@ class RegisterButtonPressed extends LoginEvent {
 class LogoutButtonPressed extends LoginEvent {}
 
 class CheckAuthentication extends LoginEvent {}
+
+class ToggleRegisterMode extends LoginEvent {}
+
+class ResetPasswordButtonPressed extends LoginEvent {
+  final String email;
+
+  ResetPasswordButtonPressed({required this.email});
+
+  @override
+  List<Object?> get props => [email];
+}

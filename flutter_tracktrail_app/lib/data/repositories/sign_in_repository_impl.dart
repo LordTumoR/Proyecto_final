@@ -66,4 +66,16 @@ class SignInRepositoryImpl implements SignInRepository {
       return Left(AuthFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, void>> restorePassword(
+    String email,
+  ) async {
+    try {
+      await dataSource.restorePassword(email);
+      return const Right(null);
+    } catch (e) {
+      return Left(AuthFailure());
+    }
+  }
 }

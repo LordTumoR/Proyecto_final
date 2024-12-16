@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/core/use_case.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
@@ -14,6 +15,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final GetCurrentUserUseCase getCurrentUserUseCase;
   final SigninNormalUserUseCase signinNormalUserUseCase;
   final RegisterUserUseCase registerUserUseCase;
+  final RestorePasswordUseCase restorePasswordUseCase;
 
   LoginBloc(
     this.signInUserUseCase,
@@ -21,6 +23,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     this.getCurrentUserUseCase,
     this.signinNormalUserUseCase,
     this.registerUserUseCase,
+    this.restorePasswordUseCase,
   ) : super(LoginState.initial()) {
     on<LoginButtonPressed>((event, emit) async {
       emit(LoginState.loading());
@@ -70,6 +73,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       result.fold(
           (failure) => emit(LoginState.failure("Fallo al realizar el logout")),
           (_) => emit(LoginState.initial()));
+    });
+    on<ResetPasswordButtonPressed>((event, emit) async {
+      final result =
+          await restorePasswordUseCase(ResetParamsNormal(email: event.email));
+
+      result.fold(
+        (failure) => emit(LoginState.failure(
+            "Fallo al realizar la recuperación de contraseña")),
+        (_) => emit(LoginState.initial()),
+      );
     });
   }
 }

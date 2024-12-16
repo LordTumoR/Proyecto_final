@@ -1,12 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class LoginButton extends StatelessWidget {
+class RestorePasswordButton extends StatelessWidget {
   final VoidCallback onPressed;
-  final String buttonText;
 
-  const LoginButton(
-      {super.key, required this.onPressed, required this.buttonText});
+  const RestorePasswordButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -19,12 +17,12 @@ class LoginButton extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.8,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 60, 83, 63).withOpacity(0.5),
+          color: const Color.fromARGB(255, 35, 36, 36).withOpacity(0.5),
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Text(
-          buttonText,
-          style: const TextStyle(
+        child: const Text(
+          'Recuperar Contraseña',
+          style: TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w600,
