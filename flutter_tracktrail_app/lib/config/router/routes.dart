@@ -2,17 +2,12 @@
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/injection.dart';
 import 'package:flutter_tracktrail_app/presentation/screens/login_page.dart';
-import 'package:flutter_tracktrail_app/presentation/screens/splash_screen.dart';
 import 'package:flutter_tracktrail_app/presentation/screens/user_page.dart';
 import 'package:go_router/go_router.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: '/login',
   routes: [
-    GoRoute(
-      path: '/splash',
-      builder: (context, state) => SplashScreen(),
-    ),
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginPage(),
@@ -27,16 +22,12 @@ final GoRouter router = GoRouter(
     final loggedIn =
         isLoggedIn.fold((_) => false, (value) => value != "NO_USER");
 
-    if (state.uri.toString() == '/splash') {}
-
     if (!loggedIn && state.uri.toString() != '/login') {
       return '/login';
     }
-
     if (loggedIn && state.uri.toString() == '/login') {
       return '/user';
     }
-
     return null;
   },
 );
