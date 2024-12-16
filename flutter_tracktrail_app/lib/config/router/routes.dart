@@ -17,7 +17,6 @@ final GoRouter router = GoRouter(
       path: '/login',
       builder: (context, state) => const LoginPage(),
     ),
-    // Ruta para UserPage
     GoRoute(
       path: '/user',
       builder: (context, state) => const UserPage(),

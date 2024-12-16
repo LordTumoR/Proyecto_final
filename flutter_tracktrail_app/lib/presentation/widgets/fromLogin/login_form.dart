@@ -54,162 +54,184 @@ class _LoginFormState extends State<LoginForm> {
                   color: Colors.white.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
+                child: Stack(
                   children: [
-                    if (isRegisterMode == false) ...[
-                      const Text(
-                        '𝐋𝐎𝐆𝐈𝐍',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromARGB(255, 1, 1, 1),
-                        ),
-                      ),
-                    ] else ...[
-                      const Text(
-                        'REGISTER',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromARGB(255, 1, 1, 1),
+                    if (isRestoreMode || isRegisterMode) ...[
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: IconButton(
+                          icon:
+                              const Icon(Icons.arrow_back, color: Colors.black),
+                          onPressed: () {
+                            setState(() {
+                              isRestoreMode = false;
+                              isRegisterMode = false;
+                            });
+                          },
                         ),
                       ),
                     ],
-                    if (isRestoreMode || !isRegisterMode) ...[
-                      LoginTextField(
-                        controller: emailController,
-                        hintText: 'Email...',
-                        icon: Icons.email_outlined,
-                        isPassword: false,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
-                    if (!isRestoreMode) ...[
-                      LoginTextField(
-                        controller: passwordController,
-                        hintText: 'Password...',
-                        icon: Icons.lock_outline,
-                        isPassword: true,
-                      ),
-                    ],
-                    const SizedBox(height: 20),
-                    if (isRegisterMode) ...[
-                      LoginTextField(
-                        controller: repitepasswordController,
-                        hintText: 'Repite Password...',
-                        icon: Icons.lock_clock_sharp,
-                        isPassword: true,
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          child: LoginButton(
-                            onPressed: () {
-                              final email = emailController.text.trim();
-                              final password = passwordController.text.trim();
-                              final repitePassword =
-                                  repitepasswordController.text.trim();
-                              if (isRegisterMode) {
-                                if (password == repitePassword) {
+                        if (isRegisterMode == false) ...[
+                          const Text(
+                            '𝐋𝐎𝐆𝐈𝐍',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromARGB(255, 1, 1, 1),
+                            ),
+                          ),
+                        ] else ...[
+                          const Text(
+                            'REGISTER',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromARGB(255, 1, 1, 1),
+                            ),
+                          ),
+                        ],
+                        LoginTextField(
+                          controller: emailController,
+                          hintText: 'Email...',
+                          icon: Icons.email_outlined,
+                          isPassword: false,
+                        ),
+                        const SizedBox(height: 10),
+                        if (!isRestoreMode) ...[
+                          LoginTextField(
+                            controller: passwordController,
+                            hintText: 'Password...',
+                            icon: Icons.lock_outline,
+                            isPassword: true,
+                          ),
+                        ],
+                        const SizedBox(height: 20),
+                        if (isRegisterMode) ...[
+                          LoginTextField(
+                            controller: repitepasswordController,
+                            hintText: 'Repite Password...',
+                            icon: Icons.lock_clock_sharp,
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              child: LoginButton(
+                                onPressed: () {
+                                  final email = emailController.text.trim();
+                                  final password =
+                                      passwordController.text.trim();
+                                  final repitePassword =
+                                      repitepasswordController.text.trim();
+                                  if (isRegisterMode) {
+                                    if (password == repitePassword) {
+                                      context.read<LoginBloc>().add(
+                                            RegisterButtonPressed(
+                                              email: email,
+                                              password: password,
+                                            ),
+                                          );
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  'Las contraseñas no coinciden.')));
+                                    }
+                                  } else if (isRestoreMode) {
+                                    context.read<LoginBloc>().add(
+                                          ResetPasswordButtonPressed(
+                                            email: email,
+                                          ),
+                                        );
+                                    setState(() {
+                                      isRestoreMode = false;
+                                    });
+                                  } else {
+                                    context.read<LoginBloc>().add(
+                                          LoginNormalButtonPressed(
+                                            email: email,
+                                            password: password,
+                                          ),
+                                        );
+                                  }
+                                },
+                                buttonText: isRegisterMode
+                                    ? 'Register'
+                                    : (isRestoreMode
+                                        ? 'Enviar email'
+                                        : 'Login'),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              child: GoogleRegisterButton(
+                                onPressed: () {
+                                  final email = emailController.text.trim();
+                                  final password =
+                                      passwordController.text.trim();
                                   context.read<LoginBloc>().add(
-                                        RegisterButtonPressed(
+                                        LoginButtonPressed(
                                           email: email,
                                           password: password,
                                         ),
                                       );
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              'Las contraseñas no coinciden.')));
-                                }
-                              } else if (isRestoreMode) {
-                                context.read<LoginBloc>().add(
-                                      ResetPasswordButtonPressed(
-                                        email: email,
-                                      ),
-                                    );
-                                setState(() {
-                                  isRestoreMode = false;
-                                });
-                              } else {
-                                context.read<LoginBloc>().add(
-                                      LoginNormalButtonPressed(
-                                        email: email,
-                                        password: password,
-                                      ),
-                                    );
-                              }
-                            },
-                            buttonText: isRegisterMode
-                                ? 'Register'
-                                : (isRestoreMode
-                                    ? 'Recuperar Contraseña'
-                                    : 'Login'),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.35,
-                          child: GoogleRegisterButton(
-                            onPressed: () {
-                              final email = emailController.text.trim();
-                              final password = passwordController.text.trim();
-                              context.read<LoginBloc>().add(
-                                    LoginButtonPressed(
-                                      email: email,
-                                      password: password,
-                                    ),
-                                  );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    if (state.errorMessage != null && !isRegisterMode) ...[
-                      const Text(
-                        'Si no dispones de cuenta puedes crear una aquí o Inicia sesión con Google:',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 0, 0, 0),
-                          fontSize: 20,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Expanded(
-                            child: RegisterButton(
-                              onPressed: () {
-                                setState(() {
-                                  isRegisterMode = true;
-                                });
-                              },
-                            ),
-                          ),
-                          if (isRestoreMode == false) ...[
-                            Expanded(
-                              child: RestorePasswordButton(
-                                onPressed: () {
-                                  setState(() {
-                                    isRestoreMode = true;
-                                  });
                                 },
                               ),
                             ),
                           ],
-                          const SizedBox(width: 10),
+                        ),
+                        const SizedBox(height: 20),
+                        if (state.errorMessage != null && !isRegisterMode) ...[
+                          const Text(
+                            'Si no dispones de cuenta puedes crear una aquí o Inicia sesión con Google:',
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 20,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              if (isRestoreMode == false) ...[
+                                Expanded(
+                                  child: RegisterButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isRegisterMode = true;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                              if (isRestoreMode == false) ...[
+                                Expanded(
+                                  child: RestorePasswordButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        isRestoreMode = true;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(width: 10),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
                         ],
-                      ),
-                      const SizedBox(height: 20),
-                    ],
+                      ],
+                    ),
                   ],
                 ),
               ),
