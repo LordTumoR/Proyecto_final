@@ -24,7 +24,7 @@ class RestorePasswordButton extends StatelessWidget {
           'Recuperar Contraseña',
           style: TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 17,
             fontWeight: FontWeight.w600,
           ),
         ),

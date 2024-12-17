@@ -51,7 +51,7 @@ class _LoginFormState extends State<LoginForm> {
               child: Container(
                 padding: const EdgeInsets.all(25),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Stack(
@@ -75,9 +75,18 @@ class _LoginFormState extends State<LoginForm> {
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        if (isRegisterMode == false) ...[
+                        if (isRestoreMode == true) ...[
                           const Text(
-                            '𝐋𝐎𝐆𝐈𝐍',
+                            'ℝ𝔼ℂ𝕌ℙ𝔼ℝ𝔸ℝ ℂ𝕆ℕ𝕋ℝ𝔸𝕊𝔼Ñ𝔸',
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.w600,
+                              color: Color.fromARGB(255, 1, 1, 1),
+                            ),
+                          ),
+                        ] else if (isRegisterMode == true) ...[
+                          const Text(
+                            'ℝ𝔼𝔾𝕀𝕊𝕋𝔼ℝ',
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
@@ -86,7 +95,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         ] else ...[
                           const Text(
-                            'REGISTER',
+                            '𝕃𝕆𝔾𝕀ℕ',
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
@@ -192,7 +201,7 @@ class _LoginFormState extends State<LoginForm> {
                         const SizedBox(height: 20),
                         if (state.errorMessage != null && !isRegisterMode) ...[
                           const Text(
-                            'Si no dispones de cuenta puedes crear una aquí o Inicia sesión con Google:',
+                            'ꜱɪ ɴᴏ ᴅɪꜱᴘᴏɴᴇꜱ ᴅᴇ ᴄᴜᴇɴᴛᴀ ᴘᴜᴇᴅᴇꜱ ᴄʀᴇᴀʀ ᴜɴᴀ ᴀǫᴜí ᴏ ɪɴɪᴄɪᴀ ꜱᴇꜱɪóɴ ᴄᴏɴ ɢᴏᴏɢʟᴇ:',
                             style: TextStyle(
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 20,

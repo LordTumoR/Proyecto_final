@@ -57,6 +57,7 @@ flutter:
   assets:
     - assets/images/background_image.jpeg
     - assets/images/splash.jpeg
+    - assets/images/Splash_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -81,11 +82,16 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
 flutter_native_splash:
+  color: "#000000"
+  background_image: assets/images/splash.jpeg 
+  
   android: true
   ios: true
   web: true
-  color: "#ffffff" 
-  background_image: assets/images/splash.jpeg 
-
-
+  
+  android_12:
+    image: assets/images/Splash_logo.png
+    color: "#000000" 
+    android_gravity: center
