@@ -3,7 +3,9 @@ import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_state.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/routine_menu.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 
 class UserPage extends StatelessWidget {
   const UserPage({super.key});
@@ -153,7 +155,17 @@ class UserPage extends StatelessWidget {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider.value(
+                          value: BlocProvider.of<RoutinesBloc>(context),
+                          child: RoutineMenu(),
+                        ),
+                      ),
+                    );
+                  },
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: AnimatedContainer(
@@ -171,7 +183,8 @@ class UserPage extends StatelessWidget {
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
                               colors: [
-                                Colors.blueAccent.withOpacity(0.8),
+                                const Color.fromARGB(255, 33, 240, 6)
+                                    .withOpacity(0.8),
                                 Colors.lightBlue.withOpacity(0.8)
                               ],
                             ),
@@ -201,7 +214,12 @@ class UserPage extends StatelessWidget {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => RoutineMenu()),
+                    );
+                  },
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: AnimatedContainer(
