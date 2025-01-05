@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_tracktrail_app/data/models/routines_model.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/exercisesTab.dart';

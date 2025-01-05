@@ -5,6 +5,14 @@ import 'package:http/http.dart' as http;
 abstract class RoutineRemoteDataSource {
   Future<List<RoutineModel>> getRoutines();
   Future<void> deleteRoutine(int idRoutine);
+  Future<RoutineModel> createRoutine(
+    String name,
+    String goal,
+    int duration,
+    bool isPrivate,
+    String difficulty,
+    String progress,
+  );
 }
 
 class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
@@ -26,6 +34,39 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
       return routinesJson.map((json) => RoutineModel.fromJson(json)).toList();
     } else {
       throw Exception('Error al cargar rutinas');
+    }
+  }
+
+  Future<RoutineModel> createRoutine(
+    String name,
+    String goal,
+    int duration,
+    bool isPrivate,
+    String difficulty,
+    String progress,
+  ) async {
+    const String token = 'admin';
+    final response = await client.post(
+      Uri.parse('http://192.168.1.138:8080/routines'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'name': name,
+        'goal': goal,
+        'duration': duration,
+        'private_public': isPrivate ? 1 : 0,
+        'dificulty': difficulty,
+        'progress': progress,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      return RoutineModel.fromJson(json.decode(response.body));
+    } else {
+      print('Error al crear la rutina: ${response.body}');
+      throw Exception('Error al crear la rutina: ${response.statusCode}');
     }
   }
 

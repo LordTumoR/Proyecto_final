@@ -33,4 +33,40 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       return Left("Error al obtener las rutinas");
     }
   }
+
+  @override
+  Future<Either<String, RoutineEntity>> createRoutine(
+    String name,
+    String goal,
+    int duration,
+    bool isPrivate,
+    String difficulty,
+    String progress,
+  ) async {
+    try {
+      final routine = await dataSource.createRoutine(
+        name,
+        goal,
+        duration,
+        isPrivate,
+        difficulty,
+        progress,
+      );
+
+      final routineEntity = RoutineEntity(
+        id: routine.idRoutine,
+        name: routine.name,
+        goal: routine.goal,
+        duration: routine.duration,
+        isPrivate: routine.isPrivate,
+        difficulty: routine.difficulty,
+        progress: routine.progress,
+        idUser: routine.idUser,
+      );
+      return Right(routineEntity);
+    } catch (e) {
+      print(e);
+      return Left("Error al obtener las rutians");
+    }
+  }
 }

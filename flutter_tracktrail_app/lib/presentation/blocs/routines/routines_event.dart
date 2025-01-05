@@ -25,3 +25,25 @@ class RoutinesFetchError extends RoutinesEvent {
   @override
   List<Object> get props => [message];
 }
+
+class CreateRoutineEvent extends RoutinesEvent {
+  final String name;
+  final String goal;
+  final int duration;
+  final bool isPrivate;
+  final String difficulty;
+  final String progress;
+
+  CreateRoutineEvent({
+    required this.name,
+    required this.goal,
+    required this.duration,
+    required this.isPrivate,
+    required this.difficulty,
+    required this.progress,
+  });
+
+  @override
+  List<Object> get props =>
+      [name, goal, duration, isPrivate, difficulty, progress];
+}

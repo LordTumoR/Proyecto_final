@@ -7,6 +7,7 @@ import 'package:flutter_tracktrail_app/data/repositories/sign_in_repository_impl
 import 'package:flutter_tracktrail_app/domain/repositories/exercises_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
@@ -31,7 +32,7 @@ Future<void> configureDependencies() async {
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<RoutinesBloc>(
-    () => RoutinesBloc(sl()),
+    () => RoutinesBloc(sl(), sl()),
   );
   sl.registerFactory<ExercisesBloc>(
     () => ExercisesBloc(sl()),
@@ -68,6 +69,9 @@ Future<void> configureDependencies() async {
   );
 
   // Casos de uso
+  sl.registerLazySingleton<CreateRoutineUseCase>(
+    () => CreateRoutineUseCase(sl()),
+  );
   sl.registerLazySingleton<GetExercisesUseCase>(
     () => GetExercisesUseCase(sl()),
   );
