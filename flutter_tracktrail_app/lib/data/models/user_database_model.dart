@@ -1,3 +1,5 @@
+import 'package:flutter_tracktrail_app/domain/entities/user_database_entity.dart';
+
 class UserDatabaseModel {
   final int idUser;
   final String name;
@@ -47,5 +49,20 @@ class UserDatabaseModel {
       'height': height,
       'role': role,
     };
+  }
+
+  UserDatabaseEntity toEntity() {
+    return UserDatabaseEntity(
+      id: idUser,
+      name: name,
+      surname: surname,
+      email: email,
+      password: '',
+      weight: weight.toDouble(),
+      dateOfBirth: dateOfBirth,
+      sex: sex,
+      height: height.toDouble(),
+      role: role,
+    );
   }
 }

@@ -1,7 +1,9 @@
+import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tracktrail_app/data/models/user_model.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 class FirebaseAuthDataSource {
   final FirebaseAuth auth;
@@ -28,6 +30,21 @@ class FirebaseAuthDataSource {
     try {
       UserCredential userCredentials = await auth
           .createUserWithEmailAndPassword(email: email, password: password);
+
+      final response = await http.post(
+        Uri.parse('http://192.168.1.138:8080/users'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'email': email,
+        }),
+      );
+
+      if (response.statusCode != 201) {
+        throw Exception(
+            'Error al registrar el usuario en la base de datos: ${response.body}');
+      }
       return UserModel.fromUserCredential(userCredentials);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -46,7 +63,7 @@ class FirebaseAuthDataSource {
     if (kIsWeb) {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
       UserCredential userCredentials =
-          await FirebaseAuth.instance.signInWithPopup(googleProvider);
+          await auth.signInWithPopup(googleProvider);
       return UserModel.fromUserCredential(userCredentials);
     } else {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -58,7 +75,7 @@ class FirebaseAuthDataSource {
       );
 
       UserCredential userCredentials =
-          await FirebaseAuth.instance.signInWithCredential(credential);
+          await auth.signInWithCredential(credential);
       return UserModel.fromUserCredential(userCredentials);
     }
   }

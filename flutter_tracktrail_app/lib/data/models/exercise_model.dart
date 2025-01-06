@@ -1,3 +1,5 @@
+import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
+
 class ExerciseModel {
   final int idExercise;
   final String name;
@@ -32,5 +34,14 @@ class ExerciseModel {
       'description': description,
       'images': image,
     };
+  }
+
+  ExerciseEntity toEntity() {
+    return ExerciseEntity(
+      id: idExercise,
+      name: name,
+      description: description,
+      image: image,
+    );
   }
 }

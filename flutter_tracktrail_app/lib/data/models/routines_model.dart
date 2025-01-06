@@ -1,3 +1,5 @@
+import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
+
 class RoutineModel {
   final int idRoutine;
   final String name;
@@ -48,5 +50,18 @@ class RoutineModel {
       'progress': progress,
       'id_user': idUser,
     };
+  }
+
+  RoutineEntity toEntity() {
+    return RoutineEntity(
+      id: idRoutine,
+      name: name,
+      goal: goal,
+      duration: duration,
+      isPrivate: isPrivate,
+      difficulty: difficulty,
+      progress: progress,
+      idUser: idUser,
+    );
   }
 }

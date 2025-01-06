@@ -1,16 +1,20 @@
 import 'package:flutter_tracktrail_app/data/datasources/exercises_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/firebase_auth_datasource.dart';
+import 'package:flutter_tracktrail_app/data/datasources/routine_exercises_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routines_datasource.dart';
 import 'package:flutter_tracktrail_app/data/repositories/exercise_repository_impl.dart';
+import 'package:flutter_tracktrail_app/data/repositories/routine_exercise_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/routines_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/sign_in_repository_impl.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/exercises_repository.dart';
+import 'package:flutter_tracktrail_app/domain/repositories/routine_exercise_reporitory.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
@@ -27,25 +31,27 @@ import 'package:http/http.dart' as http;
 final GetIt sl = GetIt.instance;
 
 Future<void> configureDependencies() async {
-  // BLocs
+  // BLoCs
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<RoutinesBloc>(
-    () => RoutinesBloc(sl(), sl()),
+    () => RoutinesBloc(sl(), sl(), sl()),
   );
   sl.registerFactory<ExercisesBloc>(
     () => ExercisesBloc(sl()),
   );
+
   // SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
 
-  // Instancia de Firebase Auth
+  // Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
 
   sl.registerLazySingleton<http.Client>(() => http.Client());
 
+  // DataSources
   sl.registerLazySingleton<FirebaseAuthDataSource>(
     () => FirebaseAuthDataSource(auth: sl<FirebaseAuth>()),
   );
@@ -55,8 +61,11 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<ExerciseRemoteDataSource>(
     () => ExerciseRemoteDataSourceImpl(sl<http.Client>()),
   );
+  sl.registerLazySingleton<RoutineExerciseRemoteDataSource>(
+    () => RoutineExerciseRemoteDataSourceImpl(sl<http.Client>()),
+  );
 
-  // Repositorios
+  // Repositories
   sl.registerLazySingleton<SignInRepository>(
     () => SignInRepositoryImpl(
         sl<FirebaseAuthDataSource>(), sl<SharedPreferences>()),
@@ -67,8 +76,14 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<ExercisesRepository>(
     () => ExercisesRepositoryImpl(sl<ExerciseRemoteDataSource>()),
   );
+  sl.registerLazySingleton<RoutineExerciseRepository>(
+    () => RoutineExerciseRepositoryImpl(sl<RoutineExerciseRemoteDataSource>()),
+  );
 
-  // Casos de uso
+  // Use Cases
+  sl.registerLazySingleton<GetUserRoutinesUseCase>(
+    () => GetUserRoutinesUseCase(sl()),
+  );
   sl.registerLazySingleton<CreateRoutineUseCase>(
     () => CreateRoutineUseCase(sl()),
   );

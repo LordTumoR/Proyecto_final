@@ -15,7 +15,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<RoutinesBloc>(context).add(FetchRoutinesEvent());
+    BlocProvider.of<RoutinesBloc>(context).add(FetchUserRoutinesEvent(''));
   }
 
   @override
@@ -39,9 +39,11 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
               final routines = state.routines!;
 
               return ListView.builder(
-                itemCount: routines.length,
+                itemCount: state.routines!.length,
                 itemBuilder: (context, index) {
-                  final routine = routines[index];
+                  final routineExercise = state.routines![index];
+                  final routine = routineExercise.routine;
+
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(

@@ -1,6 +1,7 @@
 import 'package:flutter_tracktrail_app/data/models/exercise_model.dart';
 import 'package:flutter_tracktrail_app/data/models/routines_model.dart';
 import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
+import 'package:flutter_tracktrail_app/domain/entities/routine-exercise.dart';
 
 class RoutineExerciseModel {
   final int idRoutineExercise;
@@ -39,5 +40,16 @@ class RoutineExerciseModel {
       'routines': routines.toJson(),
       'ejercicios': ejercicios.toJson(),
     };
+  }
+
+  RoutineExerciseEntity toEntity() {
+    return RoutineExerciseEntity(
+      idRoutineExercise: idRoutineExercise,
+      dateStart: dateStart,
+      dateFinish: dateFinish,
+      user: user.toEntity(),
+      routine: routines.toEntity(),
+      exercise: ejercicios.toEntity(),
+    );
   }
 }
