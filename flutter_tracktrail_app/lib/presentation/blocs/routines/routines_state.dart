@@ -1,6 +1,8 @@
+import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
+
 class RoutinesState {
   final bool isLoading;
-  final List<dynamic>? routines;
+  final List<RoutineEntity>? routines;
   final String? errorMessage;
 
   const RoutinesState({
@@ -12,7 +14,7 @@ class RoutinesState {
   // Método copyWith
   RoutinesState copyWith({
     bool? isLoading,
-    List<dynamic>? routines,
+    List<RoutineEntity>? routines,
     String? errorMessage,
   }) {
     return RoutinesState(
@@ -27,7 +29,7 @@ class RoutinesState {
 
   factory RoutinesState.loading() => const RoutinesState(isLoading: true);
 
-  factory RoutinesState.success(List<dynamic> routines) =>
+  factory RoutinesState.success(List<RoutineEntity> routines) =>
       RoutinesState(routines: routines);
 
   factory RoutinesState.failure(String errorMessage) =>

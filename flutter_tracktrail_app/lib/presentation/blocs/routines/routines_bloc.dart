@@ -44,7 +44,13 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
 
       result.fold(
         (error) => emit(RoutinesState.failure(error)),
-        (routines) => emit(RoutinesState.success(routines)),
+        (routineExerciseEntities) {
+          final routines = routineExerciseEntities
+              .map((routineExerciseEntity) => routineExerciseEntity.routine)
+              .toList();
+
+          emit(RoutinesState.success(routines));
+        },
       );
     } catch (e) {
       emit(RoutinesState.failure('Error al obtener las rutinas del usuario.'));

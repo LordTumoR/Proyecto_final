@@ -37,13 +37,12 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
               );
             } else if (state.routines != null && state.routines!.isNotEmpty) {
               final routines = state.routines!;
+              print('Routines received: ${state.routines}');
 
               return ListView.builder(
-                itemCount: state.routines!.length,
+                itemCount: routines.length,
                 itemBuilder: (context, index) {
-                  final routineExercise = state.routines![index];
-                  final routine = routineExercise.routine;
-
+                  final routine = routines[index];
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
@@ -54,26 +53,20 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                       title: Text(
                         routine.name,
                         style: const TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 20,
-                        ),
+                            color: Colors.deepPurple, fontSize: 20),
                       ),
                       subtitle: Text(
                         routine.goal,
                         style: const TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16,
-                        ),
+                            color: Colors.black54, fontSize: 16),
                       ),
                       trailing: const Icon(Icons.arrow_forward),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => BlocProvider.value(
-                              value: BlocProvider.of<RoutinesBloc>(context),
-                              child: ExercisesMenu(routine: routine),
-                            ),
+                            builder: (context) =>
+                                ExercisesMenu(routine: routine),
                           ),
                         );
                       },

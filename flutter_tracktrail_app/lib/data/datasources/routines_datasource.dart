@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_tracktrail_app/core/sharedPreferences.dart';
 import 'package:flutter_tracktrail_app/data/models/routines_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -37,6 +38,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     }
   }
 
+  @override
   Future<RoutineModel> createRoutine(
     String name,
     String goal,
@@ -46,6 +48,26 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     String progress,
   ) async {
     const String token = 'admin';
+
+    final email = await PreferencesHelper.getEmailFromPreferences();
+    int? userId;
+
+    if (email != null && email.isNotEmpty) {
+      try {
+        userId = await _getUserIdByEmail(email);
+        if (userId == null) {
+          print("El id_user no fue encontrado.");
+          throw Exception("El id_user no fue encontrado.");
+        }
+      } catch (e) {
+        print("Error al obtener el id del usuario por email: $e");
+        throw Exception("Error al obtener el id del usuario.");
+      }
+    } else {
+      print("No se encontró el email del usuario.");
+      throw Exception("No se encontró el email del usuario.");
+    }
+
     final response = await client.post(
       Uri.parse('http://192.168.1.138:8080/routines'),
       headers: {
@@ -59,14 +81,45 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
         'private_public': isPrivate ? 1 : 0,
         'dificulty': difficulty,
         'progress': progress,
+        'id_user': userId,
       }),
     );
 
     if (response.statusCode == 201) {
-      return RoutineModel.fromJson(json.decode(response.body));
+      final routine = RoutineModel.fromJson(json.decode(response.body));
+
+      print("Rutina creada correctamente y vinculada al usuario.");
+      return routine;
     } else {
       print('Error al crear la rutina: ${response.body}');
       throw Exception('Error al crear la rutina: ${response.statusCode}');
+    }
+  }
+
+  Future<int> _getUserIdByEmail(String email) async {
+    const String token = 'admin';
+    final response = await client.get(
+      Uri.parse('http://192.168.1.138:8080/users'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> usersJson = json.decode(response.body);
+      final user = usersJson.firstWhere(
+        (userJson) => userJson['email'] == email,
+        orElse: () => null,
+      );
+
+      if (user != null) {
+        return user['id_user'];
+      } else {
+        throw Exception("Usuario no encontrado para el email $email");
+      }
+    } else {
+      print('Error al obtener usuarios: ${response.body}');
+      throw Exception('Error al obtener los usuarios');
     }
   }
 

@@ -18,4 +18,8 @@ class RoutineEntity {
     required this.progress,
     this.idUser,
   });
+  @override
+  String toString() {
+    return 'RoutineEntity(name: $name, goal: $goal, duration: $duration, isPrivate: $isPrivate)';
+  }
 }
