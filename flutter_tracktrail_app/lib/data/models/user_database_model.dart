@@ -2,25 +2,25 @@ import 'package:flutter_tracktrail_app/domain/entities/user_database_entity.dart
 
 class UserDatabaseModel {
   final int idUser;
-  final String name;
-  final String surname;
+  final String? name;
+  final String? surname;
   final String email;
-  final int weight;
-  final DateTime dateOfBirth;
-  final String sex;
-  final int height;
-  final int role;
+  final int? weight;
+  final DateTime? dateOfBirth;
+  final String? sex;
+  final int? height;
+  final int? role;
 
   UserDatabaseModel({
     required this.idUser,
-    required this.name,
-    required this.surname,
+    this.name,
+    this.surname,
     required this.email,
-    required this.weight,
-    required this.dateOfBirth,
-    required this.sex,
-    required this.height,
-    required this.role,
+    this.weight,
+    this.dateOfBirth,
+    this.sex,
+    this.height,
+    this.role,
   });
 
   factory UserDatabaseModel.fromJson(Map<String, dynamic> json) {
@@ -30,7 +30,9 @@ class UserDatabaseModel {
       surname: json['surname'],
       email: json['email'],
       weight: json['weight'],
-      dateOfBirth: DateTime.parse(json['dateofbirth']),
+      dateOfBirth: json['dateofbirth'] != null
+          ? DateTime.parse(json['dateofbirth'])
+          : null,
       sex: json['sex'],
       height: json['height'],
       role: json['role'],
@@ -44,7 +46,7 @@ class UserDatabaseModel {
       'surname': surname,
       'email': email,
       'weight': weight,
-      'dateofbirth': dateOfBirth.toIso8601String(),
+      'dateofbirth': dateOfBirth?.toIso8601String(),
       'sex': sex,
       'height': height,
       'role': role,
@@ -54,15 +56,15 @@ class UserDatabaseModel {
   UserDatabaseEntity toEntity() {
     return UserDatabaseEntity(
       id: idUser,
-      name: name,
-      surname: surname,
+      name: name ?? '',
+      surname: surname ?? '',
       email: email,
       password: '',
-      weight: weight.toDouble(),
-      dateOfBirth: dateOfBirth,
-      sex: sex,
-      height: height.toDouble(),
-      role: role,
+      weight: weight?.toDouble() ?? 0.0,
+      dateOfBirth: dateOfBirth ?? DateTime(1900, 1, 1),
+      sex: sex ?? '',
+      height: height?.toDouble() ?? 0.0,
+      role: role ?? 0,
     );
   }
 }

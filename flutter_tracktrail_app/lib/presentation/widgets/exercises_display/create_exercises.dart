@@ -20,14 +20,15 @@ class CreateExerciseDrawer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Crear nuevo ejercicio',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _nameController,
-              decoration: InputDecoration(labelText: 'Nombre del ejercicio'),
+              decoration:
+                  const InputDecoration(labelText: 'Nombre del ejercicio'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Por favor ingrese el nombre';
@@ -37,7 +38,7 @@ class CreateExerciseDrawer extends StatelessWidget {
             ),
             TextFormField(
               controller: _descriptionController,
-              decoration: InputDecoration(labelText: 'Descripción'),
+              decoration: const InputDecoration(labelText: 'Descripción'),
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Por favor ingrese la descripción';
@@ -45,7 +46,7 @@ class CreateExerciseDrawer extends StatelessWidget {
                 return null;
               },
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
@@ -59,7 +60,7 @@ class CreateExerciseDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: Text('Crear Ejercicio'),
+              child: const Text('Crear Ejercicio'),
             ),
           ],
         ),

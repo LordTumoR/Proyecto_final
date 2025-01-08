@@ -49,6 +49,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
         },
       );
     } catch (e) {
+      print(e);
       emit(RoutinesState.failure('Error al obtener las rutinas del usuario.'));
     }
   }
@@ -75,6 +76,6 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
   }
 
   void fetchRoutines() {
-    add(FetchRoutinesEvent());
+    add(FetchUserRoutinesEvent());
   }
 }

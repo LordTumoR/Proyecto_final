@@ -23,8 +23,12 @@ class RoutineExerciseModel {
   factory RoutineExerciseModel.fromJson(Map<String, dynamic> json) {
     return RoutineExerciseModel(
       idRoutineExercise: json['id_routine_exercise'],
-      dateStart: DateTime.parse(json['date_start']),
-      dateFinish: DateTime.parse(json['date_finish']),
+      dateStart: json['date_start'] != null
+          ? DateTime.parse(json['date_start'])
+          : DateTime.now(),
+      dateFinish: json['date_finish'] != null
+          ? DateTime.parse(json['date_finish'])
+          : DateTime.now(),
       user: UserDatabaseModel.fromJson(json['user']),
       routines: RoutineModel.fromJson(json['routines']),
       ejercicios: ExerciseModel.fromJson(json['ejercicios']),

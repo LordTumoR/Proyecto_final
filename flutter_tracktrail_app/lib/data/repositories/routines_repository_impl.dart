@@ -92,7 +92,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       return Right(routineEntities);
     } catch (e) {
       print(e);
-      return Left("Error al obtener las rutinas del usuario");
+      return Left("Error al obtener las rutinas del usuariooooo");
     }
   }
 }

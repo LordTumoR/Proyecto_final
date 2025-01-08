@@ -93,9 +93,14 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
         ],
         onTap: (index) {
           if (index == 0) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Filtro no implementado")),
-            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider.value(
+                    value: BlocProvider.of<RoutinesBloc>(context),
+                    child: FilterRoutineForm(),
+                  ),
+                ));
           } else if (index == 1) {
             Navigator.push(
               context,

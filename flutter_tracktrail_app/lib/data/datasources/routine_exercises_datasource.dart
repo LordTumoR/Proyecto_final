@@ -80,38 +80,40 @@ class RoutineExerciseRemoteDataSourceImpl
 
     try {
       final createdExercise = await createExercise(newExercise);
+      print('Ejercicio a insertar: $createdExercise');
 
       final allRoutineExercises = await getAllRoutineExercises();
+      print('Todas las rutinas-ejercicios: $allRoutineExercises');
+
       final routineExercises = allRoutineExercises
           .where((routineExercise) =>
               routineExercise.routines.idRoutine == routineId)
           .toList();
+      print('Rutinas con ejercicio (filtradas por ID): $routineExercises');
 
-      final isExerciseAlreadyInRoutine = routineExercises.any(
-          (routineExercise) =>
-              routineExercise.routines.idRoutine == routineId &&
-              routineExercise.ejercicios.idExercise ==
-                  createdExercise.idExercise);
-
-      if (isExerciseAlreadyInRoutine) {
-        print("El ejercicio ya está asociado a la rutina. No se insertará.");
-        return;
-      }
-
-      if (routineExercises.isNotEmpty) {
-        final routineExercise = routineExercises.first;
+      if (routineExercises.isEmpty) {
+        print("La rutina no existe. Creando la rutina en routine_exercises...");
 
         final data = {
-          "date_start": routineExercise.dateStart.toIso8601String(),
-          "date_finish": routineExercise.dateFinish.toIso8601String(),
+          "id_routine": routineId,
+          "id_user": userId,
+          "id_exercise": createdExercise.idExercise,
+        };
+
+        print("Datos para insertar rutina en routine_exercises: $data");
+
+        await insertRoutineExercise(data);
+      }
+      if (routineExercises.isNotEmpty) {
+        final routineExerciseData = {
           "id_user": userId,
           "id_routine": routineId,
           "id_exercise": createdExercise.idExercise,
         };
 
-        print("Datos para insertar: $data");
-
-        await insertRoutineExercise(data);
+        print(
+            "Datos para insertar ejercicio en routine_exercises: $routineExerciseData");
+        await insertRoutineExercise(routineExerciseData);
       }
     } catch (e) {
       throw Exception('Error al agregar ejercicio a la rutina: $e');

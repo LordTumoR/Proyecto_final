@@ -46,6 +46,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     if (email.isNotEmpty) {
       try {
         userId = await _getUserIdByEmail(email);
+        print(userId);
         if (userId == null) {
           print("El id_user no fue encontrado.");
           throw Exception("El id_user no fue encontrado.");
