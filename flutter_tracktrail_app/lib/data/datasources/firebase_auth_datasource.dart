@@ -32,7 +32,7 @@ class FirebaseAuthDataSource {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       final response = await http.post(
-        Uri.parse('http://192.168.1.138:8080/users'),
+        Uri.parse('http://10.250.79.59:8080/users'),
         headers: {
           'Content-Type': 'application/json',
         },

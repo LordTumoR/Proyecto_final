@@ -6,6 +6,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dar
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
@@ -25,6 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     this.registerUserUseCase,
     this.restorePasswordUseCase,
   ) : super(LoginState.initial()) {
+    _initializeState();
     on<LoginButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signInUserUseCase(LoginParams(
@@ -84,5 +86,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         (_) => emit(LoginState.initial()),
       );
     });
+  }
+  Future<void> _initializeState() async {
+    final prefs = await SharedPreferences.getInstance();
+    final emailSharedPrefs = prefs.getString('email');
+    if (emailSharedPrefs != null && emailSharedPrefs.isNotEmpty) {
+      emit(LoginState.success(emailSharedPrefs));
+    } else {
+      emit(LoginState.initial());
+    }
   }
 }

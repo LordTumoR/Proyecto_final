@@ -33,7 +33,7 @@ class RoutineModel {
       name: json['name'] ?? 'Unknown',
       goal: json['goal'] ?? 'Unknown',
       duration: json['duration'] ?? 0,
-      isPrivate: (json['private_public'] ?? 0) == 1,
+      isPrivate: json['private_public'],
       difficulty: json['dificulty'] ?? 'Unknown',
       progress: json['progress'] ?? 'Unknown',
       idUser: json['user'] != null
@@ -48,7 +48,7 @@ class RoutineModel {
       'name': name,
       'goal': goal,
       'duration': duration,
-      'private_public': isPrivate ? 1 : 0,
+      'private_public': isPrivate,
       'dificulty': difficulty,
       'progress': progress,
       'id_user': idUser?.toJson(),

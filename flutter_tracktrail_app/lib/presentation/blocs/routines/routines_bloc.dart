@@ -45,12 +45,31 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
       result.fold(
         (error) => emit(RoutinesState.failure(error)),
         (routines) {
-          emit(RoutinesState.success(routines));
+          final filteredRoutines = routines.where((routine) {
+            final matchesName = event.filters['name'] == null ||
+                routine.name.contains(event.filters['name']);
+            final matchesGoal = event.filters['goal'] == null ||
+                routine.goal.contains(event.filters['goal']);
+            final matchesDuration = event.filters['duration'] == null ||
+                routine.duration == event.filters['duration'];
+            final matchesDifficulty = event.filters['difficulty'] == null ||
+                routine.difficulty.contains(event.filters['difficulty']);
+            final matchesPrivate = event.filters['isPrivate'] == null ||
+                routine.isPrivate == event.filters['isPrivate'];
+
+            return matchesName &&
+                matchesGoal &&
+                matchesDuration &&
+                matchesDifficulty &&
+                matchesPrivate;
+          }).toList();
+
+          emit(RoutinesState.success(filteredRoutines));
         },
       );
     } catch (e) {
       print(e);
-      emit(RoutinesState.failure('Error al obtener las rutinas del usuario.'));
+      emit(RoutinesState.failure('Las rutinas te an petao.'));
     }
   }
 
@@ -75,7 +94,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
     );
   }
 
-  void fetchRoutines() {
-    add(FetchUserRoutinesEvent());
+  void fetchRoutines({Map<String, dynamic>? filters}) {
+    add(FetchUserRoutinesEvent(filters: filters ?? {}));
   }
 }

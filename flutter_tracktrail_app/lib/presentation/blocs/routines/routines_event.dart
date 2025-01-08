@@ -9,10 +9,12 @@ abstract class RoutinesEvent extends Equatable {
 class FetchRoutinesEvent extends RoutinesEvent {}
 
 class FetchUserRoutinesEvent extends RoutinesEvent {
-  FetchUserRoutinesEvent();
+  final Map<String, dynamic> filters;
+
+  FetchUserRoutinesEvent({required this.filters});
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [filters];
 }
 
 class RoutinesFetched extends RoutinesEvent {

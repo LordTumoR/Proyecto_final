@@ -5,6 +5,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_even
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/exercises_menu.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/create_routine_form.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/filter_routine_form.dart';
 
 class MisRutinasTab extends StatefulWidget {
   @override
@@ -15,7 +16,8 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<RoutinesBloc>(context).add(FetchUserRoutinesEvent());
+    BlocProvider.of<RoutinesBloc>(context)
+        .add(FetchUserRoutinesEvent(filters: {}));
   }
 
   @override
@@ -43,6 +45,8 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                 itemCount: routines.length,
                 itemBuilder: (context, index) {
                   final routine = routines[index];
+                  print('Routine Name: ${routine.name}');
+                  print('Is Private: ${routine.isPrivate}');
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
@@ -53,14 +57,30 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                       title: Text(
                         routine.name,
                         style: const TextStyle(
-                            color: Colors.deepPurple, fontSize: 20),
+                          color: Colors.deepPurple,
+                          fontSize: 20,
+                        ),
                       ),
                       subtitle: Text(
                         routine.goal,
                         style: const TextStyle(
-                            color: Colors.black54, fontSize: 16),
+                          color: Colors.black54,
+                          fontSize: 16,
+                        ),
                       ),
-                      trailing: const Icon(Icons.arrow_forward),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (routine.isPrivate) ...[
+                            const Icon(Icons.lock, color: Colors.deepPurple),
+                          ] else ...[
+                            const Icon(Icons.lock_open,
+                                color: Colors.deepPurple),
+                          ],
+                          const SizedBox(width: 8.0),
+                          const Icon(Icons.arrow_forward),
+                        ],
+                      ),
                       onTap: () {
                         Navigator.push(
                           context,
