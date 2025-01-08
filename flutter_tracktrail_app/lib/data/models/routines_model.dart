@@ -1,3 +1,4 @@
+import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
 
 class RoutineModel {
@@ -8,7 +9,7 @@ class RoutineModel {
   final bool isPrivate;
   final String difficulty;
   final String progress;
-  final int? idUser;
+  final UserDatabaseModel? idUser;
 
   RoutineModel({
     required this.idRoutine,
@@ -18,7 +19,7 @@ class RoutineModel {
     required this.isPrivate,
     required this.difficulty,
     required this.progress,
-    this.idUser,
+    required this.idUser,
   });
 
   @override
@@ -35,7 +36,9 @@ class RoutineModel {
       isPrivate: (json['private_public'] ?? 0) == 1,
       difficulty: json['dificulty'] ?? 'Unknown',
       progress: json['progress'] ?? 'Unknown',
-      idUser: json['id_user'],
+      idUser: json['user'] != null
+          ? UserDatabaseModel.fromJson(json['user'])
+          : null,
     );
   }
 
@@ -48,7 +51,7 @@ class RoutineModel {
       'private_public': isPrivate ? 1 : 0,
       'dificulty': difficulty,
       'progress': progress,
-      'id_user': idUser,
+      'id_user': idUser?.toJson(),
     };
   }
 

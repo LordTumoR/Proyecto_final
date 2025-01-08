@@ -15,7 +15,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<RoutinesBloc>(context).add(FetchUserRoutinesEvent(''));
+    BlocProvider.of<RoutinesBloc>(context).add(FetchUserRoutinesEvent());
   }
 
   @override

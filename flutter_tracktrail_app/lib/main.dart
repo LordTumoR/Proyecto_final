@@ -6,6 +6,7 @@ import 'package:flutter_tracktrail_app/firebase_options.dart';
 import 'package:flutter_tracktrail_app/injection.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 
 void main() async {
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<LoginBloc>()),
         BlocProvider(create: (_) => sl<RoutinesBloc>()),
         BlocProvider(create: (_) => sl<ExercisesBloc>()),
+        BlocProvider(create: (_) => sl<RoutineExercisesBloc>()),
       ],
       child: MaterialApp.router(
         routerConfig: router,

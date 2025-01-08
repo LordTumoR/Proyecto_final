@@ -10,9 +10,11 @@ import 'package:flutter_tracktrail_app/domain/repositories/exercises_repository.
 import 'package:flutter_tracktrail_app/domain/repositories/routine_exercise_reporitory.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/add_routine_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_routine_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dar
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,6 +43,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerFactory<ExercisesBloc>(
     () => ExercisesBloc(sl()),
+  );
+  sl.registerFactory<RoutineExercisesBloc>(
+    () => RoutineExercisesBloc(sl(), sl()),
   );
 
   // SharedPreferences
@@ -83,6 +89,12 @@ Future<void> configureDependencies() async {
   // Use Cases
   sl.registerLazySingleton<GetUserRoutinesUseCase>(
     () => GetUserRoutinesUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetRoutineExercisesUseCase>(
+    () => GetRoutineExercisesUseCase(sl()),
+  );
+  sl.registerLazySingleton<AddExerciseToRoutineUseCase>(
+    () => AddExerciseToRoutineUseCase(sl()),
   );
   sl.registerLazySingleton<CreateRoutineUseCase>(
     () => CreateRoutineUseCase(sl()),

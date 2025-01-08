@@ -44,11 +44,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
 
       result.fold(
         (error) => emit(RoutinesState.failure(error)),
-        (routineExerciseEntities) {
-          final routines = routineExerciseEntities
-              .map((routineExerciseEntity) => routineExerciseEntity.routine)
-              .toList();
-
+        (routines) {
           emit(RoutinesState.success(routines));
         },
       );

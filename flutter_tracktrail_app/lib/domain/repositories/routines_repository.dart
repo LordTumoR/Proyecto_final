@@ -12,4 +12,6 @@ abstract class RoutinesRepository {
     String difficulty,
     String progress,
   );
+  Future<Either<String, List<RoutineEntity>>> getRoutinesByUserEmail(
+      String email);
 }

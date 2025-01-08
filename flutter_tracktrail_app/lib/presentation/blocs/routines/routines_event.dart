@@ -9,12 +9,10 @@ abstract class RoutinesEvent extends Equatable {
 class FetchRoutinesEvent extends RoutinesEvent {}
 
 class FetchUserRoutinesEvent extends RoutinesEvent {
-  final String email;
-
-  FetchUserRoutinesEvent(this.email);
+  FetchUserRoutinesEvent();
 
   @override
-  List<Object> get props => [email];
+  List<Object> get props => [];
 }
 
 class RoutinesFetched extends RoutinesEvent {

@@ -1,5 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routine_exercises_datasource.dart';
+import 'package:flutter_tracktrail_app/data/models/routine_exercise_model.dart';
+import 'package:flutter_tracktrail_app/data/models/routines_model.dart';
+import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
+import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
+import 'package:flutter_tracktrail_app/data/models/exercise_model.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routine-exercise.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routine_exercise_reporitory.dart';
 
@@ -8,60 +13,43 @@ class RoutineExerciseRepositoryImpl implements RoutineExerciseRepository {
 
   RoutineExerciseRepositoryImpl(this.remoteDataSource);
 
-  // @override
-  // Future<Either<String, RoutineExerciseEntity>> createRoutineExercise({
-  //   required int userId,
-  //   required int routineId,
-  //   required int exerciseId,
-  //   required DateTime dateStart,
-  //   required DateTime dateFinish,
-  // }) async {
-  //   try {
-  //     final model = await remoteDataSource.createRoutineExercise(
-  //       userId: userId,
-  //       routineId: routineId,
-  //       exerciseId: exerciseId,
-  //       dateStart: dateStart,
-  //       dateFinish: dateFinish,
-  //     );
-  //     return Right(model.toEntity());
-  //   } catch (e) {
-  //     return Left('Error al crear el ejercicio de rutina: $e');
-  //   }
-  // }
-
-  // @override
-  // Future<Either<String, void>> deleteRoutineExercise(
-  //     int idRoutineExercise) async {
-  //   try {
-  //     await remoteDataSource.deleteRoutineExercise(idRoutineExercise);
-  //     return const Right(null);
-  //   } catch (e) {
-  //     return Left('Error al eliminar el ejercicio de rutina: $e');
-  //   }
-  // }
-
   @override
-  Future<Either<String, List<RoutineExerciseEntity>>>
-      getRoutineExercises() async {
+  Future<Either<String, void>> addExerciseToRoutine(
+      int routineId, ExerciseEntity newExerciseEntity) async {
     try {
-      final models = await remoteDataSource.getRoutineExercises();
-      final entities = models.map((model) => model.toEntity()).toList();
-      return Right(entities);
+      final exerciseModel = _mapEntityToModel(newExerciseEntity);
+      await remoteDataSource.addExerciseToRoutine(routineId, exerciseModel);
+      return const Right(null);
     } catch (e) {
-      return Left('Error al obtener los ejercicios de rutina: $e');
+      return Left('Error al agregar ejercicio a la rutina: $e');
     }
   }
 
+  ExerciseModel _mapEntityToModel(ExerciseEntity entity) {
+    return ExerciseModel(
+      idExercise: entity.id,
+      name: entity.name,
+      description: entity.description,
+      image: entity.image,
+    );
+  }
+
   @override
-  Future<Either<String, List<RoutineExerciseEntity>>> getUserRoutines(
-      String email) async {
+  Future<Either<String, List<RoutineExerciseEntity>>>
+      getRoutineExercisesByRoutineId(int routineId) async {
     try {
-      final models = await remoteDataSource.getUserRoutines(email);
-      final entities = models.map((model) => model.toEntity()).toList();
+      final routineExercises = await remoteDataSource.getAllRoutineExercises();
+
+      final exercisesForRoutine = routineExercises
+          .where((exercise) => exercise.routines.idRoutine == routineId)
+          .toList();
+
+      final entities =
+          exercisesForRoutine.map((model) => model.toEntity()).toList();
+
       return Right(entities);
     } catch (e) {
-      return Left('Error al obtener las rutinas del usuario: $e');
+      return Left('Error al obtener los ejercicios de rutina: $e');
     }
   }
 }

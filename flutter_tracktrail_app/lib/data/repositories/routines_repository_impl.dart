@@ -69,4 +69,30 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       return Left("Error al obtener las rutians");
     }
   }
+
+  @override
+  Future<Either<String, List<RoutineEntity>>> getRoutinesByUserEmail(
+      String email) async {
+    try {
+      final routines = await dataSource.getRoutinesByUserEmail(email);
+
+      final routineEntities = routines.map((routine) {
+        return RoutineEntity(
+          id: routine.idRoutine,
+          name: routine.name,
+          goal: routine.goal,
+          duration: routine.duration,
+          isPrivate: routine.isPrivate,
+          difficulty: routine.difficulty,
+          progress: routine.progress,
+          idUser: routine.idUser,
+        );
+      }).toList();
+
+      return Right(routineEntities);
+    } catch (e) {
+      print(e);
+      return Left("Error al obtener las rutinas del usuario");
+    }
+  }
 }

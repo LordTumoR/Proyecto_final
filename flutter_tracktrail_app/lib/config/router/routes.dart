@@ -3,6 +3,7 @@ import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.da
 import 'package:flutter_tracktrail_app/injection.dart';
 import 'package:flutter_tracktrail_app/injection.dart' as di;
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/screens/login_page.dart';
 import 'package:flutter_tracktrail_app/presentation/screens/user_page.dart';
@@ -25,6 +26,9 @@ final GoRouter router = GoRouter(
           ),
           BlocProvider<ExercisesBloc>(
             create: (BuildContext context) => di.sl<ExercisesBloc>(),
+          ),
+          BlocProvider<RoutineExercisesBloc>(
+            create: (BuildContext context) => di.sl<RoutineExercisesBloc>(),
           ),
         ],
         child: const UserPage(),

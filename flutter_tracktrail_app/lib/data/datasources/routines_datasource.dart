@@ -14,6 +14,7 @@ abstract class RoutineRemoteDataSource {
     String difficulty,
     String progress,
   );
+  Future<List<RoutineModel>> getRoutinesByUserEmail(String email);
 }
 
 class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
@@ -36,6 +37,40 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     } else {
       throw Exception('Error al cargar rutinas');
     }
+  }
+
+  @override
+  Future<List<RoutineModel>> getRoutinesByUserEmail(String email) async {
+    int? userId;
+
+    if (email.isNotEmpty) {
+      try {
+        userId = await _getUserIdByEmail(email);
+        if (userId == null) {
+          print("El id_user no fue encontrado.");
+          throw Exception("El id_user no fue encontrado.");
+        }
+      } catch (e) {
+        print("Error al obtener el id del usuario por email: $e");
+        throw Exception("Error al obtener el id del usuario.");
+      }
+    } else {
+      print("No se encontró el email del usuario.");
+      throw Exception("No se encontró el email del usuario.");
+    }
+
+    final allRoutines = await getRoutines();
+    print('Todas las rutinas: $allRoutines');
+
+    final userRoutines = allRoutines.where((routine) {
+      return routine.idUser != null && routine.idUser!.idUser == userId;
+    }).toList();
+
+    if (userRoutines.isEmpty) {
+      print("No se encontraron rutinas para el usuario con id $userId");
+    }
+
+    return userRoutines;
   }
 
   @override

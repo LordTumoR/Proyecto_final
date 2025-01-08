@@ -23,6 +23,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
   @override
   Widget build(BuildContext context) {
     final name = widget.routine.name;
+    final routineid = widget.routine.id;
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -50,7 +51,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
         ),
         body: TabBarView(
           children: [
-            ExercisesTab(),
+            ExercisesTab(routineId: routineid),
           ],
         ),
       ),

@@ -7,7 +7,12 @@ class GetRoutineExercisesUseCase {
 
   GetRoutineExercisesUseCase(this.repository);
 
-  Future<Either<String, List<RoutineExerciseEntity>>> call() async {
-    return await repository.getRoutineExercises();
+  Future<Either<String, List<RoutineExerciseEntity>>> call(
+      int routineId) async {
+    try {
+      return await repository.getRoutineExercisesByRoutineId(routineId);
+    } catch (e) {
+      return Left('Error al obtener los ejercicios de rutina: $e');
+    }
   }
 }

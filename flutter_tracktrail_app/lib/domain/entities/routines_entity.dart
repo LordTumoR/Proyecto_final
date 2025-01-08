@@ -1,3 +1,5 @@
+import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
+
 class RoutineEntity {
   final int id;
   final String name;
@@ -6,7 +8,7 @@ class RoutineEntity {
   final bool isPrivate;
   final String difficulty;
   final String progress;
-  final int? idUser;
+  final UserDatabaseModel? idUser;
 
   RoutineEntity({
     required this.id,
@@ -16,7 +18,7 @@ class RoutineEntity {
     required this.isPrivate,
     required this.difficulty,
     required this.progress,
-    this.idUser,
+    required this.idUser,
   });
   @override
   String toString() {
