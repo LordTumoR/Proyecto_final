@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -77,7 +79,7 @@ class _LoginFormState extends State<LoginForm> {
                       children: [
                         if (isRestoreMode == true) ...[
                           const Text(
-                            'ℝ𝔼ℂ𝕌ℙ𝔼ℝ𝔸ℝ ℂ𝕆ℕ𝕋ℝ𝔸𝕊𝔼Ñ𝔸',
+                            'RECUPERAR CONTRASEÑA',
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
@@ -86,7 +88,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         ] else if (isRegisterMode == true) ...[
                           const Text(
-                            'ℝ𝔼𝔾𝕀𝕊𝕋𝔼ℝ',
+                            'REGISTER',
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
@@ -95,7 +97,7 @@ class _LoginFormState extends State<LoginForm> {
                           ),
                         ] else ...[
                           const Text(
-                            '𝕃𝕆𝔾𝕀ℕ',
+                            'LOGIN',
                             style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
@@ -201,7 +203,7 @@ class _LoginFormState extends State<LoginForm> {
                         const SizedBox(height: 20),
                         if (state.errorMessage != null && !isRegisterMode) ...[
                           const Text(
-                            'ꜱɪ ɴᴏ ᴅɪꜱᴘᴏɴᴇꜱ ᴅᴇ ᴄᴜᴇɴᴛᴀ ᴘᴜᴇᴅᴇꜱ ᴄʀᴇᴀʀ ᴜɴᴀ ᴀǫᴜí ᴏ ɪɴɪᴄɪᴀ ꜱᴇꜱɪóɴ ᴄᴏɴ ɢᴏᴏɢʟᴇ:',
+                            'SI NO DISPONES DE CUENTA PUEDES CREAR UNA O INICIAR SESION CON GOOGLE:',
                             style: TextStyle(
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 20,
