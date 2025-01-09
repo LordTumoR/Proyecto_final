@@ -29,4 +29,14 @@ class ExercisesRepositoryImpl implements ExercisesRepository {
       return Left("Error al obtener los ejercicios");
     }
   }
+
+  @override
+  Future<Either<String, void>> deleteExercise(int idExercise) async {
+    try {
+      await dataSource.deleteexercise(idExercise);
+      return const Right(null);
+    } catch (e) {
+      return Left("Error al eliminar el ejercicio con id $idExercise");
+    }
+  }
 }

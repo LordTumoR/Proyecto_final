@@ -15,6 +15,7 @@ import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.d
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/add_routine_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/delete_exrcise_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/delete_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
@@ -49,7 +50,7 @@ Future<void> configureDependencies() async {
     () => RoutinesBloc(sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<ExercisesBloc>(
-    () => ExercisesBloc(sl()),
+    () => ExercisesBloc(sl(), sl()),
   );
   sl.registerFactory<RoutineExercisesBloc>(
     () => RoutineExercisesBloc(sl(), sl()),
@@ -102,6 +103,9 @@ Future<void> configureDependencies() async {
     () => GetUsersInfoRepositoryImpl(sl<UserRemoteDataSource>()),
   );
   // Use Cases
+  sl.registerLazySingleton<DeleteExerciseUseCase>(
+    () => DeleteExerciseUseCase(sl()),
+  );
   sl.registerLazySingleton<DeleteRoutineUseCase>(
     () => DeleteRoutineUseCase(sl()),
   );

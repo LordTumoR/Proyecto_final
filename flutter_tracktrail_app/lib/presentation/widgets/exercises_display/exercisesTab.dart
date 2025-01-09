@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_state.dart';
@@ -130,6 +132,10 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                       ),
                                       TextButton(
                                         onPressed: () {
+                                          context.read<ExercisesBloc>().add(
+                                              DeleteExerciseEvent(
+                                                  exercise.id ?? 0));
+
                                           Navigator.of(context).pop();
                                         },
                                         child: const Text('Eliminar'),

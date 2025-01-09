@@ -25,3 +25,12 @@ class ExercisesFetchError extends ExercisesEvent {
   @override
   List<Object> get props => [message];
 }
+
+class DeleteExerciseEvent extends ExercisesEvent {
+  final int idExercise;
+
+  DeleteExerciseEvent(this.idExercise);
+
+  @override
+  List<Object> get props => [idExercise];
+}
