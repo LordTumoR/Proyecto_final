@@ -9,6 +9,7 @@ class UserDatabaseEntity {
   final String sex;
   final double height;
   final int role;
+  final String? avatar;
 
   UserDatabaseEntity({
     required this.id,
@@ -21,6 +22,7 @@ class UserDatabaseEntity {
     required this.sex,
     required this.height,
     required this.role,
+    this.avatar,
   });
 
   @override

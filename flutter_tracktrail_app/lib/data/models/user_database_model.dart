@@ -10,6 +10,7 @@ class UserDatabaseModel {
   final String? sex;
   final int? height;
   final int? role;
+  final String? avatar;
 
   UserDatabaseModel({
     required this.idUser,
@@ -21,22 +22,23 @@ class UserDatabaseModel {
     this.sex,
     this.height,
     this.role,
+    this.avatar,
   });
 
   factory UserDatabaseModel.fromJson(Map<String, dynamic> json) {
     return UserDatabaseModel(
-      idUser: json['id_user'],
-      name: json['name'],
-      surname: json['surname'],
-      email: json['email'],
-      weight: json['weight'],
-      dateOfBirth: json['dateofbirth'] != null
-          ? DateTime.parse(json['dateofbirth'])
-          : null,
-      sex: json['sex'],
-      height: json['height'],
-      role: json['role'],
-    );
+        idUser: json['id_user'],
+        name: json['name'],
+        surname: json['surname'],
+        email: json['email'],
+        weight: json['weight'],
+        dateOfBirth: json['dateofbirth'] != null
+            ? DateTime.tryParse(json['dateofbirth']) ?? DateTime(1900)
+            : null,
+        sex: json['sex'],
+        height: json['height'],
+        role: json['role'],
+        avatar: json['avatar']);
   }
 
   Map<String, dynamic> toJson() {
@@ -50,6 +52,7 @@ class UserDatabaseModel {
       'sex': sex,
       'height': height,
       'role': role,
+      'avatar': avatar,
     };
   }
 
@@ -65,6 +68,7 @@ class UserDatabaseModel {
       sex: sex ?? '',
       height: height?.toDouble() ?? 0.0,
       role: role ?? 0,
+      avatar: avatar ?? '',
     );
   }
 }

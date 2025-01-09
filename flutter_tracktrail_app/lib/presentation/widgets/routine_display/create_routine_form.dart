@@ -14,7 +14,7 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
   String _goal = '';
   int _duration = 0;
   bool _isPrivate = false;
-  String _difficulty = '';
+  String _difficulty = 'Easy';
   String _progress = '';
 
   @override
@@ -76,13 +76,24 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                   });
                 },
               ),
-              TextFormField(
+              DropdownButtonFormField<String>(
                 decoration: const InputDecoration(labelText: 'Dificultad'),
+                value: _difficulty,
+                items: const [
+                  DropdownMenuItem(value: 'Easy', child: Text('Easy')),
+                  DropdownMenuItem(value: 'Medium', child: Text('Medium')),
+                  DropdownMenuItem(value: 'Hard', child: Text('Hard')),
+                ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese la dificultad';
+                    return 'Por favor seleccione una dificultad';
                   }
                   return null;
+                },
+                onChanged: (value) {
+                  setState(() {
+                    _difficulty = value!;
+                  });
                 },
                 onSaved: (value) {
                   _difficulty = value!;
@@ -123,7 +134,7 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                   }
                 },
                 child: const Text('Crear'),
-              )
+              ),
             ],
           ),
         ),

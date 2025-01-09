@@ -14,16 +14,15 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _goalController = TextEditingController();
   final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _difficultyController = TextEditingController();
 
   bool _isPrivate = false;
+  String _difficulty = '';
 
   @override
   void dispose() {
     _nameController.dispose();
     _goalController.dispose();
     _durationController.dispose();
-    _difficultyController.dispose();
     super.dispose();
   }
 
@@ -51,7 +50,7 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
               ),
               _buildTextField(
                 controller: _durationController,
-                label: 'Duración (minutos)',
+                label: 'Duración (Dias)',
                 validatorMessage: 'Por favor ingrese la duración',
                 keyboardType: TextInputType.number,
               ),
@@ -64,10 +63,22 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
                   });
                 },
               ),
-              _buildTextField(
-                controller: _difficultyController,
-                label: 'Dificultad',
-                validatorMessage: 'Por favor ingrese la dificultad',
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: 'Dificultad'),
+                value: _difficulty.isEmpty ? null : _difficulty,
+                items: const [
+                  DropdownMenuItem(value: 'Easy', child: Text('Easy')),
+                  DropdownMenuItem(value: 'Medium', child: Text('Medium')),
+                  DropdownMenuItem(value: 'Hard', child: Text('Hard')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _difficulty = value ?? '';
+                  });
+                },
+                onSaved: (value) {
+                  _difficulty = value ?? '';
+                },
               ),
               ElevatedButton(
                 onPressed: _onFilter,
@@ -87,9 +98,11 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
     TextInputType keyboardType = TextInputType.text,
   }) {
     return TextFormField(
-        controller: controller,
-        decoration: InputDecoration(labelText: label),
-        keyboardType: keyboardType);
+      controller: controller,
+      decoration: InputDecoration(labelText: label),
+      keyboardType: keyboardType,
+      validator: (value) {},
+    );
   }
 
   void _onFilter() {
@@ -103,8 +116,7 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
             if (_goalController.text.isNotEmpty) 'goal': _goalController.text,
             if (_durationController.text.isNotEmpty)
               'duration': int.tryParse(_durationController.text),
-            if (_difficultyController.text.isNotEmpty)
-              'difficulty': _difficultyController.text,
+            if (_difficulty.isNotEmpty) 'difficulty': _difficulty,
             'isPrivate': _isPrivate,
           },
         ),

@@ -26,7 +26,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
   Future<List<RoutineModel>> getRoutines() async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.79.59:8080/routines'),
+      Uri.parse('http://192.168.1.138:8080/routines'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -46,30 +46,23 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     if (email.isNotEmpty) {
       try {
         userId = await _getUserIdByEmail(email);
-        print(userId);
         if (userId == null) {
-          print("El id_user no fue encontrado.");
           throw Exception("El id_user no fue encontrado.");
         }
       } catch (e) {
-        print("Error al obtener el id del usuario por email: $e");
         throw Exception("Error al obtener el id del usuario.");
       }
     } else {
-      print("No se encontró el email del usuario.");
       throw Exception("No se encontró el email del usuario.");
     }
 
     final allRoutines = await getRoutines();
-    print('Todas las rutinas: $allRoutines');
 
     final userRoutines = allRoutines.where((routine) {
       return routine.idUser != null && routine.idUser!.idUser == userId;
     }).toList();
 
-    if (userRoutines.isEmpty) {
-      print("No se encontraron rutinas para el usuario con id $userId");
-    }
+    if (userRoutines.isEmpty) {}
 
     return userRoutines;
   }
@@ -92,20 +85,17 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
       try {
         userId = await _getUserIdByEmail(email);
         if (userId == null) {
-          print("El id_user no fue encontrado.");
           throw Exception("El id_user no fue encontrado.");
         }
       } catch (e) {
-        print("Error al obtener el id del usuario por email: $e");
         throw Exception("Error al obtener el id del usuario.");
       }
     } else {
-      print("No se encontró el email del usuario.");
       throw Exception("No se encontró el email del usuario.");
     }
 
     final response = await client.post(
-      Uri.parse('http://10.250.79.59:8080/routines'),
+      Uri.parse('http://192.168.1.138:8080/routines'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -124,10 +114,8 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     if (response.statusCode == 201) {
       final routine = RoutineModel.fromJson(json.decode(response.body));
 
-      print("Rutina creada correctamente y vinculada al usuario.");
       return routine;
     } else {
-      print('Error al crear la rutina: ${response.body}');
       throw Exception('Error al crear la rutina: ${response.statusCode}');
     }
   }
@@ -135,7 +123,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.79.59:8080/users'),
+      Uri.parse('http://192.168.1.138:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -154,7 +142,6 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
         throw Exception("Usuario no encontrado para el email $email");
       }
     } else {
-      print('Error al obtener usuarios: ${response.body}');
       throw Exception('Error al obtener los usuarios');
     }
   }
@@ -163,7 +150,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
   Future<void> deleteRoutine(int idRoutine) async {
     const String token = 'admin';
     final response = await client.delete(
-      Uri.parse('http://10.250.79.59:8080/routines/$idRoutine'),
+      Uri.parse('http://192.168.1.138:8080/routines/$idRoutine'),
       headers: {
         'Authorization': 'Bearer $token',
       },

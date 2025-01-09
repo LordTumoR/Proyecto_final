@@ -1,8 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routine_exercises_datasource.dart';
-import 'package:flutter_tracktrail_app/data/models/routine_exercise_model.dart';
-import 'package:flutter_tracktrail_app/data/models/routines_model.dart';
-import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 import 'package:flutter_tracktrail_app/data/models/exercise_model.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routine-exercise.dart';

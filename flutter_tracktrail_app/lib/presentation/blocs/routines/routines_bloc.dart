@@ -53,7 +53,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
             final matchesDuration = event.filters['duration'] == null ||
                 routine.duration == event.filters['duration'];
             final matchesDifficulty = event.filters['difficulty'] == null ||
-                routine.difficulty.contains(event.filters['difficulty']);
+                routine.difficulty == event.filters['difficulty'];
             final matchesPrivate = event.filters['isPrivate'] == null ||
                 routine.isPrivate == event.filters['isPrivate'];
 

@@ -6,14 +6,14 @@ class CreateRoutineUseCase {
 
   CreateRoutineUseCase(this.repository);
 
-  Future<Either<String, void>> call(
-    String name,
-    String goal,
-    int duration,
-    bool isPrivate,
-    String difficulty,
-    String progress,
-  ) async {
+  Future<Either<String, void>> call({
+    String name = '',
+    String goal = '',
+    int duration = 0,
+    bool isPrivate = true,
+    String difficulty = '',
+    String progress = '',
+  }) async {
     return await repository.createRoutine(
       name,
       goal,

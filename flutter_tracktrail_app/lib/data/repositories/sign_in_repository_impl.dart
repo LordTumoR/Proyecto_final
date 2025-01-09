@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_tracktrail_app/core/failure.dart';
 import 'package:flutter_tracktrail_app/data/datasources/firebase_auth_datasource.dart';
 import 'package:flutter_tracktrail_app/data/models/user_model.dart';
+import 'package:flutter_tracktrail_app/domain/entities/user_database_entity.dart';
 import 'package:flutter_tracktrail_app/domain/entities/user_entity.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -73,6 +74,7 @@ class SignInRepositoryImpl implements SignInRepository {
       await dataSource.logout();
 
       await sharedPreferences.remove('email');
+      await sharedPreferences.remove('isRegistered');
 
       return const Right(null);
     } catch (e) {
@@ -90,5 +92,29 @@ class SignInRepositoryImpl implements SignInRepository {
     } catch (e) {
       return Left(AuthFailure());
     }
+  }
+
+  @override
+  Future<void> updateUserByEmail(UserDatabaseEntity userEntity) async {
+    final email = userEntity.email;
+    final name = userEntity.name;
+    final surname = userEntity.surname;
+    final password = userEntity.password;
+    final weight = userEntity.weight;
+    final dateOfBirth = userEntity.dateOfBirth;
+    final sex = userEntity.sex;
+    final height = userEntity.height;
+    final avatar = userEntity.avatar;
+    await dataSource.updateUser(
+      email,
+      name,
+      surname,
+      password,
+      weight,
+      dateOfBirth,
+      sex,
+      height,
+      avatar,
+    );
   }
 }

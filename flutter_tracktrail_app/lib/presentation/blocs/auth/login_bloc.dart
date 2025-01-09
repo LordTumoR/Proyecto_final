@@ -6,6 +6,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dar
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/update_user_in_database_usecase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_event.dart';
 import 'login_state.dart';
@@ -17,7 +18,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final SigninNormalUserUseCase signinNormalUserUseCase;
   final RegisterUserUseCase registerUserUseCase;
   final RestorePasswordUseCase restorePasswordUseCase;
-
+  final UpdateUserInDatabaseUseCase updateUserInDatabaseUseCase;
   LoginBloc(
     this.signInUserUseCase,
     this.signOutUserUseCase,
@@ -25,6 +26,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     this.signinNormalUserUseCase,
     this.registerUserUseCase,
     this.restorePasswordUseCase,
+    this.updateUserInDatabaseUseCase,
   ) : super(LoginState.initial()) {
     _initializeState();
     on<LoginButtonPressed>((event, emit) async {
@@ -41,15 +43,26 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     });
     on<RegisterButtonPressed>((event, emit) async {
       emit(LoginState.loading());
+
       final result = await registerUserUseCase(RegisterParamsNormal(
         email: event.email,
         password: event.password,
       ));
-      result.fold(
-        (failure) => emit(LoginState.failure("Fallo al realizar el registro")),
-        (user) => emit(LoginState.success(user.email)),
+
+      await result.fold(
+        (failure) async {
+          emit(LoginState.failure("Fallo al realizar el registro"));
+        },
+        (user) async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('email', user.email);
+          await prefs.setBool('isRegistered', true);
+
+          emit(LoginState.success(user.email));
+        },
       );
     });
+
     on<LoginNormalButtonPressed>((event, emit) async {
       emit(LoginState.loading());
       final result = await signinNormalUserUseCase(LoginParamsNormal(
@@ -85,6 +98,51 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
             "Fallo al realizar la recuperación de contraseña")),
         (_) => emit(LoginState.initial()),
       );
+    });
+    on<UpdateUserDataEvent>((event, emit) async {
+      emit(LoginState.loading());
+
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final email = prefs.getString('email');
+
+        if (email == null || email.isEmpty) {
+          emit(LoginState.failure("Email no encontrado"));
+          return;
+        }
+
+        final userParams = UserParams(
+          email: email,
+          name: event.name,
+          surname: event.surname,
+          password: event.password,
+          weight: event.weight,
+          dateOfBirth: event.dateOfBirth,
+          sex: event.sex,
+          height: event.height,
+          avatar: event.avatar,
+        );
+        await updateUserInDatabaseUseCase(userParams);
+
+        final result = await getCurrentUserUseCase(NoParams());
+
+        bool? isRegistered = prefs.getBool('isRegistered');
+        if (isRegistered == true) {
+          await prefs.remove('isRegistered');
+          print('La propiedad "isRegistered" ha sido eliminada.');
+        } else {
+          print(
+              'La propiedad "isRegistered" no existe o ya ha sido eliminada.');
+        }
+
+        result.fold(
+          (failure) =>
+              emit(LoginState.failure("Fallo al obtener datos actualizados")),
+          (username) => emit(LoginState.success(username)),
+        );
+      } catch (error) {
+        emit(LoginState.failure("Fallo al actualizar el usuario"));
+      }
     });
   }
   Future<void> _initializeState() async {

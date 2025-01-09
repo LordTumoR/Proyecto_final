@@ -49,3 +49,40 @@ class ResetPasswordButtonPressed extends LoginEvent {
   @override
   List<Object?> get props => [email];
 }
+
+class UpdateUserDataEvent extends LoginEvent {
+  final String email;
+  final String? name;
+  final String? surname;
+  final String? password;
+  final double? weight;
+  final DateTime? dateOfBirth;
+  final String? sex;
+  final double? height;
+  final String? avatar;
+
+  UpdateUserDataEvent({
+    required this.email,
+    this.name,
+    this.surname,
+    this.password,
+    this.weight,
+    this.dateOfBirth,
+    this.sex,
+    this.height,
+    this.avatar,
+  });
+
+  @override
+  List<Object?> get props => [
+        email,
+        name,
+        surname,
+        password,
+        weight,
+        dateOfBirth,
+        sex,
+        height,
+        avatar
+      ];
+}

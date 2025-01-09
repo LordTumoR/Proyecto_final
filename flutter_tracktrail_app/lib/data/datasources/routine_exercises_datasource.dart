@@ -20,7 +20,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<ExerciseModel> createExercise(ExerciseModel exercise) async {
     const String token = 'admin';
     final response = await client.post(
-      Uri.parse('http://10.250.79.59:8080/exercises'),
+      Uri.parse('http://192.168.1.138:8080/exercises'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -40,7 +40,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<List<RoutineExerciseModel>> getAllRoutineExercises() async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.79.59:8080/routine-exercises'),
+      Uri.parse('http://192.168.1.138:8080/routine-exercises'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -66,41 +66,31 @@ class RoutineExerciseRemoteDataSourceImpl
       try {
         userId = await _getUserIdByEmail(email);
         if (userId == null) {
-          print("El id_user no fue encontrado.");
           throw Exception("El id_user no fue encontrado.");
         }
       } catch (e) {
-        print("Error al obtener el id del usuario por email: $e");
         throw Exception("Error al obtener el id del usuario.");
       }
     } else {
-      print("No se encontró el email del usuario.");
       throw Exception("No se encontró el email del usuario.");
     }
 
     try {
       final createdExercise = await createExercise(newExercise);
-      print('Ejercicio a insertar: $createdExercise');
 
       final allRoutineExercises = await getAllRoutineExercises();
-      print('Todas las rutinas-ejercicios: $allRoutineExercises');
 
       final routineExercises = allRoutineExercises
           .where((routineExercise) =>
               routineExercise.routines.idRoutine == routineId)
           .toList();
-      print('Rutinas con ejercicio (filtradas por ID): $routineExercises');
 
       if (routineExercises.isEmpty) {
-        print("La rutina no existe. Creando la rutina en routine_exercises...");
-
         final data = {
           "id_routine": routineId,
           "id_user": userId,
           "id_exercise": createdExercise.idExercise,
         };
-
-        print("Datos para insertar rutina en routine_exercises: $data");
 
         await insertRoutineExercise(data);
       }
@@ -111,8 +101,6 @@ class RoutineExerciseRemoteDataSourceImpl
           "id_exercise": createdExercise.idExercise,
         };
 
-        print(
-            "Datos para insertar ejercicio en routine_exercises: $routineExerciseData");
         await insertRoutineExercise(routineExerciseData);
       }
     } catch (e) {
@@ -124,7 +112,7 @@ class RoutineExerciseRemoteDataSourceImpl
       Map<String, dynamic> routineExercise) async {
     const String token = 'admin';
     final response = await client.post(
-      Uri.parse('http://10.250.79.59:8080/routine-exercises'),
+      Uri.parse('http://192.168.1.138:8080/routine-exercises'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -141,7 +129,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.79.59:8080/users'),
+      Uri.parse('http://192.168.1.138:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -160,7 +148,6 @@ class RoutineExerciseRemoteDataSourceImpl
         throw Exception("Usuario no encontrado para el email $email");
       }
     } else {
-      print('Error al obtener usuarios: ${response.body}');
       throw Exception('Error al obtener los usuarios');
     }
   }

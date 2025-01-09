@@ -8,6 +8,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bl
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<RoutinesBloc>()),
         BlocProvider(create: (_) => sl<ExercisesBloc>()),
         BlocProvider(create: (_) => sl<RoutineExercisesBloc>()),
+        BlocProvider(create: (_) => sl<UserBloc>()),
       ],
       child: MaterialApp.router(
         routerConfig: router,

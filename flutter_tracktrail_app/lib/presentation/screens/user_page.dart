@@ -1,14 +1,41 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/routine_menu.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/user/custom_user_drawer.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/user/user_dialog_registered.dart';
 
-class UserPage extends StatelessWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:go_router/go_router.dart';
+
+class UserPage extends StatefulWidget {
   const UserPage({super.key});
+
+  @override
+  _UserPageState createState() => _UserPageState();
+}
+
+class _UserPageState extends State<UserPage> {
+  bool isUserRegistered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfUserIsRegistered();
+  }
+
+  Future<void> _checkIfUserIsRegistered() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isRegistered = prefs.getBool('isRegistered') ?? false;
+
+    setState(() {
+      isUserRegistered = isRegistered;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,81 +75,9 @@ class UserPage extends StatelessWidget {
               context.go('/login');
             },
           ),
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
         ],
       ),
-      endDrawer: Drawer(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.blueAccent, Colors.lightBlue],
-            ),
-          ),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Colors.blue[800],
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(Icons.account_circle, size: 50, color: Colors.white),
-                    SizedBox(height: 10),
-                    Text('Opciones',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.home, color: Colors.white),
-                title:
-                    const Text('Inicio', style: TextStyle(color: Colors.white)),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.settings, color: Colors.white),
-                title: const Text('Configuración',
-                    style: TextStyle(color: Colors.white)),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.fitness_center, color: Colors.white),
-                title: const Text('Rutinas',
-                    style: TextStyle(color: Colors.white)),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(Icons.analytics, color: Colors.white),
-                title: const Text('Progreso',
-                    style: TextStyle(color: Colors.white)),
-                onTap: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
+      drawer: const CustomDrawer(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -155,16 +110,21 @@ class UserPage extends StatelessWidget {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BlocProvider.value(
-                          value: BlocProvider.of<RoutinesBloc>(context),
-                          child: RoutineMenu(),
-                        ),
-                      ),
-                    );
+                  onTap: () async {
+                    await _checkIfUserIsRegistered();
+                    if (isUserRegistered) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const UserInfoDialog();
+                        },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RoutineMenu()),
+                      );
+                    }
                   },
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,

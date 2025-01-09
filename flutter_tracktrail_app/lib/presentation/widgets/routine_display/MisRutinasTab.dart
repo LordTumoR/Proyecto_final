@@ -47,6 +47,22 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                   final routine = routines[index];
                   print('Routine Name: ${routine.name}');
                   print('Is Private: ${routine.isPrivate}');
+
+                  Color barraColor;
+                  switch (routine.difficulty.toLowerCase()) {
+                    case 'easy':
+                      barraColor = Colors.green;
+                      break;
+                    case 'medium':
+                      barraColor = Colors.orange;
+                      break;
+                    case 'hard':
+                      barraColor = Colors.red;
+                      break;
+                    default:
+                      barraColor = Colors.grey;
+                  }
+
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
@@ -54,6 +70,8 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: ListTile(
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12.0),
                       title: Text(
                         routine.name,
                         style: const TextStyle(
@@ -66,6 +84,14 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
+                        ),
+                      ),
+                      leading: Container(
+                        width: 10.0,
+                        height: 100.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: barraColor,
                         ),
                       ),
                       trailing: Row(
