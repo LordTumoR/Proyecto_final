@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters, library_private_types_in_public_api, unnecessary_null_comparison
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
@@ -40,7 +42,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     decoration: BoxDecoration(
                       color: Colors.blue[800],
                     ),
-                    child: Center(child: CircularProgressIndicator()),
+                    child: const Center(child: CircularProgressIndicator()),
                   );
                 }
 
@@ -89,7 +91,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     ),
                     child: Center(
                         child: Text('Error al cargar usuario: ${state.error}',
-                            style: TextStyle(color: Colors.white))),
+                            style: const TextStyle(color: Colors.white))),
                   );
                 }
 

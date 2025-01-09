@@ -17,12 +17,11 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     final email = await PreferencesHelper.getEmailFromPreferences();
     final userId = await _getUserIdByEmail(email!);
     if (userId == null) {
-      print("El id_user no fue encontrado.");
       throw Exception("El id_user no fue encontrado.");
     }
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.138:8080/users/$userId'),
+      Uri.parse('http://10.250.79.59:8080/users/$userId'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -38,7 +37,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.138:8080/users'),
+      Uri.parse('http://10.250.79.59:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

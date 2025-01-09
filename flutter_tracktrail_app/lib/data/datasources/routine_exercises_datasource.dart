@@ -19,20 +19,34 @@ class RoutineExerciseRemoteDataSourceImpl
   @override
   Future<ExerciseModel> createExercise(ExerciseModel exercise) async {
     const String token = 'admin';
-    final response = await client.post(
-      Uri.parse('http://192.168.1.138:8080/exercises'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(exercise.toJson()),
-    );
+    final response;
 
-    if (response.statusCode == 201) {
+    if (exercise.idExercise == 0 || exercise.idExercise == null) {
+      response = await client.post(
+        Uri.parse('http://10.250.79.59:8080/exercises'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(exercise.toJson()),
+      );
+    } else {
+      response = await client.put(
+        Uri.parse('http://10.250.79.59:8080/exercises/${exercise.idExercise}'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode(exercise.toJson()),
+      );
+    }
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final Map<String, dynamic> exerciseJson = json.decode(response.body);
       return ExerciseModel.fromJson(exerciseJson);
     } else {
-      throw Exception('Error al crear el ejercicio');
+      throw Exception(
+          'Error al ${exercise.idExercise == 0 || exercise.idExercise == null ? 'crear' : 'actualizar'} el ejercicio');
     }
   }
 
@@ -40,7 +54,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<List<RoutineExerciseModel>> getAllRoutineExercises() async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.138:8080/routine-exercises'),
+      Uri.parse('http://10.250.79.59:8080/routine-exercises'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -59,6 +73,15 @@ class RoutineExerciseRemoteDataSourceImpl
   @override
   Future<void> addExerciseToRoutine(
       int routineId, ExerciseModel newExercise) async {
+    if (newExercise.idExercise != null && newExercise.idExercise != 0) {
+      try {
+        await createExercise(newExercise);
+      } catch (e) {
+        throw Exception('Error al actualizar el ejercicio: $e');
+      }
+      return;
+    }
+
     final email = await PreferencesHelper.getEmailFromPreferences();
     int? userId;
 
@@ -112,7 +135,7 @@ class RoutineExerciseRemoteDataSourceImpl
       Map<String, dynamic> routineExercise) async {
     const String token = 'admin';
     final response = await client.post(
-      Uri.parse('http://192.168.1.138:8080/routine-exercises'),
+      Uri.parse('http://10.250.79.59:8080/routine-exercises'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -129,7 +152,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.138:8080/users'),
+      Uri.parse('http://10.250.79.59:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

@@ -65,3 +65,12 @@ class CreateRoutineEvent extends RoutinesEvent {
         routineId ?? 0
       ];
 }
+
+class DeleteRoutineEvent extends RoutinesEvent {
+  final int idRoutine;
+
+  DeleteRoutineEvent(this.idRoutine);
+
+  @override
+  List<Object> get props => [idRoutine];
+}

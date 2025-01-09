@@ -23,7 +23,7 @@ class SignInRepositoryImpl implements SignInRepository {
 
       return Right(user.toEntity());
     } catch (e) {
-      print(e);
+      (e);
       return Left(AuthFailure());
     }
   }
@@ -38,7 +38,7 @@ class SignInRepositoryImpl implements SignInRepository {
 
       return Right(user.toEntity());
     } catch (e) {
-      print(e);
+      (e);
       return Left(AuthFailure());
     }
   }
@@ -53,7 +53,7 @@ class SignInRepositoryImpl implements SignInRepository {
 
       return Right(user.toEntity());
     } catch (e) {
-      print(e);
+      (e);
       return Left(AuthFailure());
     }
   }

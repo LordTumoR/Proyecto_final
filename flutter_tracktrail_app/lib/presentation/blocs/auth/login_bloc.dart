@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/core/use_case.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
@@ -129,10 +131,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         bool? isRegistered = prefs.getBool('isRegistered');
         if (isRegistered == true) {
           await prefs.remove('isRegistered');
-          print('La propiedad "isRegistered" ha sido eliminada.');
+          ('La propiedad "isRegistered" ha sido eliminada.');
         } else {
-          print(
-              'La propiedad "isRegistered" no existe o ya ha sido eliminada.');
+          ('La propiedad "isRegistered" no existe o ya ha sido eliminada.');
         }
 
         result.fold(

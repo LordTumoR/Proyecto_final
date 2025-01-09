@@ -33,7 +33,7 @@ class FirebaseAuthDataSource {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       final response = await http.post(
-        Uri.parse('http://192.168.1.138:8080/users'),
+        Uri.parse('http://10.250.79.59:8080/users'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -94,7 +94,6 @@ class FirebaseAuthDataSource {
   ) async {
     final userId = await _getUserIdByEmail(email);
     if (userId == null) {
-      print("El id_user no fue encontrado.");
       throw Exception("El id_user no fue encontrado.");
     }
 
@@ -112,7 +111,7 @@ class FirebaseAuthDataSource {
     if (avatar != null && avatar.isNotEmpty) body['avatar'] = avatar;
 
     final response = await http.put(
-      Uri.parse('http://192.168.1.138:8080/users/$userId'),
+      Uri.parse('http://10.250.79.59:8080/users/$userId'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -129,16 +128,13 @@ class FirebaseAuthDataSource {
     bool? isRegistered = prefs.getBool('isRegistered');
     if (isRegistered != null && isRegistered) {
       await prefs.remove('isRegistered');
-      print('La propiedad "isRegistered" ha sido eliminada.');
-    } else {
-      print('La propiedad "isRegistered" no existe o ya ha sido eliminada.');
-    }
+    } else {}
   }
 
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await http.get(
-      Uri.parse('http://192.168.1.138:8080/users'),
+      Uri.parse('http://10.250.79.59:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -157,7 +153,6 @@ class FirebaseAuthDataSource {
         throw Exception("Usuario no encontrado para el email $email");
       }
     } else {
-      print('Error al obtener usuarios: ${response.body}');
       throw Exception('Error al obtener los usuarios');
     }
   }

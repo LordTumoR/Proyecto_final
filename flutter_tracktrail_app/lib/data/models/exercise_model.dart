@@ -1,17 +1,20 @@
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 
 class ExerciseModel {
-  final int idExercise;
-  final String name;
-  final String description;
-  final String image;
+  final int? idExercise;
+  final String? name;
+  final String? description;
+  final String? image;
 
   ExerciseModel({
-    required this.idExercise,
-    required this.name,
-    required this.description,
-    required this.image,
-  });
+    int? idExercise,
+    String? name,
+    String? description,
+    String? image,
+  })  : idExercise = idExercise ?? 0,
+        name = name ?? '',
+        description = description ?? '',
+        image = image ?? '';
 
   @override
   String toString() {
@@ -20,10 +23,10 @@ class ExerciseModel {
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseModel(
-      idExercise: json['id_exercises'] ?? 0,
-      name: json['name'] ?? 'Unknown',
-      description: json['description'] ?? 'No description',
-      image: json['images'] ?? 'no_image.jpg',
+      idExercise: json['id_exercises'],
+      name: json['name'],
+      description: json['description'],
+      image: json['images'],
     );
   }
 
@@ -38,10 +41,10 @@ class ExerciseModel {
 
   ExerciseEntity toEntity() {
     return ExerciseEntity(
-      id: idExercise,
-      name: name,
-      description: description,
-      image: image,
+      id: idExercise ?? 0,
+      name: name ?? '',
+      description: description ?? '',
+      image: image ?? '',
     );
   }
 }

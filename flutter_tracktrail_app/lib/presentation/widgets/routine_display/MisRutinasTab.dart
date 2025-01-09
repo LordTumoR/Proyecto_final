@@ -39,14 +39,14 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
               );
             } else if (state.routines != null && state.routines!.isNotEmpty) {
               final routines = state.routines!;
-              print('Routines received: ${state.routines}');
+              ('Routines received: ${state.routines}');
 
               return ListView.builder(
                 itemCount: routines.length,
                 itemBuilder: (context, index) {
                   final routine = routines[index];
-                  print('Routine Name: ${routine.name}');
-                  print('Is Private: ${routine.isPrivate}');
+                  ('Routine Name: ${routine.name}');
+                  ('Is Private: ${routine.isPrivate}');
 
                   Color barraColor;
                   switch (routine.difficulty?.toLowerCase()) {

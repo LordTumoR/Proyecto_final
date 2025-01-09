@@ -24,7 +24,7 @@ class ExercisesRepositoryImpl implements ExercisesRepository {
 
       return Right(exerciseEntities);
     } catch (e) {
-      print(e);
+      (e);
 
       return Left("Error al obtener los ejercicios");
     }

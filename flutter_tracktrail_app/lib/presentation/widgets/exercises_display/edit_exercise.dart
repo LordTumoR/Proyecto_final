@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 
 class EditExerciseDialog extends StatefulWidget {
+  final ExerciseEntity exercise;
+  final Function(ExerciseEntity) onEdit;
+
+  EditExerciseDialog({required this.exercise, required this.onEdit});
+
   @override
   _EditExerciseDialogState createState() => _EditExerciseDialogState();
 }
@@ -8,6 +14,13 @@ class EditExerciseDialog extends StatefulWidget {
 class _EditExerciseDialogState extends State<EditExerciseDialog> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.exercise.name!;
+    _descriptionController.text = widget.exercise.description!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +55,23 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
           onPressed: () {
             String exerciseName = _nameController.text.trim();
             String exerciseDescription = _descriptionController.text.trim();
-            Navigator.of(context).pop();
+
+            if (exerciseName.isNotEmpty && exerciseDescription.isNotEmpty) {
+              final updatedExercise = ExerciseEntity(
+                id: widget.exercise.id,
+                name: exerciseName,
+                description: exerciseDescription,
+                image: widget.exercise.image,
+              );
+
+              widget.onEdit(updatedExercise);
+              Navigator.of(context).pop();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('Por favor, complete todos los campos.')),
+              );
+            }
           },
           child: const Text('Guardar'),
         ),

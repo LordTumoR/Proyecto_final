@@ -22,7 +22,7 @@ class RoutineExercisesBloc
       FetchRoutineExercises event, Emitter<RoutineExercisesState> emit) async {
     emit(RoutineExercisesState.loading());
     final result = await routineExercisesUseCase(event.routineId);
-    print('Fetched exercises: $result');
+    ('Fetched exercises: $result');
 
     result.fold(
       (error) => emit(RoutineExercisesState.failure(error)),

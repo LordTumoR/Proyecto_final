@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/edit_exercise.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_event.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/exercisesTab.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/MisRutinasTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/edit_routine.dart';
 
 class ExercisesMenu extends StatefulWidget {
@@ -92,23 +94,13 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
                 },
               ),
               ListTile(
-                title: const Text('Modificar Ejercicios'),
-                leading: const Icon(Icons.fitness_center),
-                onTap: () {
-                  Navigator.pop(context);
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return EditExerciseDialog();
-                    },
-                  );
-                },
-              ),
-              ListTile(
                 title: const Text('Eliminar Rutina'),
                 leading: const Icon(Icons.delete),
                 onTap: () {
                   Navigator.pop(context);
+                  context
+                      .read<RoutinesBloc>()
+                      .add(DeleteRoutineEvent(widget.routine.id ?? 0));
                 },
               ),
             ],
@@ -117,6 +109,12 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MisRutinasTab(),
+                  ),
+                );
               },
               child: const Text('Cancelar'),
             ),

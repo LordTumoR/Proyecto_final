@@ -28,7 +28,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
 
       return Right(routineEntities);
     } catch (e) {
-      print(e);
+      (e);
 
       return Left("Error al obtener las rutinas");
     }
@@ -67,7 +67,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       );
       return Right(routineEntity);
     } catch (e) {
-      print(e);
+      (e);
       return Left("Error al obtener las rutinas");
     }
   }
@@ -93,8 +93,19 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
 
       return Right(routineEntities);
     } catch (e) {
-      print(e);
+      (e);
       return Left("Error al obtener las rutinas del usuariooooo");
+    }
+  }
+
+  @override
+  Future<Either<String, void>> deleteRoutine(int idRoutine) async {
+    try {
+      await dataSource.deleteRoutine(idRoutine);
+      return Right(null);
+    } catch (e) {
+      (e);
+      return Left("Error al eliminar la rutina con id $idRoutine");
     }
   }
 }

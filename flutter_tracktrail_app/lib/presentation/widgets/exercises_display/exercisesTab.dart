@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_state.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/create_exercises.dart'; // Importa el nuevo Drawer
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/create_exercises.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/edit_exercise.dart'; // Importa el nuevo Drawer
 
 class ExercisesTab extends StatefulWidget {
   final int routineId;
@@ -73,20 +74,74 @@ class _ExercisesTabState extends State<ExercisesTab> {
                     ),
                     child: ListTile(
                       title: Text(
-                        exercise.name,
+                        exercise.name ?? '',
                         style: const TextStyle(
                           color: Color.fromARGB(255, 58, 71, 183),
                           fontSize: 20,
                         ),
                       ),
                       subtitle: Text(
-                        exercise.description,
+                        exercise.description ?? '',
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
                         ),
                       ),
-                      trailing: const Icon(Icons.heart_broken),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.build),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return EditExerciseDialog(
+                                    exercise: exercise,
+                                    onEdit: (updatedExercise) {
+                                      BlocProvider.of<RoutineExercisesBloc>(
+                                              context)
+                                          .add(
+                                        AddExerciseToRoutine(
+                                            widget.routineId, updatedExercise),
+                                      );
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.red),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Confirmar eliminación'),
+                                    content: const Text(
+                                        '¿Estás seguro de que deseas eliminar este ejercicio?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Cancelar'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Eliminar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                       onTap: () {},
                     ),
                   );
