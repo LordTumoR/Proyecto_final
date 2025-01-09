@@ -23,7 +23,7 @@ class RoutineExerciseRemoteDataSourceImpl
 
     if (exercise.idExercise == 0 || exercise.idExercise == null) {
       response = await client.post(
-        Uri.parse('http://10.250.79.59:8080/exercises'),
+        Uri.parse('http://192.168.1.138:8080/exercises'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ class RoutineExerciseRemoteDataSourceImpl
       );
     } else {
       response = await client.put(
-        Uri.parse('http://10.250.79.59:8080/exercises/${exercise.idExercise}'),
+        Uri.parse('http://192.168.1.138:8080/exercises/${exercise.idExercise}'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<List<RoutineExerciseModel>> getAllRoutineExercises() async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.79.59:8080/routine-exercises'),
+      Uri.parse('http://192.168.1.138:8080/routine-exercises'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -135,7 +135,7 @@ class RoutineExerciseRemoteDataSourceImpl
       Map<String, dynamic> routineExercise) async {
     const String token = 'admin';
     final response = await client.post(
-      Uri.parse('http://10.250.79.59:8080/routine-exercises'),
+      Uri.parse('http://192.168.1.138:8080/routine-exercises'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
@@ -152,7 +152,7 @@ class RoutineExerciseRemoteDataSourceImpl
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.79.59:8080/users'),
+      Uri.parse('http://192.168.1.138:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

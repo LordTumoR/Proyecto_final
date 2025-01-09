@@ -5,7 +5,10 @@ import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart'
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UpdateInfoDialog extends StatefulWidget {
-  const UpdateInfoDialog({super.key});
+  final VoidCallback onInfoUpdated;
+
+  const UpdateInfoDialog({Key? key, required this.onInfoUpdated})
+      : super(key: key);
 
   @override
   _UpdateInfoDialogState createState() => _UpdateInfoDialogState();
@@ -29,7 +32,7 @@ class _UpdateInfoDialogState extends State<UpdateInfoDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              "Modificar Informacion Usuario",
+              "Modificar Información Usuario",
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -81,9 +84,7 @@ class _UpdateInfoDialogState extends State<UpdateInfoDialog> {
                 if (mounted) {
                   BlocProvider.of<LoginBloc>(context).add(updateEvent);
                 }
-                if (mounted) {
-                  Navigator.of(context).pop();
-                }
+                widget.onInfoUpdated();
               },
               child: const Text("Guardar"),
             ),

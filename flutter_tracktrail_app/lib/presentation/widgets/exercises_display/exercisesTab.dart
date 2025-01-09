@@ -6,7 +6,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/rout
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/create_exercises.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/edit_exercise.dart'; // Importa el nuevo Drawer
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/edit_exercise.dart';
 
 class ExercisesTab extends StatefulWidget {
   final int routineId;
@@ -135,7 +135,12 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                           context.read<ExercisesBloc>().add(
                                               DeleteExerciseEvent(
                                                   exercise.id ?? 0));
-
+                                          context
+                                              .read<RoutineExercisesBloc>()
+                                              .add(
+                                                FetchRoutineExercises(
+                                                    widget.routineId),
+                                              );
                                           Navigator.of(context).pop();
                                         },
                                         child: const Text('Eliminar'),

@@ -1,10 +1,10 @@
-// ignore_for_file: use_super_parameters, library_private_types_in_public_api, unnecessary_null_comparison
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_state.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/user/personal_info_drawer.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/user/ress_password_user.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/update_user_dialog.dart';
 
 class CustomDrawer extends StatefulWidget {
@@ -105,12 +105,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 );
               },
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.home, color: Colors.white),
-            //   title:
-            //       const Text('Inicio', style: TextStyle(color: Colors.white)),
-            //   onTap: () {},
-            // ),
             ListTile(
               leading: const Icon(Icons.settings, color: Colors.white),
               title: const Text('Editar Usuario',
@@ -119,23 +113,63 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return const UpdateInfoDialog();
+                    return UpdateInfoDialog(
+                      onInfoUpdated: () {
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    );
                   },
                 );
               },
             ),
-            // ListTile(
-            //   leading: const Icon(Icons.fitness_center, color: Colors.white),
-            //   title:
-            //       const Text('Rutinas', style: TextStyle(color: Colors.white)),
-            //   onTap: () {},
-            // ),
-            // ListTile(
-            //   leading: const Icon(Icons.analytics, color: Colors.white),
-            //   title:
-            //       const Text('Progreso', style: TextStyle(color: Colors.white)),
-            //   onTap: () {},
-            // ),
+            ListTile(
+              leading: const Icon(Icons.swap_horiz, color: Colors.white),
+              title: const Text('Cambiar Contraseña',
+                  style: TextStyle(color: Colors.white)),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return RessPasswordDialog();
+                  },
+                );
+              },
+            ),
+            BlocBuilder<UserBloc, UserState>(
+              builder: (context, state) {
+                if (state.user == null) {
+                  return ListTile(
+                    leading: const Icon(Icons.analytics, color: Colors.white),
+                    title: const Text('Información Personal',
+                        style: TextStyle(color: Colors.white)),
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content:
+                                Text("No se encontró información del usuario")),
+                      );
+                    },
+                  );
+                }
+
+                final user = state.user!;
+
+                return ListTile(
+                  leading: const Icon(Icons.analytics, color: Colors.white),
+                  title: const Text('Información Personal',
+                      style: TextStyle(color: Colors.white)),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PersonalInfoDialog(user: user);
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
