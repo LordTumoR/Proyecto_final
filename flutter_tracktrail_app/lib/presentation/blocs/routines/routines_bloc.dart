@@ -47,13 +47,15 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
         (routines) {
           final filteredRoutines = routines.where((routine) {
             final matchesName = event.filters['name'] == null ||
-                routine.name.contains(event.filters['name']);
+                (routine.name?.contains(event.filters['name']) ?? false);
             final matchesGoal = event.filters['goal'] == null ||
-                routine.goal.contains(event.filters['goal']);
+                (routine.goal?.contains(event.filters['goal']) ?? false);
             final matchesDuration = event.filters['duration'] == null ||
                 routine.duration == event.filters['duration'];
             final matchesDifficulty = event.filters['difficulty'] == null ||
-                routine.difficulty == event.filters['difficulty'];
+                (routine.difficulty != null &&
+                    routine.difficulty!.contains(event.filters['difficulty']!));
+
             final matchesPrivate = event.filters['isPrivate'] == null ||
                 routine.isPrivate == event.filters['isPrivate'];
 
@@ -69,7 +71,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
       );
     } catch (e) {
       print(e);
-      emit(RoutinesState.failure('Las rutinas te an petao.'));
+      emit(RoutinesState.failure('Las rutinas te han petao.'));
     }
   }
 
@@ -78,12 +80,13 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
     emit(RoutinesState.loading());
 
     final result = await createRoutineUseCase(
-      event.name,
-      event.goal,
-      event.duration,
-      event.isPrivate,
-      event.difficulty,
-      event.progress,
+      name: event.name ?? '',
+      goal: event.goal ?? '',
+      duration: event.duration ?? 0,
+      isPrivate: event.isPrivate ?? true,
+      difficulty: event.difficulty ?? '',
+      progress: event.progress ?? '',
+      routineId: event.routineId,
     );
 
     result.fold(

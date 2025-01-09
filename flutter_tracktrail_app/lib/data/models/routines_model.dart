@@ -2,24 +2,24 @@ import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
 
 class RoutineModel {
-  final int idRoutine;
-  final String name;
-  final String goal;
-  final int duration;
-  final bool isPrivate;
-  final String difficulty;
-  final String progress;
+  final int? idRoutine;
+  final String? name;
+  final String? goal;
+  final int? duration;
+  final bool? isPrivate;
+  final String? difficulty;
+  final String? progress;
   final UserDatabaseModel? idUser;
 
   RoutineModel({
-    required this.idRoutine,
-    required this.name,
-    required this.goal,
-    required this.duration,
-    required this.isPrivate,
-    required this.difficulty,
-    required this.progress,
-    required this.idUser,
+    this.idRoutine,
+    this.name,
+    this.goal,
+    this.duration,
+    this.isPrivate,
+    this.difficulty,
+    this.progress,
+    this.idUser,
   });
 
   @override
@@ -30,12 +30,12 @@ class RoutineModel {
   factory RoutineModel.fromJson(Map<String, dynamic> json) {
     return RoutineModel(
       idRoutine: json['id_routine'] ?? 0,
-      name: json['name'] ?? 'Unknown',
-      goal: json['goal'] ?? 'Unknown',
-      duration: json['duration'] ?? 0,
+      name: json['name'],
+      goal: json['goal'],
+      duration: json['duration'],
       isPrivate: json['private_public'],
-      difficulty: json['dificulty'] ?? 'Unknown',
-      progress: json['progress'] ?? 'Unknown',
+      difficulty: json['dificulty'],
+      progress: json['progress'],
       idUser: json['user'] != null
           ? UserDatabaseModel.fromJson(json['user'])
           : null,
@@ -57,13 +57,13 @@ class RoutineModel {
 
   RoutineEntity toEntity() {
     return RoutineEntity(
-      id: idRoutine,
-      name: name,
-      goal: goal,
-      duration: duration,
-      isPrivate: isPrivate,
-      difficulty: difficulty,
-      progress: progress,
+      id: idRoutine ?? 0,
+      name: name ?? 'Unknown',
+      goal: goal ?? 'Unknown',
+      duration: duration ?? 0,
+      isPrivate: isPrivate ?? true,
+      difficulty: difficulty ?? 'Unknown',
+      progress: progress ?? 'Unknown',
       idUser: idUser,
     );
   }

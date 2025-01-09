@@ -5,12 +5,13 @@ abstract class RoutinesRepository {
   Future<Either<String, List<RoutineEntity>>> getRoutines();
   Future<Either<String, RoutineEntity>> createRoutine(
     // Add the createRoutine method
-    String name,
-    String goal,
-    int duration,
-    bool isPrivate,
-    String difficulty,
-    String progress,
+    String? name,
+    String? goal,
+    int? duration,
+    bool? isPrivate,
+    String? difficulty,
+    String? progress,
+    int? routineId,
   );
   Future<Either<String, List<RoutineEntity>>> getRoutinesByUserEmail(
       String email);

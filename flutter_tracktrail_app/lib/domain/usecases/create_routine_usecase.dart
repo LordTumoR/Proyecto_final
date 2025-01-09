@@ -13,6 +13,7 @@ class CreateRoutineUseCase {
     bool isPrivate = true,
     String difficulty = '',
     String progress = '',
+    int? routineId,
   }) async {
     return await repository.createRoutine(
       name,
@@ -21,6 +22,7 @@ class CreateRoutineUseCase {
       isPrivate,
       difficulty,
       progress,
+      routineId,
     );
   }
 }

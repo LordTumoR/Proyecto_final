@@ -7,12 +7,13 @@ abstract class RoutineRemoteDataSource {
   Future<List<RoutineModel>> getRoutines();
   Future<void> deleteRoutine(int idRoutine);
   Future<RoutineModel> createRoutine(
-    String name,
-    String goal,
-    int duration,
-    bool isPrivate,
-    String difficulty,
-    String progress,
+    String? name,
+    String? goal,
+    int? duration,
+    bool? isPrivate,
+    String? difficulty,
+    String? progress,
+    int? routineId,
   );
   Future<List<RoutineModel>> getRoutinesByUserEmail(String email);
 }
@@ -69,12 +70,13 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
 
   @override
   Future<RoutineModel> createRoutine(
-    String name,
-    String goal,
-    int duration,
-    bool isPrivate,
-    String difficulty,
-    String progress,
+    String? name,
+    String? goal,
+    int? duration,
+    bool? isPrivate,
+    String? difficulty,
+    String? progress,
+    int? routineId,
   ) async {
     const String token = 'admin';
 
@@ -94,29 +96,55 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
       throw Exception("No se encontró el email del usuario.");
     }
 
-    final response = await client.post(
-      Uri.parse('http://192.168.1.138:8080/routines'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode({
-        'name': name,
-        'goal': goal,
-        'duration': duration,
-        'private_public': isPrivate,
-        'dificulty': difficulty,
-        'progress': progress,
-        'id_user': userId,
-      }),
-    );
+    if (routineId != null && routineId != 0) {
+      final response = await client.put(
+        Uri.parse('http://192.168.1.138:8080/routines/$routineId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          if (name?.isNotEmpty ?? false) 'name': name,
+          if (goal?.isNotEmpty ?? false) 'goal': goal,
+          if (duration != 0) 'duration': duration,
+          if (isPrivate != null) 'private_public': isPrivate,
+          if (difficulty?.isNotEmpty ?? false) 'dificulty': difficulty,
+          if (progress?.isNotEmpty ?? false) 'progress': progress,
+          'id_user': userId,
+        }),
+      );
 
-    if (response.statusCode == 201) {
-      final routine = RoutineModel.fromJson(json.decode(response.body));
-
-      return routine;
+      if (response.statusCode == 200) {
+        final routine = RoutineModel.fromJson(json.decode(response.body));
+        return routine;
+      } else {
+        throw Exception(
+            'Error al actualizar la rutina: ${response.statusCode}');
+      }
     } else {
-      throw Exception('Error al crear la rutina: ${response.statusCode}');
+      final response = await client.post(
+        Uri.parse('http://192.168.1.138:8080/routines'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({
+          'name': name,
+          'goal': goal,
+          'duration': duration,
+          'private_public': isPrivate,
+          'dificulty': difficulty,
+          'progress': progress,
+          'id_user': userId,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        final routine = RoutineModel.fromJson(json.decode(response.body));
+        return routine;
+      } else {
+        throw Exception('Error al crear la rutina: ${response.statusCode}');
+      }
     }
   }
 

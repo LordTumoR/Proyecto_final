@@ -49,7 +49,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                   print('Is Private: ${routine.isPrivate}');
 
                   Color barraColor;
-                  switch (routine.difficulty.toLowerCase()) {
+                  switch (routine.difficulty?.toLowerCase()) {
                     case 'easy':
                       barraColor = Colors.green;
                       break;
@@ -73,14 +73,14 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 12.0),
                       title: Text(
-                        routine.name,
+                        routine.name ?? '',
                         style: const TextStyle(
                           color: Colors.deepPurple,
                           fontSize: 20,
                         ),
                       ),
                       subtitle: Text(
-                        routine.goal,
+                        routine.goal ?? '',
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -97,7 +97,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (routine.isPrivate) ...[
+                          if (routine.isPrivate ?? true) ...[
                             const Icon(Icons.lock, color: Colors.deepPurple),
                           ] else ...[
                             const Icon(Icons.lock_open,

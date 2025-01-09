@@ -42,6 +42,7 @@ class CreateRoutineEvent extends RoutinesEvent {
   final bool? isPrivate;
   final String? difficulty;
   final String? progress;
+  final int? routineId;
 
   CreateRoutineEvent({
     this.name,
@@ -50,6 +51,7 @@ class CreateRoutineEvent extends RoutinesEvent {
     this.isPrivate,
     this.difficulty,
     this.progress,
+    this.routineId,
   });
 
   @override
@@ -59,6 +61,7 @@ class CreateRoutineEvent extends RoutinesEvent {
         duration ?? 0,
         isPrivate ?? true,
         difficulty ?? '',
-        progress ?? ''
+        progress ?? '',
+        routineId ?? 0
       ];
 }

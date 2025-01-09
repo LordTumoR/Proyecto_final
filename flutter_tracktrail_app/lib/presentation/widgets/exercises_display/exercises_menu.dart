@@ -25,7 +25,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
   @override
   Widget build(BuildContext context) {
     final name = widget.routine.name;
-    final routineid = widget.routine.id;
+    final routineid = widget.routine.id ?? 0;
 
     return DefaultTabController(
       length: 3,
@@ -79,14 +79,14 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('Modificar Nombre de la Rutina'),
+                title: const Text('Modificar Rutina'),
                 leading: const Icon(Icons.edit),
                 onTap: () {
                   Navigator.pop(context);
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return EditRoutineDialog();
+                      return EditRoutineDialog(widget.routine.id ?? 0);
                     },
                   );
                 },
