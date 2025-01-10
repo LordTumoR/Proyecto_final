@@ -17,6 +17,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/add_routine_exercises_use
 import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/delete_exrcise_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/delete_routine_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_completion_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routine_exercises_usecase.dart';
@@ -28,6 +29,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dar
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/update_completed_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/update_user_in_database_usecase.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
@@ -47,13 +49,13 @@ Future<void> configureDependencies() async {
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<RoutinesBloc>(
-    () => RoutinesBloc(sl(), sl(), sl(), sl()),
+    () => RoutinesBloc(sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<ExercisesBloc>(
     () => ExercisesBloc(sl(), sl()),
   );
   sl.registerFactory<RoutineExercisesBloc>(
-    () => RoutineExercisesBloc(sl(), sl()),
+    () => RoutineExercisesBloc(sl(), sl(), sl()),
   );
   sl.registerFactory<UserBloc>(() => UserBloc(
         sl(),
@@ -103,6 +105,12 @@ Future<void> configureDependencies() async {
     () => GetUsersInfoRepositoryImpl(sl<UserRemoteDataSource>()),
   );
   // Use Cases
+  sl.registerLazySingleton<GetCompletionUseCase>(
+    () => GetCompletionUseCase(sl()),
+  );
+  sl.registerLazySingleton<UpdateExerciseCompletionStatus>(
+    () => UpdateExerciseCompletionStatus(sl()),
+  );
   sl.registerLazySingleton<DeleteExerciseUseCase>(
     () => DeleteExerciseUseCase(sl()),
   );

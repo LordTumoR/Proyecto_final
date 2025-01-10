@@ -9,6 +9,7 @@ class RoutineExerciseEntity {
   final UserDatabaseEntity user;
   final RoutineEntity routine;
   final ExerciseEntity exercise;
+  final bool completion;
 
   RoutineExerciseEntity({
     required this.idRoutineExercise,
@@ -17,5 +18,6 @@ class RoutineExerciseEntity {
     required this.user,
     required this.routine,
     required this.exercise,
+    required this.completion,
   });
 }

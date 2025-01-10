@@ -15,4 +15,5 @@ abstract class RoutinesRepository {
   Future<Either<String, List<RoutineEntity>>> getRoutinesByUserEmail(
       String email);
   Future<Either<String, void>> deleteRoutine(int idRoutine);
+  Future<Either<String, int>> getCompletion(int routineId);
 }

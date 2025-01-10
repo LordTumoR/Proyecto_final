@@ -26,7 +26,7 @@ class ExercisesRepositoryImpl implements ExercisesRepository {
     } catch (e) {
       (e);
 
-      return Left("Error al obtener los ejercicios");
+      return const Left("Error al obtener los ejercicios");
     }
   }
 

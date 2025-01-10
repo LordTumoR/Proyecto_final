@@ -6,6 +6,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_stat
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/exercises_menu.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/create_routine_form.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/filter_routine_form.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/progress_dialog.dart';
 
 class MisRutinasTab extends StatefulWidget {
   @override
@@ -39,14 +40,11 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
               );
             } else if (state.routines != null && state.routines!.isNotEmpty) {
               final routines = state.routines!;
-              ('Routines received: ${state.routines}');
 
               return ListView.builder(
                 itemCount: routines.length,
                 itemBuilder: (context, index) {
                   final routine = routines[index];
-                  ('Routine Name: ${routine.name}');
-                  ('Is Private: ${routine.isPrivate}');
 
                   Color barraColor;
                   switch (routine.difficulty?.toLowerCase()) {
@@ -103,6 +101,25 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                             const Icon(Icons.lock_open,
                                 color: Colors.deepPurple),
                           ],
+                          const SizedBox(width: 8.0),
+                          GestureDetector(
+                            onTap: () {
+                              BlocProvider.of<RoutinesBloc>(context).add(
+                                  FetchCompletionPercentageEvent(routine.id!));
+
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return ProgressDialog(
+                                    completionPercentage:
+                                        state.completionPercentage ?? 0,
+                                  );
+                                },
+                              );
+                            },
+                            child:
+                                Icon(Icons.percent, color: Colors.deepPurple),
+                          ),
                           const SizedBox(width: 8.0),
                           const Icon(Icons.arrow_forward),
                         ],

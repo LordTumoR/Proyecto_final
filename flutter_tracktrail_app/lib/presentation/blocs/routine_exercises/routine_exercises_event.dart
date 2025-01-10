@@ -33,3 +33,13 @@ class AddExerciseToRoutine extends RoutineExercisesEvent {
   @override
   List<Object> get props => [routineId, newExercise];
 }
+
+class UpdateExerciseCompletionEvent extends RoutineExercisesEvent {
+  final int routineExerciseId;
+  final bool isCompleted;
+
+  UpdateExerciseCompletionEvent({
+    required this.routineExerciseId,
+    required this.isCompleted,
+  });
+}

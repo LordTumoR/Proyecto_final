@@ -61,13 +61,14 @@ class _ExercisesTabState extends State<ExercisesTab> {
                   style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
               );
-            } else if (state.exercises != null && state.exercises!.isNotEmpty) {
-              final exercises = state.exercises!;
+            } else if (state.routineExercises != null &&
+                state.routineExercises!.isNotEmpty) {
+              final exercises = state.routineExercises!;
 
               return ListView.builder(
                 itemCount: exercises.length,
                 itemBuilder: (context, index) {
-                  final exercise = exercises[index];
+                  final routineExercise = exercises[index];
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
@@ -76,14 +77,14 @@ class _ExercisesTabState extends State<ExercisesTab> {
                     ),
                     child: ListTile(
                       title: Text(
-                        exercise.name ?? '',
+                        routineExercise.exercise?.name ?? '',
                         style: const TextStyle(
                           color: Color.fromARGB(255, 58, 71, 183),
                           fontSize: 20,
                         ),
                       ),
                       subtitle: Text(
-                        exercise.description ?? '',
+                        routineExercise.exercise?.description ?? '',
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -92,6 +93,17 @@ class _ExercisesTabState extends State<ExercisesTab> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Checkbox(
+                            value: routineExercise.completion ?? false,
+                            onChanged: (bool? value) {
+                              context
+                                  .read<RoutineExercisesBloc>()
+                                  .updateExerciseCompletion(
+                                    routineExercise.idRoutineExercise ?? 0,
+                                    value ?? false,
+                                  );
+                            },
+                          ),
                           IconButton(
                             icon: const Icon(Icons.build),
                             onPressed: () {
@@ -99,7 +111,7 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return EditExerciseDialog(
-                                    exercise: exercise,
+                                    exercise: routineExercise.exercise!,
                                     onEdit: (updatedExercise) {
                                       BlocProvider.of<RoutineExercisesBloc>(
                                               context)
@@ -134,7 +146,9 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                         onPressed: () {
                                           context.read<ExercisesBloc>().add(
                                               DeleteExerciseEvent(
-                                                  exercise.id ?? 0));
+                                                  routineExercise
+                                                          .exercise?.id ??
+                                                      0));
                                           context
                                               .read<RoutineExercisesBloc>()
                                               .add(

@@ -16,4 +16,6 @@ abstract class RoutineExerciseRepository {
       int routineId, ExerciseEntity newExercise);
   Future<Either<String, List<RoutineExerciseEntity>>>
       getRoutineExercisesByRoutineId(int routineId);
+  Future<Either<String, void>> updateCompletionStatus(
+      int routineExerciseId, bool isCompleted);
 }

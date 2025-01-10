@@ -10,7 +10,7 @@ class DeleteRoutineUseCase {
     try {
       return await repository.deleteRoutine(idRoutine);
     } catch (e) {
-      return Left("Error inesperado al eliminar la rutina");
+      return const Left("Error inesperado al eliminar la rutina");
     }
   }
 }

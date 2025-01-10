@@ -8,6 +8,8 @@ abstract class RoutineExerciseRemoteDataSource {
   Future<void> addExerciseToRoutine(int routineId, ExerciseModel newExercise);
   Future<List<RoutineExerciseModel>> getAllRoutineExercises();
   Future<ExerciseModel> createExercise(ExerciseModel exercise);
+  Future<void> updateRoutineExerciseCompletion(
+      int routineExerciseId, bool isCompleted);
 }
 
 class RoutineExerciseRemoteDataSourceImpl
@@ -172,6 +174,32 @@ class RoutineExerciseRemoteDataSourceImpl
       }
     } else {
       throw Exception('Error al obtener los usuarios');
+    }
+  }
+
+  @override
+  Future<void> updateRoutineExerciseCompletion(
+      int routineExerciseId, bool isCompleted) async {
+    const String token = 'admin';
+    final url =
+        'http://192.168.1.138:8080/routine-exercises/$routineExerciseId';
+
+    try {
+      final response = await client.put(
+        Uri.parse(url),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: json.encode({'completed': isCompleted}),
+      );
+
+      if (response.statusCode == 200) {
+      } else {
+        throw Exception('Error updating routine exercise: ${response.body}');
+      }
+    } catch (error) {
+      throw Exception('Failed to update routine exercise.');
     }
   }
 }

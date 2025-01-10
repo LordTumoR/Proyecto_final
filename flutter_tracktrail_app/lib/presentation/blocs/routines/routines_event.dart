@@ -74,3 +74,12 @@ class DeleteRoutineEvent extends RoutinesEvent {
   @override
   List<Object> get props => [idRoutine];
 }
+
+class FetchCompletionPercentageEvent extends RoutinesEvent {
+  final int routineId;
+
+  FetchCompletionPercentageEvent(this.routineId);
+
+  @override
+  List<Object> get props => [routineId];
+}

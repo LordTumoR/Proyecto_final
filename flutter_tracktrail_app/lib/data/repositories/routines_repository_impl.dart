@@ -30,7 +30,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
     } catch (e) {
       (e);
 
-      return Left("Error al obtener las rutinas");
+      return const Left("Error al obtener las rutinas");
     }
   }
 
@@ -68,7 +68,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       return Right(routineEntity);
     } catch (e) {
       (e);
-      return Left("Error al obtener las rutinas");
+      return const Left("Error al obtener las rutinas");
     }
   }
 
@@ -94,7 +94,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       return Right(routineEntities);
     } catch (e) {
       (e);
-      return Left("Error al obtener las rutinas del usuariooooo");
+      return const Left("Error al obtener las rutinas del usuariooooo");
     }
   }
 
@@ -102,10 +102,20 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
   Future<Either<String, void>> deleteRoutine(int idRoutine) async {
     try {
       await dataSource.deleteRoutine(idRoutine);
-      return Right(null);
+      return const Right(null);
     } catch (e) {
       (e);
       return Left("Error al eliminar la rutina con id $idRoutine");
+    }
+  }
+
+  @override
+  Future<Either<String, int>> getCompletion(int routineId) async {
+    try {
+      final completion = await dataSource.getCompletion(routineId);
+      return Right(completion);
+    } catch (e) {
+      return const Left("Error al obtener el porcentaje de completado");
     }
   }
 }

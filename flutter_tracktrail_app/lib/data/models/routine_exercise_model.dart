@@ -10,6 +10,7 @@ class RoutineExerciseModel {
   final UserDatabaseModel user;
   final RoutineModel routines;
   final ExerciseModel ejercicios;
+  final bool completion;
 
   RoutineExerciseModel({
     required this.idRoutineExercise,
@@ -18,6 +19,7 @@ class RoutineExerciseModel {
     required this.user,
     required this.routines,
     required this.ejercicios,
+    required this.completion,
   });
 
   factory RoutineExerciseModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class RoutineExerciseModel {
       user: UserDatabaseModel.fromJson(json['user']),
       routines: RoutineModel.fromJson(json['routines']),
       ejercicios: ExerciseModel.fromJson(json['ejercicios']),
+      completion: json['completado'],
     );
   }
 
@@ -43,6 +46,7 @@ class RoutineExerciseModel {
       'user': user.toJson(),
       'routines': routines.toJson(),
       'ejercicios': ejercicios.toJson(),
+      'completion': completion,
     };
   }
 
@@ -54,6 +58,7 @@ class RoutineExerciseModel {
       user: user.toEntity(),
       routine: routines.toEntity(),
       exercise: ejercicios.toEntity(),
+      completion: completion,
     );
   }
 }

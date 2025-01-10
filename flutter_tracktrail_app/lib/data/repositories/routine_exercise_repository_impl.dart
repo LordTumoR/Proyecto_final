@@ -49,4 +49,17 @@ class RoutineExerciseRepositoryImpl implements RoutineExerciseRepository {
       return Left('Error al obtener los ejercicios de rutina: $e');
     }
   }
+
+  @override
+  Future<Either<String, void>> updateCompletionStatus(
+      int routineExerciseId, bool isCompleted) async {
+    try {
+      await remoteDataSource.updateRoutineExerciseCompletion(
+          routineExerciseId, isCompleted);
+      return const Right(null);
+    } catch (e) {
+      return Left(
+          'Error al actualizar el estado de completado del ejercicio: $e');
+    }
+  }
 }

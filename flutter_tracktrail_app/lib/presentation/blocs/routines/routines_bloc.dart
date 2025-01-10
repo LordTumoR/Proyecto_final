@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/delete_routine_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_completion_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_state.dart';
@@ -12,18 +13,22 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
   final CreateRoutineUseCase createRoutineUseCase;
   final GetUserRoutinesUseCase getUserRoutinesUseCase;
   final DeleteRoutineUseCase deleteRoutineUseCase;
+  final GetCompletionUseCase getCompletionPercentageUseCase;
 
   RoutinesBloc(
     this.getRoutinesUseCase,
     this.createRoutineUseCase,
     this.getUserRoutinesUseCase,
     this.deleteRoutineUseCase,
+    this.getCompletionPercentageUseCase,
   ) : super(RoutinesState.initial()) {
     on<FetchRoutinesEvent>(_onFetchRoutines);
     on<CreateRoutineEvent>(_onCreateRoutine);
     on<FetchUserRoutinesEvent>(_onFetchUserRoutines);
     on<DeleteRoutineEvent>(_onDeleteRoutine);
+    on<FetchCompletionPercentageEvent>(_onFetchCompletionPercentage);
   }
+
   Future<void> _onDeleteRoutine(
       DeleteRoutineEvent event, Emitter<RoutinesState> emit) async {
     emit(RoutinesState.loading());
@@ -116,5 +121,19 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
 
   void fetchRoutines({Map<String, dynamic>? filters}) {
     add(FetchUserRoutinesEvent(filters: filters ?? {}));
+  }
+
+  Future<void> _onFetchCompletionPercentage(
+      FetchCompletionPercentageEvent event, Emitter<RoutinesState> emit) async {
+    emit(RoutinesState.loading());
+
+    final result =
+        await getCompletionPercentageUseCase.execute(event.routineId);
+
+    result.fold(
+      (error) => emit(RoutinesState.failure(error)),
+      (percentage) =>
+          emit(RoutinesState.successCompletionPercentage(percentage)),
+    );
   }
 }

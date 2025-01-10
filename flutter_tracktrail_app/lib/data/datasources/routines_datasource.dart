@@ -16,6 +16,7 @@ abstract class RoutineRemoteDataSource {
     int? routineId,
   );
   Future<List<RoutineModel>> getRoutinesByUserEmail(String email);
+  Future<int> getCompletion(int routineId);
 }
 
 class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
@@ -185,6 +186,25 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     );
     if (response.statusCode != 200) {
       throw Exception('Error al eliminar rutina con id $idRoutine');
+    }
+  }
+
+  @override
+  Future<int> getCompletion(int routineId) async {
+    const String token = 'admin';
+    final response = await client.get(
+      Uri.parse(
+          'http://192.168.1.138:8080/routine-exercises/$routineId/completion'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> completionJson = json.decode(response.body);
+      return completionJson['percentage'];
+    } else {
+      throw Exception('Error al obtener el porcentaje de completado');
     }
   }
 }
