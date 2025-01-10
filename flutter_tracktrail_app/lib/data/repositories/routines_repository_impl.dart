@@ -110,7 +110,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
   }
 
   @override
-  Future<Either<String, int>> getCompletion(int routineId) async {
+  Future<Either<String, double>> getCompletion(int routineId) async {
     try {
       final completion = await dataSource.getCompletion(routineId);
       return Right(completion);

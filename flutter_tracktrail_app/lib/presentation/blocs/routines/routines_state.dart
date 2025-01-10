@@ -4,7 +4,7 @@ class RoutinesState {
   final bool isLoading;
   final List<RoutineEntity>? routines;
   final String? errorMessage;
-  final int? completionPercentage;
+  final double? completionPercentage;
 
   const RoutinesState({
     this.isLoading = false,
@@ -18,7 +18,7 @@ class RoutinesState {
     bool? isLoading,
     List<RoutineEntity>? routines,
     String? errorMessage,
-    int? completionPercentage,
+    double? completionPercentage,
   }) {
     return RoutinesState(
       isLoading: isLoading ?? this.isLoading,
@@ -36,7 +36,7 @@ class RoutinesState {
   factory RoutinesState.success(List<RoutineEntity> routines) =>
       RoutinesState(routines: routines);
 
-  factory RoutinesState.successCompletionPercentage(int percentage) =>
+  factory RoutinesState.successCompletionPercentage(double percentage) =>
       RoutinesState(isLoading: false, completionPercentage: percentage);
 
   factory RoutinesState.failure(String errorMessage) =>

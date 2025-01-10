@@ -128,7 +128,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
     emit(RoutinesState.loading());
 
     final result =
-        await getCompletionPercentageUseCase.execute(event.routineId);
+        await getCompletionPercentageUseCase.execute(event.routineId ?? 0);
 
     result.fold(
       (error) => emit(RoutinesState.failure(error)),

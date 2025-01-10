@@ -102,6 +102,9 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                     routineExercise.idRoutineExercise ?? 0,
                                     value ?? false,
                                   );
+                              context
+                                  .read<RoutineExercisesBloc>()
+                                  .fetchRoutineExercises(widget.routineId);
                             },
                           ),
                           IconButton(

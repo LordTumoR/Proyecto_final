@@ -104,16 +104,10 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                           const SizedBox(width: 8.0),
                           GestureDetector(
                             onTap: () {
-                              BlocProvider.of<RoutinesBloc>(context).add(
-                                  FetchCompletionPercentageEvent(routine.id!));
-
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return ProgressDialog(
-                                    completionPercentage:
-                                        state.completionPercentage ?? 0,
-                                  );
+                                  return ProgressDialog(routineId: routine.id!);
                                 },
                               );
                             },

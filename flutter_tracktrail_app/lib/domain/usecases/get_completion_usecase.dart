@@ -6,7 +6,7 @@ class GetCompletionUseCase {
 
   GetCompletionUseCase(this.repository);
 
-  Future<Either<String, int>> execute(int routineId) async {
+  Future<Either<String, double>> execute(int routineId) async {
     try {
       final completionResult = await repository.getCompletion(routineId);
       return completionResult;
