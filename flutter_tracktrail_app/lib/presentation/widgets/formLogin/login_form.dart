@@ -1,11 +1,11 @@
 // ignore_for_file: deprecated_member_use
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/fromLogin/loginWithGoogle_button.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/fromLogin/register_button.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/fromLogin/restore_pass_button.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/formLogin/loginWithGoogle_button.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/formLogin/register_button.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/formLogin/restore_pass_button.dart';
 import 'package:go_router/go_router.dart';
 import 'login_textfield.dart';
 import 'login_button.dart';
@@ -152,9 +152,11 @@ class _LoginFormState extends State<LoginForm> {
                                           );
                                     } else {
                                       ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  'Las contraseñas no coinciden.')));
+                                          .showSnackBar(SnackBar(
+                                        content: Text(
+                                            AppLocalizations.of(context)!
+                                                .password_dont_match),
+                                      ));
                                     }
                                   } else if (isRestoreMode) {
                                     context.read<LoginBloc>().add(

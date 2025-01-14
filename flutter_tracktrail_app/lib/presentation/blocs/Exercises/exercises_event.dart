@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_tracktrail_app/domain/entities/Exercises_entity.dart';
+import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 
 abstract class ExercisesEvent extends Equatable {
   @override

@@ -54,12 +54,14 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 },
               ),
               TextFormField(
-                decoration:
-                    const InputDecoration(labelText: 'Duración (minutos)'),
+                decoration: const InputDecoration(labelText: 'Duración (Dias)'),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor ingrese la duración';
+                  }
+                  if (int.tryParse(value) == null) {
+                    return 'Por favor ingrese un número válido';
                   }
                   return null;
                 },

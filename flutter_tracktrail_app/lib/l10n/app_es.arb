@@ -1,0 +1,7 @@
+{
+  "title": "¡Hola, Mundo!",
+  "changeLanguage": "Cambiar Idioma",
+  "password_dont_match": "Las contraseñas no coinciden",
+  "password_required": "La contraseña es requerida",
+  "restore_password": "Recuperar contraseña"
+}

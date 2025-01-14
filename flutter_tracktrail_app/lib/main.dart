@@ -6,9 +6,13 @@ import 'package:flutter_tracktrail_app/firebase_options.dart';
 import 'package:flutter_tracktrail_app/injection.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/language/language_state.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,13 +35,29 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => sl<ExercisesBloc>()),
         BlocProvider(create: (_) => sl<RoutineExercisesBloc>()),
         BlocProvider(create: (_) => sl<UserBloc>()),
+        BlocProvider(create: (_) => sl<LanguageBloc>())
       ],
-      child: MaterialApp.router(
-        routerConfig: router,
-        debugShowCheckedModeBanner: false,
-        title: 'ProyectoFinal tracktrail',
-        theme: ThemeData(primarySwatch: Colors.blue),
-      ),
+      child:
+          BlocBuilder<LanguageBloc, LanguageState>(builder: (context, state) {
+        return MaterialApp.router(
+          routerConfig: router,
+          debugShowCheckedModeBanner: false,
+          title: 'ProyectoFinal tracktrail',
+          theme: ThemeData(primarySwatch: Colors.blue),
+          locale: state.locale,
+          supportedLocales: const [
+            Locale('en'),
+            Locale('es'),
+            Locale('fr'),
+          ],
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+        );
+      }),
     );
   }
 }

@@ -34,6 +34,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/update_user_in_database_u
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
@@ -60,7 +61,7 @@ Future<void> configureDependencies() async {
   sl.registerFactory<UserBloc>(() => UserBloc(
         sl(),
       ));
-
+  sl.registerFactory<LanguageBloc>(() => LanguageBloc());
   // SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);

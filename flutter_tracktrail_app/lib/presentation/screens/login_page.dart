@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/fromLogin/background_image.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/fromLogin/login_form.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/formLogin/background_image.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/formLogin/login_form.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});

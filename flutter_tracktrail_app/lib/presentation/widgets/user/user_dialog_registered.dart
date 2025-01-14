@@ -36,12 +36,12 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
                   color: Colors.blue),
             ),
             const SizedBox(height: 20),
-            _buildTextField(_nameController, "Nombre"),
-            _buildTextField(_surnameController, "Apellido"),
-            _buildTextField(_weightController, "Peso"),
-            _buildTextField(_dobController, "Fecha de Nacimiento"),
-            _buildTextField(_sexController, "Sexo"),
-            _buildTextField(_heightController, "Altura"),
+            _buildTextField(_nameController, "Nombre", false),
+            _buildTextField(_surnameController, "Apellido", false),
+            _buildTextField(_weightController, "Peso", true),
+            _buildTextField(_dobController, "Fecha de Nacimiento", false),
+            _buildTextField(_sexController, "Sexo", false),
+            _buildTextField(_heightController, "Altura", true),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
@@ -62,11 +62,49 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
 
                 final name = _nameController.text;
                 final surname = _surnameController.text;
-                final weight = double.tryParse(_weightController.text) ?? 0.0;
-                final dob =
-                    DateTime.tryParse(_dobController.text) ?? DateTime.now();
+                final weightText = _weightController.text;
+                final dobText = _dobController.text;
                 final sex = _sexController.text;
-                final height = double.tryParse(_heightController.text) ?? 0.0;
+                final heightText = _heightController.text;
+
+                if (name.isEmpty ||
+                    surname.isEmpty ||
+                    sex.isEmpty ||
+                    weightText.isEmpty ||
+                    heightText.isEmpty ||
+                    dobText.isEmpty) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text("Por favor complete todos los campos")),
+                    );
+                  }
+                  return;
+                }
+
+                double? weight = double.tryParse(weightText);
+                if (weight == null || weight <= 0) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text("Por favor ingrese un peso válido")),
+                    );
+                  }
+                  return;
+                }
+
+                double? height = double.tryParse(heightText);
+                if (height == null || height <= 0) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text("Por favor ingrese una altura válida")),
+                    );
+                  }
+                  return;
+                }
+
+                DateTime? dob = DateTime.tryParse(dobText);
 
                 final updateEvent = UpdateUserDataEvent(
                   email: email,
@@ -94,7 +132,8 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label) {
+  Widget _buildTextField(
+      TextEditingController controller, String label, bool isNumber) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: TextField(
@@ -105,6 +144,7 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
             borderRadius: BorderRadius.circular(8),
           ),
         ),
+        keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       ),
     );
   }
