@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserInfoDialog extends StatefulWidget {
   const UserInfoDialog({super.key});
@@ -28,20 +29,26 @@ class _UserInfoDialogState extends State<UserInfoDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Bienvenido a TrackTrail, para desbloquear todas las funciones completa la configuración inicial",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.welcomee,
+              style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue),
             ),
             const SizedBox(height: 20),
-            _buildTextField(_nameController, "Nombre", false),
-            _buildTextField(_surnameController, "Apellido", false),
-            _buildTextField(_weightController, "Peso", true),
-            _buildTextField(_dobController, "Fecha de Nacimiento", false),
-            _buildTextField(_sexController, "Sexo", false),
-            _buildTextField(_heightController, "Altura", true),
+            _buildTextField(
+                _nameController, AppLocalizations.of(context)!.name, false),
+            _buildTextField(_surnameController,
+                AppLocalizations.of(context)!.surname, false),
+            _buildTextField(
+                _weightController, AppLocalizations.of(context)!.weight, true),
+            _buildTextField(_dobController,
+                AppLocalizations.of(context)!.date_of_birth, false),
+            _buildTextField(
+                _sexController, AppLocalizations.of(context)!.sex, false),
+            _buildTextField(
+                _heightController, AppLocalizations.of(context)!.height, true),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {

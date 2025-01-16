@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditExerciseDialog extends StatefulWidget {
   final ExerciseEntity exercise;
@@ -25,21 +26,21 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Editar Ejercicio'),
+      title: Text(AppLocalizations.of(context)!.edit_exercise),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: 'Nombre del ejercicio',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.exercise_name,
             ),
           ),
           const SizedBox(height: 10),
           TextField(
             controller: _descriptionController,
-            decoration: const InputDecoration(
-              labelText: 'Descripción del ejercicio',
+            decoration: InputDecoration(
+              labelText: AppLocalizations.of(context)!.exercise_description,
             ),
           ),
         ],
@@ -49,7 +50,7 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancelar'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
           onPressed: () {
@@ -68,12 +69,13 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Por favor, complete todos los campos.')),
+                SnackBar(
+                    content:
+                        Text(AppLocalizations.of(context)!.error_fields_empty)),
               );
             }
           },
-          child: const Text('Guardar'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

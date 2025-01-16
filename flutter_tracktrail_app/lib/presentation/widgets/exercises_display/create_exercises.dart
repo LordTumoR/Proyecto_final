@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreateExerciseDrawer extends StatelessWidget {
   final int routineId;
@@ -20,28 +21,31 @@ class CreateExerciseDrawer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Crear nuevo ejercicio',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.create_exercise,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _nameController,
-              decoration:
-                  const InputDecoration(labelText: 'Nombre del ejercicio'),
+              decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.exercise_name),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Por favor ingrese el nombre';
+                  return AppLocalizations.of(context)!.error_exercise_name;
                 }
                 return null;
               },
             ),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(labelText: 'Descripción'),
+              decoration: InputDecoration(
+                  labelText:
+                      AppLocalizations.of(context)!.exercise_description),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Por favor ingrese la descripción';
+                  return AppLocalizations.of(context)!
+                      .error_exercise_description;
                 }
                 return null;
               },
@@ -60,7 +64,7 @@ class CreateExerciseDrawer extends StatelessWidget {
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Crear Ejercicio'),
+              child: Text(AppLocalizations.of(context)!.create_exercise_button),
             ),
           ],
         ),

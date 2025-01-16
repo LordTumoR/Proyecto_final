@@ -7,6 +7,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_even
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/exercisesTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/MisRutinasTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/edit_routine.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ExercisesMenu extends StatefulWidget {
   final RoutineEntity routine;
@@ -35,7 +36,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(255, 42, 168, 3),
           title: Text(
-            'Ejercicios de  $name',
+            '${AppLocalizations.of(context)!.exercises_of} $name',
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -49,15 +50,15 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
               },
             ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             indicatorColor: Colors.white,
             indicatorWeight: 4.0,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
             tabs: [
               Tab(
-                icon: Icon(Icons.fitness_center, size: 30),
-                text: "Mis Ejercicios",
+                icon: const Icon(Icons.fitness_center, size: 30),
+                text: AppLocalizations.of(context)!.my_exercises,
               ),
             ],
           ),
@@ -76,12 +77,13 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Modificar Rutina: ${widget.routine.name}'),
+          title: Text(
+              '${AppLocalizations.of(context)!.modify_routine}: ${widget.routine.name}'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('Modificar Rutina'),
+                title: Text(AppLocalizations.of(context)!.modify_routine),
                 leading: const Icon(Icons.edit),
                 onTap: () {
                   Navigator.pop(context);
@@ -94,7 +96,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
                 },
               ),
               ListTile(
-                title: const Text('Eliminar Rutina'),
+                title: Text(AppLocalizations.of(context)!.delete_routine),
                 leading: const Icon(Icons.delete),
                 onTap: () {
                   Navigator.pop(context);
@@ -116,7 +118,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
                   ),
                 );
               },
-              child: const Text('Cancelar'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
           ],
         );

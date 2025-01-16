@@ -7,6 +7,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/rout
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/create_exercises.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/edit_exercise.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ExercisesTab extends StatefulWidget {
   final int routineId;
@@ -46,7 +47,7 @@ class _ExercisesTabState extends State<ExercisesTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Ejercicios de rutina'),
+        title: Text(AppLocalizations.of(context)!.exercises_of_routine),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -57,7 +58,7 @@ class _ExercisesTabState extends State<ExercisesTab> {
             } else if (state.errorMessage != null) {
               return Center(
                 child: Text(
-                  'Error: ${state.errorMessage}',
+                  '${AppLocalizations.of(context)!.error}: ${state.errorMessage}',
                   style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
               );
@@ -135,15 +136,18 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return AlertDialog(
-                                    title: const Text('Confirmar eliminación'),
-                                    content: const Text(
-                                        '¿Estás seguro de que deseas eliminar este ejercicio?'),
+                                    title: Text(AppLocalizations.of(context)!
+                                        .confirm_deletion),
+                                    content: Text(AppLocalizations.of(context)!
+                                        .confirm_exercise_deletion),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: const Text('Cancelar'),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .cancel),
                                       ),
                                       TextButton(
                                         onPressed: () {
@@ -160,7 +164,9 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                               );
                                           Navigator.of(context).pop();
                                         },
-                                        child: const Text('Eliminar'),
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .delete),
                                       ),
                                     ],
                                   );
@@ -177,7 +183,9 @@ class _ExercisesTabState extends State<ExercisesTab> {
               );
             }
 
-            return const Center(child: Text('No hay ejercicios disponibles.'));
+            return Center(
+                child:
+                    Text(AppLocalizations.of(context)!.no_exercises_available));
           },
         ),
       ),

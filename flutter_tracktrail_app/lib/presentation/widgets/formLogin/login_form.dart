@@ -78,27 +78,27 @@ class _LoginFormState extends State<LoginForm> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         if (isRestoreMode == true) ...[
-                          const Text(
-                            'RECUPERAR CONTRASEÑA',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.recover_password,
+                            style: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
                               color: Color.fromARGB(255, 1, 1, 1),
                             ),
                           ),
                         ] else if (isRegisterMode == true) ...[
-                          const Text(
-                            'REGISTER',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.register,
+                            style: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
                               color: Color.fromARGB(255, 1, 1, 1),
                             ),
                           ),
                         ] else ...[
-                          const Text(
-                            'LOGIN',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.login,
+                            style: const TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
                               color: Color.fromARGB(255, 1, 1, 1),
@@ -107,7 +107,7 @@ class _LoginFormState extends State<LoginForm> {
                         ],
                         LoginTextField(
                           controller: emailController,
-                          hintText: 'Email...',
+                          hintText: AppLocalizations.of(context)!.email_hint,
                           icon: Icons.email_outlined,
                           isPassword: false,
                         ),
@@ -115,7 +115,8 @@ class _LoginFormState extends State<LoginForm> {
                         if (!isRestoreMode) ...[
                           LoginTextField(
                             controller: passwordController,
-                            hintText: 'Password...',
+                            hintText:
+                                AppLocalizations.of(context)!.password_hint,
                             icon: Icons.lock_outline,
                             isPassword: true,
                           ),
@@ -124,7 +125,8 @@ class _LoginFormState extends State<LoginForm> {
                         if (isRegisterMode) ...[
                           LoginTextField(
                             controller: repitepasswordController,
-                            hintText: 'Repite Password...',
+                            hintText: AppLocalizations.of(context)!
+                                .repeat_password_hint,
                             icon: Icons.lock_clock_sharp,
                             isPassword: true,
                           ),
@@ -177,10 +179,13 @@ class _LoginFormState extends State<LoginForm> {
                                   }
                                 },
                                 buttonText: isRegisterMode
-                                    ? 'Register'
+                                    ? AppLocalizations.of(context)!
+                                        .register_button
                                     : (isRestoreMode
-                                        ? 'Enviar email'
-                                        : 'Login'),
+                                        ? AppLocalizations.of(context)!
+                                            .send_email
+                                        : AppLocalizations.of(context)!
+                                            .login_button),
                               ),
                             ),
                             const SizedBox(width: 10),
@@ -204,9 +209,9 @@ class _LoginFormState extends State<LoginForm> {
                         ),
                         const SizedBox(height: 20),
                         if (state.errorMessage != null && !isRegisterMode) ...[
-                          const Text(
-                            'SI NO DISPONES DE CUENTA PUEDES CREAR UNA O INICIAR SESION CON GOOGLE:',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.no_account_message,
+                            style: const TextStyle(
                               color: Color.fromARGB(255, 0, 0, 0),
                               fontSize: 20,
                             ),

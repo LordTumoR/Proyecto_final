@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CreateRoutineForm extends StatefulWidget {
   @override
@@ -21,7 +22,7 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Crear Rutina'),
+        title: Text(AppLocalizations.of(context)!.create_routine),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -30,10 +31,11 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
           child: Column(
             children: [
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Nombre'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.name),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese un nombre';
+                    return AppLocalizations.of(context)!.name_required;
                   }
                   return null;
                 },
@@ -42,10 +44,11 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Objetivo'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.goal),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese un objetivo';
+                    return AppLocalizations.of(context)!.goal_required;
                   }
                   return null;
                 },
@@ -54,14 +57,15 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Duración (Dias)'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.duration),
                 keyboardType: TextInputType.number,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese la duración';
+                    return AppLocalizations.of(context)!.duration_required;
                   }
                   if (int.tryParse(value) == null) {
-                    return 'Por favor ingrese un número válido';
+                    return AppLocalizations.of(context)!.valid_number;
                   }
                   return null;
                 },
@@ -70,7 +74,7 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 },
               ),
               CheckboxListTile(
-                title: const Text('Privada'),
+                title: Text(AppLocalizations.of(context)!.private),
                 value: _isPrivate,
                 onChanged: (value) {
                   setState(() {
@@ -79,7 +83,8 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 },
               ),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Dificultad'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.difficulty),
                 value: _difficulty,
                 items: const [
                   DropdownMenuItem(value: 'Easy', child: Text('Easy')),
@@ -88,7 +93,7 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 ],
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor seleccione una dificultad';
+                    return AppLocalizations.of(context)!.select_difficulty;
                   }
                   return null;
                 },
@@ -102,10 +107,11 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                 },
               ),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Progreso'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.progress),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor ingrese el progreso';
+                    return AppLocalizations.of(context)!.progress_required;
                   }
                   return null;
                 },
@@ -135,7 +141,7 @@ class _CreateRoutineFormState extends State<CreateRoutineForm> {
                     Navigator.of(context).pop();
                   }
                 },
-                child: const Text('Crear'),
+                child: Text(AppLocalizations.of(context)!.create),
               ),
             ],
           ),

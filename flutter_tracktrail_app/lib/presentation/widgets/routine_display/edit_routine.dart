@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditRoutineDialog extends StatefulWidget {
   final int routineId;
@@ -23,34 +24,38 @@ class _EditRoutineDialogState extends State<EditRoutineDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Editar Rutina'),
+      title: Text(AppLocalizations.of(context)!.edit_routine),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Nombre de la rutina'),
+            decoration:
+                InputDecoration(labelText: AppLocalizations.of(context)!.name),
           ),
           TextField(
             controller: _goalController,
             decoration:
-                const InputDecoration(labelText: 'Objetivo de la rutina'),
+                InputDecoration(labelText: AppLocalizations.of(context)!.goal),
           ),
           TextField(
             controller: _durationController,
-            decoration: const InputDecoration(labelText: 'Duración'),
+            decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.duration),
             keyboardType: TextInputType.number,
           ),
           TextField(
             controller: _difficultyController,
-            decoration: const InputDecoration(labelText: 'Dificultad'),
+            decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.difficulty),
           ),
           TextField(
             controller: _progressController,
-            decoration: const InputDecoration(labelText: 'Progreso'),
+            decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.progress),
           ),
           SwitchListTile(
-            title: const Text('Privada'),
+            title: Text(AppLocalizations.of(context)!.private),
             value: _isPrivate,
             onChanged: (bool value) {
               setState(() {
@@ -65,7 +70,7 @@ class _EditRoutineDialogState extends State<EditRoutineDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancelar'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
           onPressed: () {
@@ -88,7 +93,7 @@ class _EditRoutineDialogState extends State<EditRoutineDialog> {
 
             Navigator.of(context).pop();
           },
-          child: const Text('Guardar'),
+          child: Text(AppLocalizations.of(context)!.save),
         ),
       ],
     );

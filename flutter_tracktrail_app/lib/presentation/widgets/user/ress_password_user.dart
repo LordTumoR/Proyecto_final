@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RessPasswordDialog extends StatefulWidget {
   @override
@@ -14,12 +15,12 @@ class _RessPasswordDialogState extends State<RessPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Recuperar Contraseña'),
+      title: Text(AppLocalizations.of(context)!.reset_password),
       content: TextField(
         controller: _emailController,
-        decoration: const InputDecoration(
-          labelText: 'Email',
-          hintText: 'Introduce tu email',
+        decoration: InputDecoration(
+          labelText: AppLocalizations.of(context)!.email,
+          hintText: AppLocalizations.of(context)!.enter_your_email,
         ),
         keyboardType: TextInputType.emailAddress,
       ),
@@ -28,7 +29,7 @@ class _RessPasswordDialogState extends State<RessPasswordDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: const Text('Cancelar'),
+          child: Text(AppLocalizations.of(context)!.cancel),
         ),
         TextButton(
           onPressed: () {
@@ -40,12 +41,13 @@ class _RessPasswordDialogState extends State<RessPasswordDialog> {
               Navigator.of(context).pop();
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('Por favor, introduce un email válido')),
+                SnackBar(
+                    content: Text(AppLocalizations.of(context)!
+                        .please_enter_valid_email)),
               );
             }
           },
-          child: const Text('Aceptar'),
+          child: Text(AppLocalizations.of(context)!.accept),
         ),
       ],
     );

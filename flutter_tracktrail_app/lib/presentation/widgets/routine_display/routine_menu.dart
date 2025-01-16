@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/MisRutinasTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/TabContent.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RoutineMenu extends StatefulWidget {
   @override
@@ -23,30 +24,30 @@ class _RoutineMenuState extends State<RoutineMenu> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.deepPurple,
-          title: const Text(
-            'Rutinas',
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.of(context)!.routines,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
-          bottom: const TabBar(
+          bottom: TabBar(
             indicatorColor: Colors.white,
             indicatorWeight: 4.0,
             labelColor: Colors.white,
             unselectedLabelColor: Colors.white70,
             tabs: [
               Tab(
-                icon: Icon(Icons.fitness_center, size: 30),
-                text: "Mis Rutinas",
+                icon: const Icon(Icons.fitness_center, size: 30),
+                text: AppLocalizations.of(context)!.my_routines,
               ),
               Tab(
-                icon: Icon(Icons.search, size: 30),
-                text: "Buscar Rutinas",
+                icon: const Icon(Icons.search, size: 30),
+                text: AppLocalizations.of(context)!.search_routines,
               ),
               Tab(
-                icon: Icon(Icons.favorite, size: 30),
-                text: "Favoritas",
+                icon: const Icon(Icons.favorite, size: 30),
+                text: AppLocalizations.of(context)!.favorites,
               ),
             ],
           ),
@@ -54,15 +55,15 @@ class _RoutineMenuState extends State<RoutineMenu> {
         body: TabBarView(
           children: [
             MisRutinasTab(),
-            const TabContent(
-              title: 'Buscar Rutinas',
+            TabContent(
+              title: AppLocalizations.of(context)!.search_routines,
               icon: Icons.search,
-              content: 'Busca nuevas rutinas para tu entrenamiento.',
+              content: AppLocalizations.of(context)!.search_new_routines,
             ),
-            const TabContent(
-              title: 'Favoritas',
+            TabContent(
+              title: AppLocalizations.of(context)!.favorites,
               icon: Icons.favorite,
-              content: 'Tus rutinas favoritas estarán aquí.',
+              content: AppLocalizations.of(context)!.your_favorite_routines,
             ),
           ],
         ),

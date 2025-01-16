@@ -7,6 +7,7 @@ import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/ex
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/create_routine_form.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/filter_routine_form.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/progress_dialog.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MisRutinasTab extends StatefulWidget {
   @override
@@ -24,7 +25,9 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.create_and_filter_routines),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<RoutinesBloc, RoutinesState>(
@@ -133,7 +136,9 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
               );
             }
 
-            return const Center(child: Text('No hay rutinas disponibles.'));
+            return Center(
+                child:
+                    Text(AppLocalizations.of(context)!.no_routines_available));
           },
         ),
       ),

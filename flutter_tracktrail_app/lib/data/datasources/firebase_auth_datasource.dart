@@ -31,7 +31,7 @@ class FirebaseAuthDataSource {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       final response = await http.post(
-        Uri.parse('http://10.250.79.59:8080/users'),
+        Uri.parse('http://10.250.77.44:8080/users'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -109,7 +109,7 @@ class FirebaseAuthDataSource {
     if (avatar != null && avatar.isNotEmpty) body['avatar'] = avatar;
 
     final response = await http.put(
-      Uri.parse('http://10.250.79.59:8080/users/$userId'),
+      Uri.parse('http://10.250.77.44:8080/users/$userId'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -132,7 +132,7 @@ class FirebaseAuthDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await http.get(
-      Uri.parse('http://10.250.79.59:8080/users'),
+      Uri.parse('http://10.250.77.44:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

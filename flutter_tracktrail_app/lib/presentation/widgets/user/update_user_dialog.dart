@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UpdateInfoDialog extends StatefulWidget {
   final VoidCallback onInfoUpdated;
@@ -31,20 +32,25 @@ class _UpdateInfoDialogState extends State<UpdateInfoDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Modificar Información Usuario",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.update_user_info,
+              style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue),
             ),
             const SizedBox(height: 20),
-            _buildTextField(_nameController, "Nombre"),
-            _buildTextField(_surnameController, "Apellido"),
-            _buildTextField(_weightController, "Peso"),
-            _buildTextField(_avatarController, "Avatar"),
-            _buildTextField(_sexController, "Sexo"),
-            _buildTextField(_heightController, "Altura"),
+            _buildTextField(
+                _nameController, AppLocalizations.of(context)!.name),
+            _buildTextField(
+                _surnameController, AppLocalizations.of(context)!.surname),
+            _buildTextField(
+                _weightController, AppLocalizations.of(context)!.weight),
+            _buildTextField(
+                _avatarController, AppLocalizations.of(context)!.avatar),
+            _buildTextField(_sexController, AppLocalizations.of(context)!.sex),
+            _buildTextField(
+                _heightController, AppLocalizations.of(context)!.height),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
@@ -55,9 +61,9 @@ class _UpdateInfoDialogState extends State<UpdateInfoDialog> {
                 if (email.isEmpty) {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content:
-                              Text("No se encontró el correo electrónico")),
+                      SnackBar(
+                          content: Text(
+                              AppLocalizations.of(context)!.no_email_found)),
                     );
                   }
                   return;
@@ -86,7 +92,7 @@ class _UpdateInfoDialogState extends State<UpdateInfoDialog> {
                 }
                 widget.onInfoUpdated();
               },
-              child: const Text("Guardar"),
+              child: Text(AppLocalizations.of(context)!.save),
             ),
           ],
         ),

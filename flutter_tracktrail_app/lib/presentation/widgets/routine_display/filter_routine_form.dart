@@ -1,5 +1,5 @@
 // ignore_for_file: library_private_types_in_public_api, use_key_in_widget_constructors
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
@@ -42,22 +42,19 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
             children: [
               _buildTextField(
                 controller: _nameController,
-                label: 'Nombre',
-                validatorMessage: 'Por favor ingrese un nombre',
+                label: AppLocalizations.of(context)!.name,
               ),
               _buildTextField(
                 controller: _goalController,
-                label: 'Objetivo',
-                validatorMessage: 'Por favor ingrese un objetivo',
+                label: AppLocalizations.of(context)!.goal,
               ),
               _buildTextField(
                 controller: _durationController,
-                label: 'Duración (Dias)',
-                validatorMessage: 'Por favor ingrese la duración',
+                label: AppLocalizations.of(context)!.duration,
                 keyboardType: TextInputType.number,
               ),
               CheckboxListTile(
-                title: const Text('Privada'),
+                title: Text(AppLocalizations.of(context)!.private),
                 value: _isPrivate,
                 onChanged: (value) {
                   setState(() {
@@ -66,7 +63,8 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
                 },
               ),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: 'Dificultad'),
+                decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.difficulty),
                 value: _difficulty.isEmpty ? null : _difficulty,
                 items: const [
                   DropdownMenuItem(value: 'Easy', child: Text('Easy')),
@@ -84,7 +82,7 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
               ),
               ElevatedButton(
                 onPressed: _onFilter,
-                child: const Text('Filtrar Rutinas'),
+                child: Text(AppLocalizations.of(context)!.filter_routines),
               ),
             ],
           ),
@@ -96,14 +94,12 @@ class _FilterRoutineFormState extends State<FilterRoutineForm> {
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
-    required String validatorMessage,
     TextInputType keyboardType = TextInputType.text,
   }) {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(labelText: label),
       keyboardType: keyboardType,
-      validator: (value) {},
     );
   }
 

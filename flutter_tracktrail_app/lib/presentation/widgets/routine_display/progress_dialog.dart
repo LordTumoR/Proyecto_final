@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProgressDialog extends StatelessWidget {
   final int routineId;
@@ -15,7 +16,7 @@ class ProgressDialog extends StatelessWidget {
         .add(FetchCompletionPercentageEvent(routineId));
 
     return AlertDialog(
-      title: const Text('METAS Y PROGRESO'),
+      title: Text(AppLocalizations.of(context)!.goals_and_progress),
       content: BlocBuilder<RoutinesBloc, RoutinesState>(
         builder: (context, state) {
           final completionPercentage = state.completionPercentage ?? 0.0;
@@ -25,7 +26,7 @@ class ProgressDialog extends StatelessWidget {
           }
 
           return Text(
-            "Porcentaje completado: $completionPercentage%",
+            "${AppLocalizations.of(context)!.completion_percentage}: $completionPercentage%",
             style: const TextStyle(fontSize: 18),
           );
         },
@@ -37,7 +38,7 @@ class ProgressDialog extends StatelessWidget {
                 .add(FetchUserRoutinesEvent(filters: {}));
             Navigator.of(context).pop();
           },
-          child: const Text('Cerrar'),
+          child: Text(AppLocalizations.of(context)!.close),
         ),
       ],
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/domain/entities/user_database_entity.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PersonalInfoDialog extends StatelessWidget {
   final UserDatabaseEntity user;
@@ -15,30 +16,33 @@ class PersonalInfoDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Información del Usuario",
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.user_info,
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.blue,
               ),
             ),
             const SizedBox(height: 20),
-            _buildInfoRow("Nombre:", user.name),
-            _buildInfoRow("Apellido:", user.surname),
-            _buildInfoRow("Correo:", user.email),
-            _buildInfoRow("Peso:", "${user.weight} kg"),
+            _buildInfoRow(AppLocalizations.of(context)!.name, user.name),
+            _buildInfoRow(AppLocalizations.of(context)!.surname, user.surname),
+            _buildInfoRow(AppLocalizations.of(context)!.email, user.email),
             _buildInfoRow(
-                "Fecha de Nacimiento:", _formatDate(user.dateOfBirth)),
-            _buildInfoRow("Sexo:", user.sex),
-            _buildInfoRow("Altura:", "${user.height} cm"),
-            _buildInfoRow("Avatar:", user.avatar ?? "No disponible"),
+                AppLocalizations.of(context)!.weight, "${user.weight} kg"),
+            _buildInfoRow(AppLocalizations.of(context)!.date_of_birth,
+                _formatDate(user.dateOfBirth)),
+            _buildInfoRow(AppLocalizations.of(context)!.sex, user.sex),
+            _buildInfoRow(
+                AppLocalizations.of(context)!.height, "${user.height} cm"),
+            _buildInfoRow(AppLocalizations.of(context)!.avatar,
+                user.avatar ?? AppLocalizations.of(context)!.not_available),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text("Cerrar"),
+              child: Text(AppLocalizations.of(context)!.close),
             ),
           ],
         ),
