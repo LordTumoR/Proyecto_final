@@ -86,6 +86,9 @@
   "confirm_exercise_deletion": "¿Estás seguro de que deseas eliminar este ejercicio?",
   "cancel": "Cancelar",
   "delete": "Eliminar",
-  "no_exercises_available": "No hay ejercicios disponibles"
-
+  "no_exercises_available": "No hay ejercicios disponibles",
+  "nutrition": "Nutrición",
+  "progresss": "Progreso",
+  "routes_and_maps": "Rutas Y Mapas",
+  "change_language": "Cambiar idioma"
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_state.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/user/change_language.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/personal_info_drawer.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/ress_password_user.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/update_user_dialog.dart';
@@ -134,6 +135,19 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   context: context,
                   builder: (BuildContext context) {
                     return RessPasswordDialog();
+                  },
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.language, color: Colors.white),
+              title: Text(AppLocalizations.of(context)!.change_language,
+                  style: const TextStyle(color: Colors.white)),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return LanguageDialog();
                   },
                 );
               },

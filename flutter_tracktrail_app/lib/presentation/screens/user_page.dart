@@ -8,7 +8,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_state.dart'
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/routine_menu.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/custom_user_drawer.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/user_dialog_registered.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:go_router/go_router.dart';
 
@@ -203,15 +203,15 @@ class _UserPageState extends State<UserPage> {
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.restaurant,
+                              const Icon(Icons.restaurant,
                                   size: 50, color: Colors.white),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
-                                'Nutrición',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.nutrition,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -251,15 +251,15 @@ class _UserPageState extends State<UserPage> {
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.show_chart,
+                              const Icon(Icons.show_chart,
                                   size: 50, color: Colors.white),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               Text(
-                                'Progreso',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.progresss,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
@@ -299,14 +299,15 @@ class _UserPageState extends State<UserPage> {
                             ),
                             borderRadius: BorderRadius.circular(15),
                           ),
-                          child: const Column(
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.map, size: 50, color: Colors.white),
-                              SizedBox(height: 10),
+                              const Icon(Icons.map,
+                                  size: 50, color: Colors.white),
+                              const SizedBox(height: 10),
                               Text(
-                                'Rutas y Mapas',
-                                style: TextStyle(
+                                AppLocalizations.of(context)!.routes_and_maps,
+                                style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
