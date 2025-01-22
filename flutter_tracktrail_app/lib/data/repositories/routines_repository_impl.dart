@@ -23,6 +23,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
           difficulty: routine.difficulty,
           progress: routine.progress,
           idUser: routine.idUser,
+          imageUrl: routine.imageUrl,
         );
       }).toList();
 
@@ -43,6 +44,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
     String? difficulty,
     String? progress,
     int? routineId,
+    String? imageUrl,
   ) async {
     try {
       final routine = await dataSource.createRoutine(
@@ -53,6 +55,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
         difficulty ?? '',
         progress ?? '',
         routineId ?? 0,
+        imageUrl ?? '',
       );
 
       final routineEntity = RoutineEntity(
@@ -64,6 +67,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
         difficulty: routine.difficulty,
         progress: routine.progress,
         idUser: routine.idUser,
+        imageUrl: routine.imageUrl,
       );
       return Right(routineEntity);
     } catch (e) {
@@ -88,6 +92,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
           difficulty: routine.difficulty,
           progress: routine.progress,
           idUser: routine.idUser,
+          imageUrl: routine.imageUrl,
         );
       }).toList();
 

@@ -1,22 +1,28 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_tracktrail_app/data/datasources/exercises_datasource.dart';
+import 'package:flutter_tracktrail_app/data/datasources/files_firebase_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/firebase_auth_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routine_exercises_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routines_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/users_datasource.dart';
 import 'package:flutter_tracktrail_app/data/repositories/exercise_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/get_users_info_repository_impl.dart';
+import 'package:flutter_tracktrail_app/data/repositories/image_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/routine_exercise_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/routines_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/sign_in_repository_impl.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/exercises_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/get_users_info_repository.dart';
+import 'package:flutter_tracktrail_app/domain/repositories/image_repositoriy.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routine_exercise_reporitory.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/add_routine_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/create_routine_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/delete_exrcise_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/delete_image_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/delete_routine_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/fetch_image_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_completion_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
@@ -31,9 +37,11 @@ import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/update_completed_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/update_user_in_database_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/upload_image_usecase.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/image/image_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
@@ -49,6 +57,11 @@ Future<void> configureDependencies() async {
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
+  sl.registerFactory(() => ImageBloc(
+        fetchImagesUseCase: sl(),
+        uploadImageUseCase: sl(),
+        deleteImageUseCase: sl(),
+      ));
   sl.registerFactory<RoutinesBloc>(
     () => RoutinesBloc(sl(), sl(), sl(), sl(), sl()),
   );
@@ -68,6 +81,7 @@ Future<void> configureDependencies() async {
 
   // Firebase Auth
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
+  sl.registerLazySingleton(() => FirebaseStorage.instance);
 
   sl.registerLazySingleton<http.Client>(() => http.Client());
 
@@ -87,11 +101,17 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<UserRemoteDataSource>(
     () => UserRemoteDataSourceImpl(sl<http.Client>()),
   );
+  sl.registerLazySingleton<FirebaseStorageDataSource>(
+    () => FirebaseStorageDataSourceImpl(storage: sl()),
+  );
 
   // Repositories
   sl.registerLazySingleton<SignInRepository>(
     () => SignInRepositoryImpl(
         sl<FirebaseAuthDataSource>(), sl<SharedPreferences>()),
+  );
+  sl.registerLazySingleton<ImageRepository>(
+    () => ImageRepositoryImpl(dataSource: sl()),
   );
   sl.registerLazySingleton<RoutinesRepository>(
     () => RoutinesRepositoryImpl(sl<RoutineRemoteDataSource>()),
@@ -115,6 +135,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<DeleteExerciseUseCase>(
     () => DeleteExerciseUseCase(sl()),
   );
+  sl.registerLazySingleton(() => FetchImagesUseCase(sl()));
+  sl.registerLazySingleton(() => UploadImageUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteImageUseCase(sl()));
   sl.registerLazySingleton<DeleteRoutineUseCase>(
     () => DeleteRoutineUseCase(sl()),
   );

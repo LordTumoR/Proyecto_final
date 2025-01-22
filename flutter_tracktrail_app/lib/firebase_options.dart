@@ -63,6 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '299432086695',
     projectId: 'tracktraillogin',
     storageBucket: 'tracktraillogin.firebasestorage.app',
+    androidClientId: '299432086695-h5lshjo7kfdmj776cfih1ab072em9nqc.apps.googleusercontent.com',
+    iosClientId: '299432086695-mn4jrvcnfgou452u04580roa9927ath2.apps.googleusercontent.com',
     iosBundleId: 'com.app.tracktrail',
   );
 
@@ -72,6 +74,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '299432086695',
     projectId: 'tracktraillogin',
     storageBucket: 'tracktraillogin.firebasestorage.app',
+    androidClientId: '299432086695-h5lshjo7kfdmj776cfih1ab072em9nqc.apps.googleusercontent.com',
+    iosClientId: '299432086695-453po6eeanki1bf9jllmvk62t3a1vkek.apps.googleusercontent.com',
     iosBundleId: 'com.example.flutterFirebaseLogin',
   );
 
@@ -83,4 +87,5 @@ class DefaultFirebaseOptions {
     authDomain: 'tracktraillogin.firebaseapp.com',
     storageBucket: 'tracktraillogin.firebasestorage.app',
   );
+
 }

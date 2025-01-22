@@ -97,7 +97,7 @@ class _UserPageState extends State<UserPage> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: Text(
-                      'Bienvenido: $email',
+                      '${AppLocalizations.of(context)!.welcomeee}: ${email}',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

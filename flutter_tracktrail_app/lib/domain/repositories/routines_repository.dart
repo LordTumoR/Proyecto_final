@@ -11,6 +11,7 @@ abstract class RoutinesRepository {
     String? difficulty,
     String? progress,
     int? routineId,
+    String? imageUrl,
   );
   Future<Either<String, List<RoutineEntity>>> getRoutinesByUserEmail(
       String email);

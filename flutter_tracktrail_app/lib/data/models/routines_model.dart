@@ -10,6 +10,7 @@ class RoutineModel {
   final String? difficulty;
   final String? progress;
   final UserDatabaseModel? idUser;
+  final String? imageUrl;
 
   RoutineModel({
     this.idRoutine,
@@ -20,6 +21,7 @@ class RoutineModel {
     this.difficulty,
     this.progress,
     this.idUser,
+    this.imageUrl,
   });
 
   @override
@@ -39,6 +41,7 @@ class RoutineModel {
       idUser: json['user'] != null
           ? UserDatabaseModel.fromJson(json['user'])
           : null,
+      imageUrl: json['imageurl'],
     );
   }
 
@@ -52,6 +55,7 @@ class RoutineModel {
       'dificulty': difficulty,
       'progress': progress,
       'id_user': idUser?.toJson(),
+      'imageurl': imageUrl,
     };
   }
 
@@ -65,6 +69,7 @@ class RoutineModel {
       difficulty: difficulty ?? 'Unknown',
       progress: progress ?? 'Unknown',
       idUser: idUser,
+      imageUrl: imageUrl,
     );
   }
 }
