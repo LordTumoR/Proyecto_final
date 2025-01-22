@@ -1,12 +1,14 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_tracktrail_app/data/datasources/files_firebase_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routines_datasource.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.dart';
 
 class RoutinesRepositoryImpl implements RoutinesRepository {
   final RoutineRemoteDataSource dataSource;
+  final FirebaseStorageDataSource filesdatasource;
 
-  RoutinesRepositoryImpl(this.dataSource);
+  RoutinesRepositoryImpl(this.dataSource, this.filesdatasource);
 
   @override
   Future<Either<String, List<RoutineEntity>>> getRoutines() async {
@@ -121,6 +123,20 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
       return Right(completion);
     } catch (e) {
       return const Left("Error al obtener el porcentaje de completado");
+    }
+  }
+
+  @override
+  Future<Either<String, void>> saveRoutineWithImage(
+    String imageUrl,
+    String routineId,
+  ) async {
+    try {
+      filesdatasource.saveRoutineWithImage(routineId, imageUrl);
+
+      return const Right(null);
+    } catch (e) {
+      return Left("Error al guardar la rutina con la imagen: $e");
     }
   }
 }

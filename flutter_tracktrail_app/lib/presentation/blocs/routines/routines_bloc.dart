@@ -4,6 +4,8 @@ import 'package:flutter_tracktrail_app/domain/usecases/delete_routine_usecase.da
 import 'package:flutter_tracktrail_app/domain/usecases/get_completion_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/save_routine_with_image_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/upload_image_usecase.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'routines_event.dart';
@@ -14,19 +16,24 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
   final GetUserRoutinesUseCase getUserRoutinesUseCase;
   final DeleteRoutineUseCase deleteRoutineUseCase;
   final GetCompletionUseCase getCompletionPercentageUseCase;
+  final UploadImageUseCase uploadImageUseCase;
+  final SaveRoutineWithImageUseCase saveRoutineWithImageUseCase;
 
   RoutinesBloc(
-    this.getRoutinesUseCase,
-    this.createRoutineUseCase,
-    this.getUserRoutinesUseCase,
-    this.deleteRoutineUseCase,
-    this.getCompletionPercentageUseCase,
-  ) : super(RoutinesState.initial()) {
+      this.getRoutinesUseCase,
+      this.createRoutineUseCase,
+      this.getUserRoutinesUseCase,
+      this.deleteRoutineUseCase,
+      this.getCompletionPercentageUseCase,
+      this.uploadImageUseCase,
+      this.saveRoutineWithImageUseCase)
+      : super(RoutinesState.initial()) {
     on<FetchRoutinesEvent>(_onFetchRoutines);
     on<CreateRoutineEvent>(_onCreateRoutine);
     on<FetchUserRoutinesEvent>(_onFetchUserRoutines);
     on<DeleteRoutineEvent>(_onDeleteRoutine);
     on<FetchCompletionPercentageEvent>(_onFetchCompletionPercentage);
+    on<SaveRoutineWithImageEvent>(_onSaveRoutineWithImage);
   }
 
   Future<void> _onDeleteRoutine(
@@ -135,5 +142,37 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
       (percentage) =>
           emit(RoutinesState.successCompletionPercentage(percentage)),
     );
+  }
+
+  Future<void> _onSaveRoutineWithImage(
+      SaveRoutineWithImageEvent event, Emitter<RoutinesState> emit) async {
+    emit(state.copyWith(isSavingRoutine: true));
+
+    try {
+      final result =
+          await uploadImageUseCase.execute(event.file, event.fileName);
+      result.fold(
+        (error) {
+          emit(RoutinesState.saveRoutineFailure(error.toString()));
+        },
+        (imageUrl) async {
+          final saveResult = await saveRoutineWithImageUseCase.execute(
+            imageUrl: imageUrl,
+            routineId: event.routineId,
+          );
+
+          saveResult.fold(
+            (failure) {
+              emit(RoutinesState.saveRoutineFailure(failure));
+            },
+            (_) {
+              emit(RoutinesState.saveRoutineSuccess());
+            },
+          );
+        },
+      );
+    } catch (e) {
+      emit(RoutinesState.saveRoutineFailure(e.toString()));
+    }
   }
 }

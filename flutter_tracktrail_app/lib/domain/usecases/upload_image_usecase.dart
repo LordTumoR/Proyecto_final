@@ -6,7 +6,7 @@ class UploadImageUseCase {
 
   UploadImageUseCase(this.repository);
 
-  Future<Either<Exception, void>> call(dynamic file, String fileName) {
+  Future<Either<Exception, String>> execute(dynamic file, String fileName) {
     return repository.uploadImage(file, fileName);
   }
 }

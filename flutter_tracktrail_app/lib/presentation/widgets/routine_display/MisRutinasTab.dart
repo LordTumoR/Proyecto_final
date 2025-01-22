@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
@@ -15,6 +17,26 @@ class MisRutinasTab extends StatefulWidget {
 }
 
 class _MisRutinasTabState extends State<MisRutinasTab> {
+  File? _selectedImage;
+
+  Future<void> _pickImage(String routineId) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _selectedImage = File(pickedFile.path);
+      });
+      BlocProvider.of<RoutinesBloc>(context).add(
+        SaveRoutineWithImageEvent(
+          routineId: routineId,
+          file: _selectedImage!,
+          fileName: pickedFile.name,
+        ),
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -114,11 +136,27 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                 },
                               );
                             },
-                            child:
-                                Icon(Icons.percent, color: Colors.deepPurple),
+                            child: const Icon(Icons.percent,
+                                color: Colors.deepPurple),
                           ),
                           const SizedBox(width: 8.0),
                           const Icon(Icons.arrow_forward),
+                          const SizedBox(width: 8.0),
+                          GestureDetector(
+                            onTap: () => _pickImage(routine.id! as String),
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: _selectedImage == null
+                                  ? const Icon(Icons.add_a_photo)
+                                  : Image.file(_selectedImage!),
+                            ),
+                          ),
                         ],
                       ),
                       onTap: () {

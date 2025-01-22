@@ -17,4 +17,5 @@ abstract class RoutinesRepository {
       String email);
   Future<Either<String, void>> deleteRoutine(int idRoutine);
   Future<Either<String, double>> getCompletion(int routineId);
+  Future<void> saveRoutineWithImage(String imageUrl, String routineId);
 }

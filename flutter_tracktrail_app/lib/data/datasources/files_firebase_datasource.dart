@@ -6,8 +6,9 @@ import 'package:flutter/foundation.dart';
 
 abstract class FirebaseStorageDataSource {
   Future<List<Map<String, String>>> fetchImages();
-  Future<void> uploadImage(dynamic file, String fileName);
+  Future<String> uploadImage(dynamic file, String fileName);
   Future<void> deleteImage(String id);
+  Future<void> saveRoutineWithImage(String imageUrl, String routineId);
 }
 
 class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
@@ -31,7 +32,7 @@ class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
   }
 
   @override
-  Future<void> uploadImage(dynamic file, String fileName) async {
+  Future<String> uploadImage(dynamic file, String fileName) async {
     try {
       final Reference storageRef = storage.ref().child('images/$fileName');
 
@@ -54,6 +55,9 @@ class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
               'En entornos que no son web, necesitamos que el fichero sea de tipo texto');
         }
       }
+
+      final String downloadUrl = await storageRef.getDownloadURL();
+      return downloadUrl;
     } catch (e) {
       throw Exception('Error al cargar la imagen: $e');
     }
@@ -69,20 +73,14 @@ class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
     }
   }
 
-  Future<void> saveRoutineWithImage(
-      dynamic file, String fileName, String routineId) async {
+  @override
+  Future<void> saveRoutineWithImage(String imageUrl, String routineId) async {
     try {
-      final FirebaseStorageDataSource dataSource =
-          FirebaseStorageDataSourceImpl(
-        storage: FirebaseStorage.instance,
-      );
-      final imageUrl = await dataSource.uploadImage(file, fileName);
-
       final response = await http.post(
-        Uri.parse('http://10.250.77.44:8080/routines/$routineId'),
+        Uri.parse('http://192.168.1.144:8080/routines/$routineId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'imageUrl': imageUrl,
+          'imageurl': imageUrl,
         }),
       );
 

@@ -32,6 +32,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase
 import 'package:flutter_tracktrail_app/domain/usecases/get_users_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/resetPassword_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/save_routine_with_image_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_normal_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_in_user_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/sign_out_user_usecase.dart';
@@ -41,10 +42,10 @@ import 'package:flutter_tracktrail_app/domain/usecases/upload_image_usecase.dart
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_tracktrail_app/presentation/blocs/image/image_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,13 +58,8 @@ Future<void> configureDependencies() async {
   sl.registerFactory<LoginBloc>(
     () => LoginBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
-  sl.registerFactory(() => ImageBloc(
-        fetchImagesUseCase: sl(),
-        uploadImageUseCase: sl(),
-        deleteImageUseCase: sl(),
-      ));
   sl.registerFactory<RoutinesBloc>(
-    () => RoutinesBloc(sl(), sl(), sl(), sl(), sl()),
+    () => RoutinesBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<ExercisesBloc>(
     () => ExercisesBloc(sl(), sl()),
@@ -114,7 +110,8 @@ Future<void> configureDependencies() async {
     () => ImageRepositoryImpl(dataSource: sl()),
   );
   sl.registerLazySingleton<RoutinesRepository>(
-    () => RoutinesRepositoryImpl(sl<RoutineRemoteDataSource>()),
+    () => RoutinesRepositoryImpl(
+        sl<RoutineRemoteDataSource>(), sl<FirebaseStorageDataSource>()),
   );
   sl.registerLazySingleton<ExercisesRepository>(
     () => ExercisesRepositoryImpl(sl<ExerciseRemoteDataSource>()),
@@ -143,6 +140,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<GetUsersUseCase>(
     () => GetUsersUseCase(sl()),
+  );
+  sl.registerLazySingleton<SaveRoutineWithImageUseCase>(
+    () => SaveRoutineWithImageUseCase(sl()),
   );
   sl.registerLazySingleton<GetUserRoutinesUseCase>(
     () => GetUserRoutinesUseCase(sl()),

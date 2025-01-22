@@ -29,7 +29,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
   Future<List<RoutineModel>> getRoutines() async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.77.44:8080/routines'),
+      Uri.parse('http://192.168.1.144:8080/routines'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -101,7 +101,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
 
     if (routineId != null && routineId != 0) {
       final response = await client.put(
-        Uri.parse('http://10.250.77.44:8080/routines/$routineId'),
+        Uri.parse('http://192.168.1.144:8080/routines/$routineId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
       }
     } else {
       final response = await client.post(
-        Uri.parse('http://10.250.77.44:8080/routines'),
+        Uri.parse('http://192.168.1.144:8080/routines'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -156,7 +156,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.77.44:8080/users'),
+      Uri.parse('http://192.168.1.144:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -183,7 +183,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
   Future<void> deleteRoutine(int idRoutine) async {
     const String token = 'admin';
     final response = await client.delete(
-      Uri.parse('http://10.250.77.44:8080/routines/$idRoutine'),
+      Uri.parse('http://192.168.1.144:8080/routines/$idRoutine'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -198,7 +198,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     const String token = 'admin';
     final response = await client.get(
       Uri.parse(
-          'http://10.250.77.44:8080/routine-exercises/$routineId/completion'),
+          'http://192.168.1.144:8080/routine-exercises/$routineId/completion'),
       headers: {
         'Authorization': 'Bearer $token',
       },

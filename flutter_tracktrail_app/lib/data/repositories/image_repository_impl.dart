@@ -22,11 +22,11 @@ class ImageRepositoryImpl implements ImageRepository {
   }
 
   @override
-  Future<Either<Exception, void>> uploadImage(
+  Future<Either<Exception, String>> uploadImage(
       dynamic file, String fileName) async {
     try {
       await dataSource.uploadImage(file, fileName);
-      return const Right(null);
+      return const Right('');
     } catch (e) {
       return Left(Exception('Failed to upload image: $e'));
     }

@@ -83,3 +83,18 @@ class FetchCompletionPercentageEvent extends RoutinesEvent {
   @override
   List<Object> get props => [routineId ?? 0];
 }
+
+class SaveRoutineWithImageEvent extends RoutinesEvent {
+  final dynamic file;
+  final String fileName;
+  final String routineId;
+
+  SaveRoutineWithImageEvent({
+    required this.file,
+    required this.fileName,
+    required this.routineId,
+  });
+
+  @override
+  List<Object> get props => [file, fileName, routineId];
+}
