@@ -8,7 +8,7 @@ class SaveRoutineWithImageUseCase {
 
   Future<Either<String, void>> execute({
     required String imageUrl,
-    required String routineId,
+    required int routineId,
   }) async {
     try {
       await repository.saveRoutineWithImage(imageUrl, routineId);

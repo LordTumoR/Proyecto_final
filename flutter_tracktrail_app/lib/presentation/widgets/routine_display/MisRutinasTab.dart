@@ -19,7 +19,7 @@ class MisRutinasTab extends StatefulWidget {
 class _MisRutinasTabState extends State<MisRutinasTab> {
   File? _selectedImage;
 
-  Future<void> _pickImage(String routineId) async {
+  Future<void> _pickImage(int routineId) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -86,88 +86,141 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                       barraColor = Colors.grey;
                   }
 
-                  return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.purple[100],
-                      borderRadius: BorderRadius.circular(12.0),
-                    ),
-                    child: ListTile(
-                      contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 12.0),
-                      title: Text(
-                        routine.name ?? '',
-                        style: const TextStyle(
-                          color: Colors.deepPurple,
-                          fontSize: 20,
-                        ),
+                  return SizedBox(
+                    height: 200,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.purple[100],
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                      subtitle: Text(
-                        routine.goal ?? '',
-                        style: const TextStyle(
-                          color: Colors.black54,
-                          fontSize: 16,
-                        ),
-                      ),
-                      leading: Container(
-                        width: 10.0,
-                        height: 100.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.0),
-                          color: barraColor,
-                        ),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
+                      child: Row(
                         children: [
-                          if (routine.isPrivate ?? true) ...[
-                            const Icon(Icons.lock, color: Colors.deepPurple),
-                          ] else ...[
-                            const Icon(Icons.lock_open,
-                                color: Colors.deepPurple),
-                          ],
-                          const SizedBox(width: 8.0),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return ProgressDialog(routineId: routine.id!);
-                                },
-                              );
-                            },
-                            child: const Icon(Icons.percent,
-                                color: Colors.deepPurple),
-                          ),
-                          const SizedBox(width: 8.0),
-                          const Icon(Icons.arrow_forward),
-                          const SizedBox(width: 8.0),
-                          GestureDetector(
-                            onTap: () => _pickImage(routine.id! as String),
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: Colors.grey),
-                              ),
-                              child: _selectedImage == null
-                                  ? const Icon(Icons.add_a_photo)
-                                  : Image.file(_selectedImage!),
+                          Container(
+                            width: 10.0,
+                            height: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12.0),
+                              color: barraColor,
                             ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(25.0),
+                            child: Container(
+                              width: 100.0,
+                              height: 150.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(3.0),
+                                image: DecorationImage(
+                                  image: routine.imageUrl != null &&
+                                          routine.imageUrl!.isNotEmpty
+                                      ? NetworkImage(routine.imageUrl!)
+                                      : const AssetImage(
+                                              'assets/placeholder.png')
+                                          as ImageProvider,
+                                  fit: BoxFit.cover,
+                                ),
+                                color: Colors.grey[300],
+                              ),
+                              child: (_selectedImage == null &&
+                                      (routine.imageUrl == null ||
+                                          routine.imageUrl!.isEmpty))
+                                  ? const Icon(Icons.image, size: 40)
+                                  : null,
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      routine.name ?? '',
+                                      style: const TextStyle(
+                                        color: Colors.deepPurple,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height:
+                                            8.0), // Espacio entre el texto y la fila
+                                    Text(
+                                      routine.goal ?? '',
+                                      style: const TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                        height:
+                                            8.0), // Espacio entre el texto y la fila
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        if (routine.isPrivate ?? true) ...[
+                                          const Icon(Icons.lock,
+                                              color: Colors.deepPurple),
+                                        ] else ...[
+                                          const Icon(Icons.lock_open,
+                                              color: Colors.deepPurple),
+                                        ],
+                                        const SizedBox(
+                                            width: 8.0), // Espacio entre íconos
+                                        GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return ProgressDialog(
+                                                    routineId: routine.id!);
+                                              },
+                                            );
+                                          },
+                                          child: const Icon(Icons.percent,
+                                              color: Colors.deepPurple),
+                                        ),
+                                        const SizedBox(
+                                            width: 8.0), // Espacio entre íconos
+                                        GestureDetector(
+                                          onTap: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return ExercisesMenu(
+                                                    routine: routine);
+                                              },
+                                            );
+                                          },
+                                          child:
+                                              const Icon(Icons.arrow_forward),
+                                        ),
+                                        const SizedBox(
+                                            width: 8.0), // Espacio entre íconos
+                                        GestureDetector(
+                                          onTap: () => _pickImage(routine.id!),
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                  color: Colors.grey),
+                                            ),
+                                            child:
+                                                const Icon(Icons.add_a_photo),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )),
                           ),
                         ],
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                ExercisesMenu(routine: routine),
-                          ),
-                        );
-                      },
                     ),
                   );
                 },

@@ -5,16 +5,19 @@ class ExerciseModel {
   final String? name;
   final String? description;
   final String? image;
+  final DateTime? dateTime;
 
   ExerciseModel({
     int? idExercise,
     String? name,
     String? description,
     String? image,
+    DateTime? dateTime,
   })  : idExercise = idExercise ?? 0,
         name = name ?? '',
         description = description ?? '',
-        image = image ?? '';
+        image = image ?? '',
+        dateTime = dateTime;
 
   @override
   String toString() {
@@ -23,11 +26,11 @@ class ExerciseModel {
 
   factory ExerciseModel.fromJson(Map<String, dynamic> json) {
     return ExerciseModel(
-      idExercise: json['id_exercises'],
-      name: json['name'],
-      description: json['description'],
-      image: json['images'],
-    );
+        idExercise: json['id_exercises'],
+        name: json['name'],
+        description: json['description'],
+        image: json['images'],
+        dateTime: DateTime.parse(json['dateTime']));
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,7 @@ class ExerciseModel {
       'name': name,
       'description': description,
       'images': image,
+      'dateTime': dateTime?.toIso8601String(),
     };
   }
 
@@ -45,6 +49,7 @@ class ExerciseModel {
       name: name ?? '',
       description: description ?? '',
       image: image ?? '',
+      dateTime: dateTime,
     );
   }
 }

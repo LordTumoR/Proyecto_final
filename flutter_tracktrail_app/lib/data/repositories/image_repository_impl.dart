@@ -25,8 +25,8 @@ class ImageRepositoryImpl implements ImageRepository {
   Future<Either<Exception, String>> uploadImage(
       dynamic file, String fileName) async {
     try {
-      await dataSource.uploadImage(file, fileName);
-      return const Right('');
+      final downloadUrl = await dataSource.uploadImage(file, fileName);
+      return Right(downloadUrl);
     } catch (e) {
       return Left(Exception('Failed to upload image: $e'));
     }

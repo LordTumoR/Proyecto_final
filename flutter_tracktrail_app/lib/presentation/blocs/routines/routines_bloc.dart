@@ -151,8 +151,9 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
     try {
       final result =
           await uploadImageUseCase.execute(event.file, event.fileName);
-      result.fold(
-        (error) {
+
+      await result.fold(
+        (error) async {
           emit(RoutinesState.saveRoutineFailure(error.toString()));
         },
         (imageUrl) async {
@@ -161,12 +162,13 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
             routineId: event.routineId,
           );
 
-          saveResult.fold(
-            (failure) {
+          await saveResult.fold(
+            (failure) async {
               emit(RoutinesState.saveRoutineFailure(failure));
             },
-            (_) {
+            (_) async {
               emit(RoutinesState.saveRoutineSuccess());
+              fetchRoutines();
             },
           );
         },

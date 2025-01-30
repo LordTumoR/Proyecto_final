@@ -8,7 +8,7 @@ abstract class FirebaseStorageDataSource {
   Future<List<Map<String, String>>> fetchImages();
   Future<String> uploadImage(dynamic file, String fileName);
   Future<void> deleteImage(String id);
-  Future<void> saveRoutineWithImage(String imageUrl, String routineId);
+  Future<void> saveRoutineWithImage(int routineId, String imageUrl);
 }
 
 class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
@@ -40,19 +40,27 @@ class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
         // En el entorno web
         if (file is Uint8List) {
           await storageRef.putData(file);
+          print('Subiendo archivo: $file');
+          print('Tipo de archivo: ${file.runtimeType}');
         } else {
           throw Exception(
               'En entornos web, el fichero debe ser de tipo Uint8List');
         }
       } else {
         // En móviles/escritorio
-        if (file is String) {
-          final fileBytes = await Future.delayed(
-              Duration.zero, () => File(file).readAsBytesSync());
+        print('Subiendo archivo: $file');
+        print('Tipo de archivo: ${file.runtimeType}');
+        if (file is File) {
+          final fileBytes = await file.readAsBytes();
+
+          await storageRef.putData(fileBytes);
+        } else if (file is String) {
+          final fileBytes = File(file).readAsBytesSync();
+
           await storageRef.putData(fileBytes);
         } else {
           throw Exception(
-              'En entornos que no son web, necesitamos que el fichero sea de tipo texto');
+              'En dispositivos móviles, el archivo debe ser de tipo File o String');
         }
       }
 
@@ -74,9 +82,9 @@ class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
   }
 
   @override
-  Future<void> saveRoutineWithImage(String imageUrl, String routineId) async {
+  Future<void> saveRoutineWithImage(int routineId, String imageUrl) async {
     try {
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse('http://192.168.1.144:8080/routines/$routineId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({

@@ -28,6 +28,7 @@ class RoutineExerciseRepositoryImpl implements RoutineExerciseRepository {
       name: entity.name ?? '',
       description: entity.description ?? '',
       image: entity.image ?? '',
+      dateTime: entity.dateTime,
     );
   }
 
@@ -46,7 +47,7 @@ class RoutineExerciseRepositoryImpl implements RoutineExerciseRepository {
 
       return Right(entities);
     } catch (e) {
-      return Left('Error al obtener los ejercicios de rutina: $e');
+      return Left('Error al obtener los ejercicios de rutinaddddd: $e');
     }
   }
 

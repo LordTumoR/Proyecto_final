@@ -129,7 +129,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
   @override
   Future<Either<String, void>> saveRoutineWithImage(
     String imageUrl,
-    String routineId,
+    int routineId,
   ) async {
     try {
       filesdatasource.saveRoutineWithImage(routineId, imageUrl);

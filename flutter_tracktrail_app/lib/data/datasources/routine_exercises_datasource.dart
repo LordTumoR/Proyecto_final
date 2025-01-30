@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 abstract class RoutineExerciseRemoteDataSource {
   Future<void> addExerciseToRoutine(int routineId, ExerciseModel newExercise);
   Future<List<RoutineExerciseModel>> getAllRoutineExercises();
-  Future<ExerciseModel> createExercise(ExerciseModel exercise);
+  Future<ExerciseModel> createExercise(
+      ExerciseModel exercise, int routineId, int userId);
   Future<void> updateRoutineExerciseCompletion(
       int routineExerciseId, bool isCompleted);
 }
@@ -19,13 +20,14 @@ class RoutineExerciseRemoteDataSourceImpl
   RoutineExerciseRemoteDataSourceImpl(this.client);
 
   @override
-  Future<ExerciseModel> createExercise(ExerciseModel exercise) async {
+  Future<ExerciseModel> createExercise(
+      ExerciseModel exercise, int routineId, int userId) async {
     const String token = 'admin';
     final response;
 
     if (exercise.idExercise == 0 || exercise.idExercise == null) {
       response = await client.post(
-        Uri.parse('http://192.168.1.144:8080/exercises'),
+        Uri.parse('http://192.168.1.144:8080/exercises/$routineId/$userId'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -63,6 +65,7 @@ class RoutineExerciseRemoteDataSourceImpl
     );
 
     if (response.statusCode == 200) {
+      print('Response body: ${response.body}');
       final List<dynamic> routineExercisesJson = json.decode(response.body);
       return routineExercisesJson
           .map((json) => RoutineExerciseModel.fromJson(json))
@@ -75,15 +78,6 @@ class RoutineExerciseRemoteDataSourceImpl
   @override
   Future<void> addExerciseToRoutine(
       int routineId, ExerciseModel newExercise) async {
-    if (newExercise.idExercise != null && newExercise.idExercise != 0) {
-      try {
-        await createExercise(newExercise);
-      } catch (e) {
-        throw Exception('Error al actualizar el ejercicio: $e');
-      }
-      return;
-    }
-
     final email = await PreferencesHelper.getEmailFromPreferences();
     int? userId;
 
@@ -99,56 +93,12 @@ class RoutineExerciseRemoteDataSourceImpl
     } else {
       throw Exception("No se encontró el email del usuario.");
     }
-
     try {
-      final createdExercise = await createExercise(newExercise);
-
-      final allRoutineExercises = await getAllRoutineExercises();
-
-      final routineExercises = allRoutineExercises
-          .where((routineExercise) =>
-              routineExercise.routines.idRoutine == routineId)
-          .toList();
-
-      if (routineExercises.isEmpty) {
-        final data = {
-          "id_routine": routineId,
-          "id_user": userId,
-          "id_exercise": createdExercise.idExercise,
-        };
-
-        await insertRoutineExercise(data);
-      }
-      if (routineExercises.isNotEmpty) {
-        final routineExerciseData = {
-          "id_user": userId,
-          "id_routine": routineId,
-          "id_exercise": createdExercise.idExercise,
-        };
-
-        await insertRoutineExercise(routineExerciseData);
-      }
+      await createExercise(newExercise, routineId, userId);
     } catch (e) {
-      throw Exception('Error al agregar ejercicio a la rutina: $e');
+      throw Exception('Error al actualizar el ejercicio: $e');
     }
-  }
-
-  Future<void> insertRoutineExercise(
-      Map<String, dynamic> routineExercise) async {
-    const String token = 'admin';
-    final response = await client.post(
-      Uri.parse('http://192.168.1.144:8080/routine-exercises'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(routineExercise),
-    );
-
-    if (response.statusCode != 201) {
-      throw Exception(
-          'Error al insertar el ejercicio en routine_exercises: ${response.body}');
-    }
+    return;
   }
 
   Future<int> _getUserIdByEmail(String email) async {

@@ -5,6 +5,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_state.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_tab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/routine_menu.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/custom_user_drawer.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/user/user_dialog_registered.dart';
@@ -177,7 +178,7 @@ class _UserPageState extends State<UserPage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => RoutineMenu()),
+                      MaterialPageRoute(builder: (context) => NutritionMenu()),
                     );
                   },
                   child: MouseRegion(

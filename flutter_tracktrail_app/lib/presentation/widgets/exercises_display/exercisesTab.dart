@@ -6,6 +6,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/rout
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/create_exercises.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/edit_exercise.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -22,21 +23,22 @@ class _ExercisesTabState extends State<ExercisesTab> {
   @override
   void initState() {
     super.initState();
+    final fechaSeleccionada = DateManager().selectedDate.value;
     context
         .read<RoutineExercisesBloc>()
-        .fetchRoutineExercises(widget.routineId);
+        .fetchRoutineExercises(widget.routineId, fechaSeleccionada);
   }
 
   void _openCreateExerciseDrawer() {
+    final fechaSeleccionada = DateManager().selectedDate.value;
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return CreateExerciseDrawer(
           routineId: widget.routineId,
           onCreate: (newExercise) {
-            context
-                .read<RoutineExercisesBloc>()
-                .add(AddExerciseToRoutine(widget.routineId, newExercise));
+            context.read<RoutineExercisesBloc>().add(AddExerciseToRoutine(
+                widget.routineId, newExercise, fechaSeleccionada));
           },
         );
       },
@@ -46,13 +48,23 @@ class _ExercisesTabState extends State<ExercisesTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.exercises_of_routine),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: BlocBuilder<RoutineExercisesBloc, RoutineExercisesState>(
+          builder: (context, state) {
+            final fechaSeleccionada = DateManager().selectedDate.value;
+            String title;
+            title =
+                '${AppLocalizations.of(context)!.exercises_of_routine}: ${fechaSeleccionada.toLocal()}';
+            return AppBar(title: Text(title));
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: BlocBuilder<RoutineExercisesBloc, RoutineExercisesState>(
           builder: (context, state) {
+            final fechaSeleccionada = DateManager().selectedDate.value;
             if (state.isLoading) {
               return const Center(child: CircularProgressIndicator());
             } else if (state.errorMessage != null) {
@@ -73,19 +85,20 @@ class _ExercisesTabState extends State<ExercisesTab> {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 3, 185, 34),
+                      color: const Color.fromARGB(255, 167, 63, 211)
+                          .withOpacity(0.8),
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: ListTile(
                       title: Text(
-                        routineExercise.exercise?.name ?? '',
+                        routineExercise.exercise.name ?? '',
                         style: const TextStyle(
                           color: Color.fromARGB(255, 58, 71, 183),
                           fontSize: 20,
                         ),
                       ),
                       subtitle: Text(
-                        routineExercise.exercise?.description ?? '',
+                        routineExercise.exercise.description ?? '',
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 16,
@@ -95,17 +108,19 @@ class _ExercisesTabState extends State<ExercisesTab> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Checkbox(
-                            value: routineExercise.completion ?? false,
+                            value: routineExercise.completion,
                             onChanged: (bool? value) {
                               context
                                   .read<RoutineExercisesBloc>()
                                   .updateExerciseCompletion(
-                                    routineExercise.idRoutineExercise ?? 0,
-                                    value ?? false,
-                                  );
+                                      routineExercise.idRoutineExercise,
+                                      value ?? false,
+                                      widget.routineId,
+                                      fechaSeleccionada);
                               context
                                   .read<RoutineExercisesBloc>()
-                                  .fetchRoutineExercises(widget.routineId);
+                                  .fetchRoutineExercises(
+                                      widget.routineId, fechaSeleccionada);
                             },
                           ),
                           IconButton(
@@ -115,13 +130,13 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return EditExerciseDialog(
-                                    exercise: routineExercise.exercise!,
+                                    exercise: routineExercise.exercise,
                                     onEdit: (updatedExercise) {
                                       BlocProvider.of<RoutineExercisesBloc>(
                                               context)
                                           .add(
-                                        AddExerciseToRoutine(
-                                            widget.routineId, updatedExercise),
+                                        AddExerciseToRoutine(widget.routineId,
+                                            updatedExercise, fechaSeleccionada),
                                       );
                                     },
                                   );
@@ -153,14 +168,14 @@ class _ExercisesTabState extends State<ExercisesTab> {
                                         onPressed: () {
                                           context.read<ExercisesBloc>().add(
                                               DeleteExerciseEvent(
-                                                  routineExercise
-                                                          .exercise?.id ??
+                                                  routineExercise.exercise.id ??
                                                       0));
                                           context
                                               .read<RoutineExercisesBloc>()
                                               .add(
                                                 FetchRoutineExercises(
-                                                    widget.routineId),
+                                                    widget.routineId,
+                                                    fechaSeleccionada),
                                               );
                                           Navigator.of(context).pop();
                                         },
@@ -191,8 +206,8 @@ class _ExercisesTabState extends State<ExercisesTab> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openCreateExerciseDrawer,
-        child: Icon(Icons.add),
         backgroundColor: Colors.green,
+        child: const Icon(Icons.add),
       ),
     );
   }

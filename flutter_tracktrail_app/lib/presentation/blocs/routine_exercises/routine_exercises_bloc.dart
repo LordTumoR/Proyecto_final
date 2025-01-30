@@ -21,16 +21,43 @@ class RoutineExercisesBloc
     on<AddExerciseToRoutine>(_onAddExerciseToRoutine);
     on<UpdateExerciseCompletionEvent>(_onUpdateExerciseCompletion);
   }
-
   Future<void> _onFetchRoutineExercises(
       FetchRoutineExercises event, Emitter<RoutineExercisesState> emit) async {
     emit(RoutineExercisesState.loading());
+
+    // Llama al caso de uso
     final result = await routineExercisesUseCase(event.routineId);
 
     result.fold(
-      (error) => emit(RoutineExercisesState.failure(error)),
+      (error) {
+        print('Error al cargar los ejercicios: $error');
+        emit(RoutineExercisesState.failure(error));
+      },
       (routineExercises) {
-        emit(RoutineExercisesState.success(routineExercises));
+        print('Ejercicios cargados: $routineExercises');
+        print('Fecha seleccionada: ${event.dateTime}');
+
+        final filteredExercises = routineExercises.where((exercise) {
+          final exerciseDate = exercise.exercise.dateTime?.toLocal();
+          final selectedDate = event.dateTime.toLocal();
+
+          if (exerciseDate == null) {
+            return false;
+          }
+
+          return DateTime(
+                exerciseDate.year,
+                exerciseDate.month,
+                exerciseDate.day,
+              ) ==
+              DateTime(
+                selectedDate.year,
+                selectedDate.month,
+                selectedDate.day,
+              );
+        }).toList();
+
+        emit(RoutineExercisesState.success(filteredExercises));
       },
     );
   }
@@ -44,7 +71,7 @@ class RoutineExercisesBloc
     );
 
     result.fold((error) => emit(RoutineExercisesState.failure(error)), (_) {
-      add(FetchRoutineExercises(event.routineId));
+      add(FetchRoutineExercises(event.routineId, event.dateTime));
     });
   }
 
@@ -61,22 +88,25 @@ class RoutineExercisesBloc
 
     result.fold(
       (error) => emit(RoutineExercisesState.failure(error)),
-      (_) => add(FetchRoutineExercises(event.routineExerciseId)),
+      (_) => fetchRoutineExercises(event.routineId, event.dateTime),
     );
   }
 
-  void fetchRoutineExercises(int routineId) {
-    add(FetchRoutineExercises(routineId));
+  void fetchRoutineExercises(int routineId, DateTime dateTime) {
+    add(FetchRoutineExercises(routineId, dateTime));
   }
 
-  void addExerciseToRoutine(int routineId, ExerciseEntity newExercise) {
-    add(AddExerciseToRoutine(routineId, newExercise));
+  void addExerciseToRoutine(
+      int routineId, ExerciseEntity newExercise, DateTime dateTime) {
+    add(AddExerciseToRoutine(routineId, newExercise, dateTime));
   }
 
-  void updateExerciseCompletion(int routineExerciseId, bool isCompleted) {
+  void updateExerciseCompletion(int routineExerciseId, bool isCompleted,
+      int routineId, DateTime dateTime) {
     add(UpdateExerciseCompletionEvent(
-      routineExerciseId: routineExerciseId,
-      isCompleted: isCompleted,
-    ));
+        routineId: routineId,
+        routineExerciseId: routineExerciseId,
+        isCompleted: isCompleted,
+        dateTime: dateTime));
   }
 }

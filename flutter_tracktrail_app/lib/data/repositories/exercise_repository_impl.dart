@@ -19,6 +19,7 @@ class ExercisesRepositoryImpl implements ExercisesRepository {
           name: exercise.name,
           description: exercise.description,
           image: exercise.image,
+          dateTime: exercise.dateTime,
         );
       }).toList();
 

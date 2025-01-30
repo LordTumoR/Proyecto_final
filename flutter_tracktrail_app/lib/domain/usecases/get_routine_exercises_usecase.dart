@@ -12,7 +12,7 @@ class GetRoutineExercisesUseCase {
     try {
       return await repository.getRoutineExercisesByRoutineId(routineId);
     } catch (e) {
-      return Left('Error al obtener los ejercicios de rutina: $e');
+      return Left('Error al obtener los ejercicios de rutinaaaaa: $e');
     }
   }
 }

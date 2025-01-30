@@ -87,7 +87,7 @@ class FetchCompletionPercentageEvent extends RoutinesEvent {
 class SaveRoutineWithImageEvent extends RoutinesEvent {
   final dynamic file;
   final String fileName;
-  final String routineId;
+  final int routineId;
 
   SaveRoutineWithImageEvent({
     required this.file,

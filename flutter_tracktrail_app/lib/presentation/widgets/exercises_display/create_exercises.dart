@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 
 class CreateExerciseDrawer extends StatelessWidget {
   final int routineId;
   final Function(ExerciseEntity) onCreate;
+  final fechaSeleccionada = DateManager().selectedDate.value;
 
   CreateExerciseDrawer({required this.routineId, required this.onCreate});
 
@@ -59,6 +61,7 @@ class CreateExerciseDrawer extends StatelessWidget {
                     name: _nameController.text,
                     description: _descriptionController.text,
                     image: '',
+                    dateTime: fechaSeleccionada,
                   );
                   onCreate(newExercise);
                   Navigator.pop(context);

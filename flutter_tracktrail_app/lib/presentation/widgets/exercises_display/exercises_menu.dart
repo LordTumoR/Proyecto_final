@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/domain/entities/routines_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_event.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/exercisesTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/MisRutinasTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/edit_routine.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 
 class ExercisesMenu extends StatefulWidget {
   final RoutineEntity routine;
@@ -19,6 +22,8 @@ class ExercisesMenu extends StatefulWidget {
 }
 
 class _ExercisesMenuState extends State<ExercisesMenu> {
+  DatePickerController _controller = DatePickerController();
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +39,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 42, 168, 3),
+          backgroundColor: const Color.fromARGB(255, 189, 83, 213),
           title: Text(
             '${AppLocalizations.of(context)!.exercises_of} $name',
             style: const TextStyle(
@@ -63,9 +68,34 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
             ],
           ),
         ),
-        body: TabBarView(
+        body: Column(
           children: [
-            ExercisesTab(routineId: routineid),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: SizedBox(
+                height: 100,
+                child: DatePicker(
+                  DateTime.now(),
+                  controller: _controller,
+                  onDateChange: (date) {
+                    DateManager().updateDate(date);
+
+                    final updatedFechaSeleccionada =
+                        DateManager().selectedDate.value;
+
+                    context.read<RoutineExercisesBloc>().fetchRoutineExercises(
+                        widget.routine.id ?? 0, updatedFechaSeleccionada);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  ExercisesTab(routineId: routineid),
+                ],
+              ),
+            ),
           ],
         ),
       ),

@@ -8,11 +8,12 @@ abstract class RoutineExercisesEvent extends Equatable {
 
 class FetchRoutineExercises extends RoutineExercisesEvent {
   final int routineId;
+  final DateTime dateTime;
 
-  FetchRoutineExercises(this.routineId);
+  FetchRoutineExercises(this.routineId, this.dateTime);
 
   @override
-  List<Object> get props => [routineId];
+  List<Object> get props => [routineId, this.dateTime];
 }
 
 class RoutineExercisesError extends RoutineExercisesEvent {
@@ -27,18 +28,23 @@ class RoutineExercisesError extends RoutineExercisesEvent {
 class AddExerciseToRoutine extends RoutineExercisesEvent {
   final int routineId;
   final ExerciseEntity newExercise;
+  final DateTime dateTime;
 
-  AddExerciseToRoutine(this.routineId, this.newExercise);
+  AddExerciseToRoutine(this.routineId, this.newExercise, this.dateTime);
 
   @override
-  List<Object> get props => [routineId, newExercise];
+  List<Object> get props => [routineId, newExercise, this.dateTime];
 }
 
 class UpdateExerciseCompletionEvent extends RoutineExercisesEvent {
+  final DateTime dateTime;
+  final int routineId;
   final int routineExerciseId;
   final bool isCompleted;
 
   UpdateExerciseCompletionEvent({
+    required this.dateTime,
+    required this.routineId,
     required this.routineExerciseId,
     required this.isCompleted,
   });
