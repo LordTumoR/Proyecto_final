@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_create.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_filter.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_listview.dart';
 
 class NutritionMenu extends StatefulWidget {
@@ -79,7 +80,12 @@ class _NutritionMenuState extends State<NutritionMenu> {
                 IconButton(
                   icon: const Icon(Icons.filter_list, color: Colors.white),
                   onPressed: () {
-                    print('Filtrar clickeado');
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return FilterNutritionDialog();
+                      },
+                    );
                   },
                 ),
                 IconButton(

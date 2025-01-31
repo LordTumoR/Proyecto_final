@@ -52,11 +52,11 @@ class NutritionRepositoryImpl implements NutritionRepository {
 
   @override
   Future<Either<String, NutritionEntity>> updateNutritionRecord(
-    int id,
-    String name,
-    String description,
-    DateTime date,
-    int userId,
+    int? id,
+    String? name,
+    String? description,
+    DateTime? date,
+    int? userId,
   ) async {
     try {
       final nutritionModel = await remoteDataSource.updateNutritionRecord(

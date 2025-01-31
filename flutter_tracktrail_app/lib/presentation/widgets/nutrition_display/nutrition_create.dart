@@ -35,7 +35,6 @@ class _CreateNutritionRecordDialogState
             const SizedBox(height: 20),
             _buildTextField(_nameController, 'Nombre de la dieta'),
             _buildTextField(_descriptionController, 'Descripción'),
-            // _buildTextField(_dateController, 'Fecha (yyyy-mm-dd)'),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
@@ -44,8 +43,6 @@ class _CreateNutritionRecordDialogState
                 final description = _descriptionController.text;
                 final date =
                     DateTime.tryParse(_dateController.text) ?? DateTime.now();
-
-                // Aquí llamas al evento con los valores
                 context.read<NutritionBloc>().add(
                       CreateNutritionRecord(
                         name: name,

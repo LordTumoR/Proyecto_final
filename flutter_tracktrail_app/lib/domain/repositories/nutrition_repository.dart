@@ -10,11 +10,11 @@ abstract class NutritionRepository {
     int userId,
   );
   Future<Either<String, NutritionEntity>> updateNutritionRecord(
-    int id,
-    String name,
-    String description,
-    DateTime date,
-    int userId,
+    int? id,
+    String? name,
+    String? description,
+    DateTime? date,
+    int? userId,
   );
   Future<Either<String, void>> deleteNutritionRecord(int id);
 }

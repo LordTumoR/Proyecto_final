@@ -1,9 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tracktrail_app/domain/entities/food_entity.dart';
+import 'package:flutter_tracktrail_app/domain/entities/openfoodfacts_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_state.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
 
-class SearchFoodsTab extends StatelessWidget {
+class SearchFoodsTab extends StatefulWidget {
+  final int dietId;
+
+  const SearchFoodsTab({required this.dietId, super.key});
+  @override
+  _SearchFoodsTabState createState() => _SearchFoodsTabState();
+}
+
+class _SearchFoodsTabState extends State<SearchFoodsTab> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<FoodBloc>().add(LoadRandomFoods());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FoodBloc, FoodState>(
@@ -39,12 +56,11 @@ class SearchFoodsTab extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 10.0),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                                12.0), // Bordes redondeados
+                            borderRadius: BorderRadius.circular(12.0),
                             child: Image.network(
                               foodItem.imageUrl!,
-                              width: 120, // Tamaño de la imagen más grande
-                              height: 200, // Tamaño de la imagen más grande
+                              width: 120,
+                              height: 200,
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -86,13 +102,68 @@ class SearchFoodsTab extends StatelessWidget {
                       ),
                     ],
                   ),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.add, color: Colors.white),
+                    onPressed: () {
+                      _addFoodItem(foodItem);
+                    },
+                  ),
                 ),
               );
             },
           );
         }
 
-        return Center(child: Text('No hay alimentos disponibles'));
+        return const Center(child: Text('No hay alimentos disponibles'));
+      },
+    );
+  }
+
+  void _addFoodItem(FoodEntity foodItem) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Añadir alimento'),
+          content: Text('¿Deseas añadir ${foodItem.name} a tu lista?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                final foodEntity = FoodEntityDatabase(
+                  id: 0,
+                  name: foodItem.name ?? '',
+                  brand: foodItem.brand ?? '',
+                  category: foodItem.category ?? '',
+                  calories: foodItem.nutritionInfo,
+                  carbohydrates: 0,
+                  protein: 0,
+                  fat: 0,
+                  fiber: 0,
+                  sugar: 0,
+                  sodium: 0,
+                  cholesterol: 0,
+                );
+
+                context.read<FoodBloc>().add(CreateFoodEvent(
+                    foodEntity, widget.dietId,
+                    loadRandomFoods: true));
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${foodItem.name} añadido correctamente'),
+                  ),
+                );
+              },
+              child: const Text('Añadir'),
+            ),
+          ],
+        );
       },
     );
   }

@@ -22,7 +22,13 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<NutritionBloc>(context).add(FetchNutritionRecords());
+    BlocProvider.of<NutritionBloc>(context).add(
+      FetchNutritionRecords(
+        name: '',
+        description: '',
+        date: null,
+      ),
+    );
   }
 
   Future<void> _pickImage(int nutritionRecordId) async {
@@ -113,7 +119,7 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Amount: ${record.name}',
+                                    'Nombre: ${record.name}',
                                     style: const TextStyle(
                                       color: Colors.deepPurple,
                                       fontSize: 20,
@@ -121,7 +127,7 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                                   ),
                                   const SizedBox(height: 8.0),
                                   Text(
-                                    'Date: ${record.description}',
+                                    'Descripcion: ${record.description}',
                                     style: const TextStyle(
                                       color: Colors.black54,
                                       fontSize: 16,
@@ -189,7 +195,7 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                                           showDialog(
                                             context: context,
                                             builder: (BuildContext context) {
-                                              return FoodTab();
+                                              return FoodTab(dietId: record.id);
                                             },
                                           );
                                         },

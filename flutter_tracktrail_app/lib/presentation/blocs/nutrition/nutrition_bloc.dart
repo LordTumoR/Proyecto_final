@@ -1,13 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/nutrition_repository.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/create_nutrition_record_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/delete_nutrition_record_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_nutrition_record_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/update_nutrition_record_usecase.dart';
 import 'nutrition_event.dart';
 import 'nutrition_state.dart';
 
 class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
-  final NutritionRepository nutritionRepository;
+  final NutritionRecordUseCase nutritionRecordUseCase;
+  final CreateNutritionRecordUseCase createNutritionRecordUseCase;
+  final UpdateNutritionRecordUseCase updateNutritionRecordUseCase;
+  final DeleteNutritionRecordUseCase deleteNutritionRecordUseCase;
 
-  NutritionBloc({required this.nutritionRepository})
-      : super(NutritionInitial()) {
+  NutritionBloc(
+    this.nutritionRecordUseCase,
+    this.createNutritionRecordUseCase,
+    this.updateNutritionRecordUseCase,
+    this.deleteNutritionRecordUseCase,
+  ) : super(NutritionInitial()) {
     on<FetchNutritionRecords>(_onFetchNutritionRecords);
     on<CreateNutritionRecord>(_onCreateNutritionRecord);
     on<UpdateNutritionRecord>(_onUpdateNutritionRecord);
@@ -18,12 +29,24 @@ class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
       FetchNutritionRecords event, Emitter<NutritionState> emit) async {
     emit(NutritionLoading());
 
-    final result = await nutritionRepository.getNutritionRecords();
+    final result = await nutritionRecordUseCase();
 
     result.fold(
       (error) => emit(NutritionOperationFailure(error: error)),
-      (nutritionRecords) =>
-          emit(NutritionLoaded(nutritionRecords: nutritionRecords)),
+      (nutritionRecords) {
+        final filteredRecords = nutritionRecords.where((record) {
+          final matchesName =
+              record.name.toLowerCase().contains(event.name.toLowerCase());
+          final matchesDescription = record.description
+              .toLowerCase()
+              .contains(event.description.toLowerCase());
+          final matchesDate = event.date == null || record.date == event.date;
+
+          return matchesName && matchesDescription && matchesDate;
+        }).toList();
+
+        emit(NutritionLoaded(nutritionRecords: filteredRecords));
+      },
     );
   }
 
@@ -31,7 +54,7 @@ class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
       CreateNutritionRecord event, Emitter<NutritionState> emit) async {
     emit(NutritionLoading());
 
-    final result = await nutritionRepository.createNutritionRecord(
+    final result = await createNutritionRecordUseCase(
       event.name,
       event.description,
       event.date,
@@ -42,7 +65,11 @@ class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
       (error) => emit(NutritionOperationFailure(error: error)),
       (_) {
         emit(NutritionOperationSuccess());
-        add(FetchNutritionRecords());
+        add(FetchNutritionRecords(
+          name: '',
+          description: '',
+          date: null,
+        ));
       },
     );
   }
@@ -51,19 +78,22 @@ class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
       UpdateNutritionRecord event, Emitter<NutritionState> emit) async {
     emit(NutritionLoading());
 
-    final result = await nutritionRepository.updateNutritionRecord(
+    final result = await updateNutritionRecordUseCase.call(
       event.id,
       event.name,
       event.description,
       event.date,
       event.userId,
     );
-
     result.fold(
       (error) => emit(NutritionOperationFailure(error: error)),
       (_) {
         emit(NutritionOperationSuccess());
-        add(FetchNutritionRecords());
+        add(FetchNutritionRecords(
+          name: '',
+          description: '',
+          date: null,
+        ));
       },
     );
   }
@@ -72,13 +102,19 @@ class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
       DeleteNutritionRecord event, Emitter<NutritionState> emit) async {
     emit(NutritionLoading());
 
-    final result = await nutritionRepository.deleteNutritionRecord(event.id);
+    final result = await deleteNutritionRecordUseCase(
+      event.id,
+    );
 
     result.fold(
       (error) => emit(NutritionOperationFailure(error: error)),
       (_) {
         emit(NutritionOperationSuccess());
-        add(FetchNutritionRecords());
+        add(FetchNutritionRecords(
+          name: '',
+          description: '',
+          date: null,
+        ));
       },
     );
   }

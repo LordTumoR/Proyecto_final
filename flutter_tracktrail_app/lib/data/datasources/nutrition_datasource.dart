@@ -13,11 +13,11 @@ abstract class NutritionRemoteDataSource {
     int userId,
   );
   Future<NutritionModel> updateNutritionRecord(
-    int id,
-    String name,
-    String description,
-    DateTime date,
-    int userId,
+    int? id,
+    String? name,
+    String? description,
+    DateTime? date,
+    int? userId,
   );
 }
 
@@ -26,19 +26,27 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
 
   NutritionRemoteDataSourceImpl(this.client);
 
-  static const String baseUrl = 'http://localhost:8080/nutrition-records';
+  static const String baseUrl = 'http://localhost:8080/nutrition-records/user/';
+  static const String CreateUrl = 'http://localhost:8080/nutrition-records';
 
   @override
   Future<List<NutritionModel>> getNutritionRecords() async {
-    final response = await client.get(Uri.parse(baseUrl));
+    final prefs = await SharedPreferences.getInstance();
+    final email = prefs.getString('email');
 
+    if (email == null) {
+      throw Exception("Email no encontrado en SharedPreferences");
+    }
+
+    final userId = await _getUserIdByEmail(email);
+    final response = await client.get(Uri.parse('$baseUrl$userId'));
     if (response.statusCode == 200) {
       final List<dynamic> nutritionJson = json.decode(response.body);
       return nutritionJson
           .map((json) => NutritionModel.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load nutrition records');
+      throw Exception('SIN DIETAS');
     }
   }
 
@@ -54,7 +62,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.144:8080/users'),
+      Uri.parse('http://10.250.76.46:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -95,7 +103,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
       final userId = await _getUserIdByEmail(email);
 
       final response = await client.post(
-        Uri.parse(baseUrl),
+        Uri.parse(CreateUrl),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'name': name,
@@ -118,11 +126,11 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
 
   @override
   Future<NutritionModel> updateNutritionRecord(
-    int id,
-    String name,
-    String description,
-    DateTime date,
-    int userId,
+    int? id,
+    String? name,
+    String? description,
+    DateTime? date,
+    int? userId,
   ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -135,12 +143,12 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
       final userId = await _getUserIdByEmail(email);
 
       final response = await client.put(
-        Uri.parse('$baseUrl/$id'),
+        Uri.parse('$CreateUrl/$id'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'name': name,
           'description': description,
-          'date': date.toIso8601String(),
+          'date': date?.toIso8601String(),
           'user_id': userId,
         }),
       );
