@@ -85,7 +85,7 @@ class FirebaseStorageDataSourceImpl implements FirebaseStorageDataSource {
   Future<void> saveRoutineWithImage(int routineId, String imageUrl) async {
     try {
       final response = await http.put(
-        Uri.parse('http://10.250.76.46:8080/routines/$routineId'),
+        Uri.parse('http://192.168.53.228:8080/routines/$routineId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'imageurl': imageUrl,

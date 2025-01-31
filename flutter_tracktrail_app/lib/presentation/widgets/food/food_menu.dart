@@ -8,6 +8,7 @@ import 'package:flutter_tracktrail_app/presentation/widgets/food/edit_food_dialo
 import 'package:flutter_tracktrail_app/presentation/widgets/food/filter_food_dialog.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/food/food_tabbar_myfood.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/food/food_tabbar_searchfood.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/food/scanner_tab.dart';
 
 class FoodTab extends StatefulWidget {
   final int dietId;
@@ -37,7 +38,7 @@ class _FoodTabState extends State<FoodTab> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -65,6 +66,11 @@ class _FoodTabState extends State<FoodTab> {
                     size: 30, color: Color.fromARGB(255, 255, 157, 0)),
                 text: AppLocalizations.of(context)!.search_foods,
               ),
+              const Tab(
+                icon: Icon(Icons.scanner,
+                    size: 30, color: Color.fromARGB(255, 255, 157, 0)),
+                child: Text('Scannear'),
+              ),
             ],
           ),
         ),
@@ -74,6 +80,7 @@ class _FoodTabState extends State<FoodTab> {
             children: [
               DatabaseFoodsTab(dietId: widget.dietId),
               SearchFoodsTab(dietId: widget.dietId),
+              ScannerTab(dietId: widget.dietId),
             ],
           ),
         ),

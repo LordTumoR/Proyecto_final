@@ -41,6 +41,7 @@ import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dar
 import 'package:flutter_tracktrail_app/domain/usecases/get_foods_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_nutrition_record_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_openfoodfacts_food_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_product_by_barcode.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routine_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase.dart';
@@ -60,6 +61,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/Exercises/exercises_bl
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/food/food_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_event.dart';
@@ -87,7 +89,7 @@ Future<void> configureDependencies() async {
     () => RoutineExercisesBloc(sl(), sl(), sl()),
   );
   sl.registerFactory<FoodBloc>(
-    () => FoodBloc(sl(), sl(), sl(), sl()),
+    () => FoodBloc(sl(), sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<UserBloc>(() => UserBloc(
         sl(),
@@ -222,6 +224,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<AddExerciseToRoutineUseCase>(
     () => AddExerciseToRoutineUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetProductByBarcodeUseCase>(
+    () => GetProductByBarcodeUseCase(sl()),
   );
   sl.registerLazySingleton<CreateRoutineUseCase>(
     () => CreateRoutineUseCase(sl()),

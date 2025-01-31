@@ -33,4 +33,24 @@ class FoodRepositoryImpl implements FoodRepository {
       return Left("Error al obtener los alimentos: ${e.toString()}");
     }
   }
+
+  @override
+  Future<Either<String, FoodEntity>> getProductByBarcode(String barcode) async {
+    try {
+      final product = await dataSource.getProductByBarcode(barcode);
+
+      final foodEntity = FoodEntity(
+        name: product['name'] ?? 'Desconocido',
+        brand: product['brand'] ?? 'Desconocido',
+        category: product['category'] ?? 'Sin categoría',
+        imageUrl: product['imageUrl'] ?? '',
+        nutritionInfo: product['nutritionInfo'] ?? 0.0,
+      );
+
+      return Right(foodEntity);
+    } catch (e) {
+      return Left(
+          "Error al obtener el producto por código de barras: ${e.toString()}");
+    }
+  }
 }

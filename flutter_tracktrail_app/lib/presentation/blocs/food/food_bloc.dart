@@ -1,7 +1,10 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tracktrail_app/domain/entities/openfoodfacts_entity.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/create_food_database_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_foods_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_openfoodfacts_food_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_product_by_barcode.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/update_food_usecase.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_state.dart';
@@ -11,14 +14,16 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
   final GetNutritionFoods foodDatabaseUseCase;
   final CreateFood createFoodUseCase;
   final UpdateFood updateFoodUseCase;
+  final GetProductByBarcodeUseCase getProductByBarcodeUseCase;
 
   FoodBloc(this.createFoodUseCase, this.foodUseCase, this.foodDatabaseUseCase,
-      this.updateFoodUseCase)
+      this.updateFoodUseCase, this.getProductByBarcodeUseCase)
       : super(FoodInitial()) {
     on<LoadRandomFoods>(_onLoadRandomFoods);
     on<LoadDatabaseFoods>(_onLoadDatabaseFoods);
     on<CreateFoodEvent>(_onCreateFood);
     on<UpdateFoodEvent>(_onUpdateFood);
+    on<GetProductByBarcodeEvent>(_onGetProductByBarcodeEvent);
   }
   Future<void> _onLoadRandomFoods(
       LoadRandomFoods event, Emitter<FoodState> emit) async {
@@ -116,5 +121,19 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
     } catch (e) {
       emit(FoodError('Error al actualizar el alimento: $e'));
     }
+  }
+
+  Future<void> _onGetProductByBarcodeEvent(
+    GetProductByBarcodeEvent event,
+    Emitter<FoodState> emit,
+  ) async {
+    emit(FoodLoading());
+
+    final result = await getProductByBarcodeUseCase(event.barcode);
+
+    result.fold(
+      (failure) => emit(FoodError(failure)),
+      (food) => emit(FoodLoaded([food])),
+    );
   }
 }

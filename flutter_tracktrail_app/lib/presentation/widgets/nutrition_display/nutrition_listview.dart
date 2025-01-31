@@ -78,7 +78,7 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                   final record = nutritionRecords[index];
 
                   return SizedBox(
-                    height: 200,
+                    height: 300,
                     child: Container(
                       margin: const EdgeInsets.symmetric(vertical: 10.0),
                       decoration: BoxDecoration(

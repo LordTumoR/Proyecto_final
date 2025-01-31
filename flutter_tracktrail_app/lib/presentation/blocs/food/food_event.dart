@@ -52,3 +52,12 @@ class UpdateFoodEvent extends FoodEvent {
   @override
   List<Object?> get props => [food, dietId];
 }
+
+class GetProductByBarcodeEvent extends FoodEvent {
+  final String barcode;
+
+  const GetProductByBarcodeEvent(this.barcode);
+
+  @override
+  List<Object?> get props => [barcode];
+}

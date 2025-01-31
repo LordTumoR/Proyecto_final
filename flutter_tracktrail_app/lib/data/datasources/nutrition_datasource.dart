@@ -26,8 +26,10 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
 
   NutritionRemoteDataSourceImpl(this.client);
 
-  static const String baseUrl = 'http://localhost:8080/nutrition-records/user/';
-  static const String CreateUrl = 'http://localhost:8080/nutrition-records';
+  static const String baseUrl =
+      'http://192.168.53.228:8080/nutrition-records/user/';
+  static const String CreateUrl =
+      'http://192.168.53.228:8080/nutrition-records';
 
   @override
   Future<List<NutritionModel>> getNutritionRecords() async {
@@ -62,7 +64,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://10.250.76.46:8080/users'),
+      Uri.parse('http://192.168.53.228:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
