@@ -16,7 +16,7 @@ class ExerciseRemoteDataSourceImpl implements ExerciseRemoteDataSource {
   Future<List<ExerciseModel>> getexercises() async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.53.228:8080/exercises'),
+      Uri.parse('http://192.168.1.141:8080/exercises'),
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -33,7 +33,7 @@ class ExerciseRemoteDataSourceImpl implements ExerciseRemoteDataSource {
   Future<void> deleteexercise(int idexercise) async {
     const String token = 'admin';
     final response = await client.delete(
-      Uri.parse('http://192.168.53.228:8080/exercises/$idexercise'),
+      Uri.parse('http://192.168.1.141:8080/exercises/$idexercise'),
       headers: {
         'Authorization': 'Bearer $token',
       },

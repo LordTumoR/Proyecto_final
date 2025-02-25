@@ -15,6 +15,8 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,38 +32,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
+    return MultiProvider(
       providers: [
-        BlocProvider(create: (_) => sl<LoginBloc>()),
-        BlocProvider(create: (_) => sl<RoutinesBloc>()),
-        BlocProvider(create: (_) => sl<ExercisesBloc>()),
-        BlocProvider(create: (_) => sl<RoutineExercisesBloc>()),
-        BlocProvider(create: (_) => sl<UserBloc>()),
-        BlocProvider(create: (_) => sl<LanguageBloc>()),
-        BlocProvider(create: (_) => sl<NutritionBloc>()),
-        BlocProvider(create: (_) => sl<FoodBloc>())
+        Provider<DateManager>.value(value: DateManager()),
       ],
-      child:
-          BlocBuilder<LanguageBloc, LanguageState>(builder: (context, state) {
-        return MaterialApp.router(
-          routerConfig: router,
-          debugShowCheckedModeBanner: false,
-          title: 'ProyectoFinal tracktrail',
-          theme: ThemeData(primarySwatch: Colors.blue),
-          locale: state.locale,
-          supportedLocales: const [
-            Locale('en'),
-            Locale('es'),
-            Locale('fr'),
-          ],
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-        );
-      }),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => sl<LoginBloc>()),
+          BlocProvider(create: (_) => sl<RoutinesBloc>()),
+          BlocProvider(create: (_) => sl<ExercisesBloc>()),
+          BlocProvider(create: (_) => sl<RoutineExercisesBloc>()),
+          BlocProvider(create: (_) => sl<UserBloc>()),
+          BlocProvider(create: (_) => sl<LanguageBloc>()),
+          BlocProvider(create: (_) => sl<NutritionBloc>()),
+          BlocProvider(create: (_) => sl<FoodBloc>()),
+        ],
+        child:
+            BlocBuilder<LanguageBloc, LanguageState>(builder: (context, state) {
+          return MaterialApp.router(
+            routerConfig: router,
+            debugShowCheckedModeBanner: false,
+            title: 'ProyectoFinal tracktrail',
+            theme: ThemeData(primarySwatch: Colors.blue),
+            locale: state.locale,
+            supportedLocales: const [
+              Locale('en'),
+              Locale('es'),
+              Locale('fr'),
+            ],
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+          );
+        }),
+      ),
     );
   }
 }
