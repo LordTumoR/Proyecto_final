@@ -88,13 +88,14 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       } else {
         add(
           LoadDatabaseFoods(
-            dietId: event.dietId,
-            name: null,
-            minCalories: null,
-            maxCalories: null,
-            category: null,
-            brand: null,
-          ),
+              dietId: event.dietId,
+              name: null,
+              minCalories: null,
+              maxCalories: null,
+              category: null,
+              brand: null,
+              mealType: null,
+              date: null),
         );
       }
     } catch (e) {
@@ -110,13 +111,14 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       emit(FoodUpdated(updatedFood));
       add(
         LoadDatabaseFoods(
-          dietId: event.dietId,
-          name: null,
-          minCalories: null,
-          maxCalories: null,
-          category: null,
-          brand: null,
-        ),
+            dietId: event.dietId,
+            name: null,
+            minCalories: null,
+            maxCalories: null,
+            category: null,
+            brand: null,
+            mealType: null,
+            date: null),
       );
     } catch (e) {
       emit(FoodError('Error al actualizar el alimento: $e'));

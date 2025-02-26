@@ -35,6 +35,8 @@ class FoodDatabaseRepositoryImpl implements FoodDatabaseRepository {
         sugar: food.sugar,
         sodium: food.sodium,
         cholesterol: food.cholesterol,
+        mealtype: food.mealtype,
+        date: food.date,
       );
 
       final createdFoodModel =
@@ -62,6 +64,8 @@ class FoodDatabaseRepositoryImpl implements FoodDatabaseRepository {
         sugar: food.sugar,
         sodium: food.sodium,
         cholesterol: food.cholesterol,
+        mealtype: food.mealtype,
+        date: food.date,
       );
 
       final updatedFood = await remoteDataSource.updateFood(foodModel);

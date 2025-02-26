@@ -17,6 +17,8 @@ class LoadDatabaseFoods extends FoodEvent {
   final double? maxCalories;
   final String? category;
   final String? brand;
+  final String? mealType;
+  final DateTime? date;
 
   const LoadDatabaseFoods({
     required this.dietId,
@@ -25,6 +27,8 @@ class LoadDatabaseFoods extends FoodEvent {
     this.maxCalories,
     this.category,
     this.brand,
+    this.mealType,
+    this.date,
   });
 
   @override

@@ -11,6 +11,8 @@ class FoodEntityDatabase {
   final double? sugar;
   final double? sodium;
   final double? cholesterol;
+  final String? mealtype;
+  final DateTime? date;
 
   FoodEntityDatabase({
     required this.id,
@@ -25,6 +27,8 @@ class FoodEntityDatabase {
     this.sugar,
     this.sodium,
     this.cholesterol,
+    this.mealtype,
+    this.date,
   });
 
   @override

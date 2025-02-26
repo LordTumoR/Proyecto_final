@@ -13,6 +13,8 @@ class FoodModelDatabase {
   final double? sugar;
   final double? sodium;
   final double? cholesterol;
+  final String? mealtype;
+  final DateTime? date;
 
   FoodModelDatabase({
     this.id,
@@ -27,6 +29,8 @@ class FoodModelDatabase {
     this.sugar,
     this.sodium,
     this.cholesterol,
+    this.mealtype,
+    this.date,
   });
 
   factory FoodModelDatabase.fromJson(Map<String, dynamic> json) {
@@ -43,6 +47,8 @@ class FoodModelDatabase {
       sugar: (json['sugar'] as num?)?.toDouble(),
       sodium: (json['sodium'] as num?)?.toDouble(),
       cholesterol: (json['cholesterol'] as num?)?.toDouble(),
+      mealtype: json['mealtype'],
+      date: json['date'] != null ? DateTime.parse(json['date']) : null,
     );
   }
 
@@ -60,6 +66,8 @@ class FoodModelDatabase {
       'sugar': sugar,
       'sodium': sodium,
       'cholesterol': cholesterol,
+      'mealtype': mealtype,
+      'date': date?.toIso8601String(),
     };
   }
 
@@ -77,6 +85,8 @@ class FoodModelDatabase {
       sugar: sugar ?? 0.0,
       sodium: sodium ?? 0.0,
       cholesterol: cholesterol ?? 0.0,
+      mealtype: mealtype ?? '',
+      date: date ?? DateTime.now(),
     );
   }
 }

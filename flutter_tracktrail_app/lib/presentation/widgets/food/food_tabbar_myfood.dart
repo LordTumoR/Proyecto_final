@@ -20,9 +20,19 @@ class DatabaseFoodsTab extends StatefulWidget {
 
 class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
   final DatePickerController _controller = DatePickerController();
+  String selectedMealType = 'Desayuno'; // Estado inicial del dropdown
+
   @override
   void initState() {
     super.initState();
+    _loadFoods();
+
+    DateManager().selectedDate.addListener(() {
+      _loadFoods();
+    });
+  }
+
+  void _loadFoods() {
     final fechaSeleccionada = DateManager().selectedDate.value;
     context.read<FoodBloc>().add(
           LoadDatabaseFoods(
@@ -32,22 +42,9 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
             maxCalories: null,
             category: null,
             brand: null,
+            mealType: selectedMealType,
           ),
         );
-
-    DateManager().selectedDate.addListener(() {
-      final nuevaFecha = DateManager().selectedDate.value;
-      context.read<FoodBloc>().add(
-            LoadDatabaseFoods(
-              dietId: widget.dietId,
-              name: null,
-              minCalories: null,
-              maxCalories: null,
-              category: null,
-              brand: null,
-            ),
-          );
-    });
   }
 
   @override
@@ -56,8 +53,8 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registro de Alimentos"),
-        backgroundColor: Colors.purple,
+        title: const Text("Seguimiento de Dietas"),
+        backgroundColor: const Color.fromARGB(255, 252, 224, 179),
       ),
       body: Column(
         children: [
@@ -75,6 +72,46 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey, width: 1),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: selectedMealType,
+                    items: ['Desayuno', 'Comida', 'Merienda', 'Cena']
+                        .map((meal) => DropdownMenuItem(
+                              value: meal,
+                              child: Text(
+                                meal,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      if (value != null) {
+                        setState(() {
+                          selectedMealType = value;
+                          _loadFoods();
+                        });
+                      }
+                    },
+                    icon:
+                        const Icon(Icons.arrow_drop_down, color: Colors.black),
+                    dropdownColor: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
           Expanded(
             child: BlocBuilder<FoodBloc, FoodState>(
               builder: (context, state) {
@@ -89,12 +126,15 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                   );
                 } else if (state is FoodDatabaseLoaded) {
                   final filteredFoodList = state.foodList
-                      .where((food) => food == selectedDate)
+                      .where((food) =>
+                          food.date == selectedDate.value &&
+                          food.mealtype == selectedMealType)
                       .toList();
 
                   if (filteredFoodList.isEmpty) {
                     return const Center(
-                      child: Text('No hay alimentos guardados para esta fecha'),
+                      child: Text(
+                          'No hay alimentos guardados para esta selección'),
                     );
                   }
 
@@ -131,47 +171,14 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                                     fontSize: 16,
                                   ),
                                 ),
-                                Text(
-                                  'Proteínas: ${foodItem.protein?.toStringAsFixed(2) ?? 'N/A'} g',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  'Carbohidratos: ${foodItem.carbohydrates?.toStringAsFixed(2) ?? 'N/A'} g',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  'Grasas: ${foodItem.fat?.toStringAsFixed(2) ?? 'N/A'} g',
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                  ),
-                                ),
                               ],
                             ),
-                            trailing: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.more,
-                                      color: Color.fromARGB(255, 45, 18, 143)),
-                                  onPressed: () {
-                                    _showFoodDetailsDialog(context, foodItem);
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.edit,
-                                      color: Color.fromARGB(255, 45, 18, 143)),
-                                  onPressed: () {
-                                    _showEditFoodDialog(context, foodItem);
-                                  },
-                                ),
-                              ],
+                            trailing: IconButton(
+                              icon: const Icon(Icons.edit,
+                                  color: Color.fromARGB(255, 45, 18, 143)),
+                              onPressed: () {
+                                _showEditFoodDialog(context, foodItem);
+                              },
                             ),
                           ),
                         );

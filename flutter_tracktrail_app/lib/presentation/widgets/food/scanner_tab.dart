@@ -32,7 +32,7 @@ class _ScannerTabState extends State<ScannerTab> {
       cameraFace: CameraFace.back,
     );
 
-    return result; // Devuelve el código escaneado
+    return result;
   }
 
   Future<void> _onScanBarcode() async {
@@ -43,7 +43,6 @@ class _ScannerTabState extends State<ScannerTab> {
         _scannedCode = barcode;
       });
 
-      // Envía el código escaneado al Bloc
       context.read<FoodBloc>().add(GetProductByBarcodeEvent(barcode));
     }
   }
