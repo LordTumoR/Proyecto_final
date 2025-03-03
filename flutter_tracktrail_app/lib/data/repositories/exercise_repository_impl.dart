@@ -20,6 +20,8 @@ class ExercisesRepositoryImpl implements ExercisesRepository {
           description: exercise.description,
           image: exercise.image,
           dateTime: exercise.dateTime,
+          repetitions: exercise.repetitions,
+          weight: exercise.weight,
         );
       }).toList();
 

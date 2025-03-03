@@ -15,7 +15,8 @@ class EditExerciseDialog extends StatefulWidget {
 class _EditExerciseDialogState extends State<EditExerciseDialog> {
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _repetitionsController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -43,6 +44,30 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
               labelText: AppLocalizations.of(context)!.exercise_description,
             ),
           ),
+          TextFormField(
+            controller: _weightController,
+            decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.exercise_weight),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return AppLocalizations.of(context)!.error_exercise_weight;
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            controller: _repetitionsController,
+            decoration: InputDecoration(
+                labelText: AppLocalizations.of(context)!.exercise_repetitions),
+            keyboardType: TextInputType.number,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return AppLocalizations.of(context)!.error_exercise_repetitions;
+              }
+              return null;
+            },
+          ),
         ],
       ),
       actions: [
@@ -63,6 +88,8 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
                 name: exerciseName,
                 description: exerciseDescription,
                 image: widget.exercise.image,
+                weight: double.tryParse(_weightController.text) ?? 0,
+                repetitions: int.tryParse(_repetitionsController.text) ?? 0,
               );
 
               widget.onEdit(updatedExercise);

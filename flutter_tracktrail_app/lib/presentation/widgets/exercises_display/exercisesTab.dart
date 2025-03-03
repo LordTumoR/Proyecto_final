@@ -98,7 +98,9 @@ class _ExercisesTabState extends State<ExercisesTab> {
                         ),
                       ),
                       subtitle: Text(
-                        routineExercise.exercise.description ?? '',
+                        '${routineExercise.exercise.description ?? ''}\n'
+                        'Peso: ${routineExercise.exercise.weight ?? 'N/A'} kg | '
+                        'Repeticiones: ${routineExercise.exercise.repetitions ?? 'N/A'}',
                         style: const TextStyle(
                           color: Colors.black54,
                           fontSize: 16,

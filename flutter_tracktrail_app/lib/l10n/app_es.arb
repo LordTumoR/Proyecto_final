@@ -99,5 +99,16 @@
   "search_foods": "Buscar alimentos",
   "calories":"Calorias",
   "confirm_food_deletion": "Confirmar eliminacion de alimento",
-  "no_food_available": "Sin alimentos Disponibles"
+  "no_food_available": "Sin alimentos Disponibles",
+  "no_records_found": "Sin dietas encontradas",
+  "food_list": "Lista de alimentos",
+  "my_foods": "Mis alimentos",
+  "search_foods": "Buscar alimentos",
+  "calories": "Calorías",
+  "confirm_food_deletion": "Confirmar eliminación de alimento",
+  "no_food_available": "Sin alimentos disponibles",
+  "exercise_weight": "Peso",
+  "error_exercise_weight": "Por favor, introduce un peso válido",
+  "exercise_repetitions": "Repeticiones",
+  "error_exercise_repetitions": "Por favor, introduce un número válido de repeticiones"
 }

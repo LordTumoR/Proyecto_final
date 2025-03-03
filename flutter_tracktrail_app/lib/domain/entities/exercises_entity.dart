@@ -4,6 +4,8 @@ class ExerciseEntity {
   final String? description;
   final String? image;
   final DateTime? dateTime;
+  final int? repetitions;
+  final double? weight;
 
   ExerciseEntity({
     this.id,
@@ -11,5 +13,7 @@ class ExerciseEntity {
     this.description,
     this.image,
     this.dateTime,
+    this.repetitions,
+    this.weight,
   });
 }

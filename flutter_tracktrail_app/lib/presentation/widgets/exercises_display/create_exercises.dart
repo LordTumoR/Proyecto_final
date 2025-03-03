@@ -13,6 +13,8 @@ class CreateExerciseDrawer extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _weightController = TextEditingController();
+  final TextEditingController _repetitionsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,32 @@ class CreateExerciseDrawer extends StatelessWidget {
                 return null;
               },
             ),
+            TextFormField(
+              controller: _weightController,
+              decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.exercise_weight),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return AppLocalizations.of(context)!.error_exercise_weight;
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: _repetitionsController,
+              decoration: InputDecoration(
+                  labelText:
+                      AppLocalizations.of(context)!.exercise_repetitions),
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return AppLocalizations.of(context)!
+                      .error_exercise_repetitions;
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
@@ -62,6 +90,8 @@ class CreateExerciseDrawer extends StatelessWidget {
                     description: _descriptionController.text,
                     image: '',
                     dateTime: fechaSeleccionada,
+                    weight: double.tryParse(_weightController.text) ?? 0,
+                    repetitions: int.tryParse(_repetitionsController.text) ?? 0,
                   );
                   onCreate(newExercise);
                   Navigator.pop(context);

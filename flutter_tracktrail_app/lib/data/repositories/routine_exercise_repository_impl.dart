@@ -24,12 +24,13 @@ class RoutineExerciseRepositoryImpl implements RoutineExerciseRepository {
 
   ExerciseModel _mapEntityToModel(ExerciseEntity entity) {
     return ExerciseModel(
-      idExercise: entity.id ?? 0,
-      name: entity.name ?? '',
-      description: entity.description ?? '',
-      image: entity.image ?? '',
-      dateTime: entity.dateTime,
-    );
+        idExercise: entity.id ?? 0,
+        name: entity.name ?? '',
+        description: entity.description ?? '',
+        image: entity.image ?? '',
+        dateTime: entity.dateTime,
+        repetitions: entity.repetitions,
+        weight: entity.weight);
   }
 
   @override

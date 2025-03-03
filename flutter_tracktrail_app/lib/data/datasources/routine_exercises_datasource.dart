@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 abstract class RoutineExerciseRemoteDataSource {
   Future<void> addExerciseToRoutine(int routineId, ExerciseModel newExercise);
   Future<List<RoutineExerciseModel>> getAllRoutineExercises();
-  Future<ExerciseModel> createExercise(
+  Future<List<ExerciseModel>> createExercise(
       ExerciseModel exercise, int routineId, int userId);
   Future<void> updateRoutineExerciseCompletion(
       int routineExerciseId, bool isCompleted);
@@ -19,8 +19,7 @@ class RoutineExerciseRemoteDataSourceImpl
 
   RoutineExerciseRemoteDataSourceImpl(this.client);
 
-  @override
-  Future<ExerciseModel> createExercise(
+  Future<List<ExerciseModel>> createExercise(
       ExerciseModel exercise, int routineId, int userId) async {
     const String token = 'admin';
     final response;
@@ -46,8 +45,8 @@ class RoutineExerciseRemoteDataSourceImpl
     }
 
     if (response.statusCode == 200 || response.statusCode == 201) {
-      final Map<String, dynamic> exerciseJson = json.decode(response.body);
-      return ExerciseModel.fromJson(exerciseJson);
+      final List<dynamic> decodedResponse = json.decode(response.body);
+      return decodedResponse.map((e) => ExerciseModel.fromJson(e)).toList();
     } else {
       throw Exception(
           'Error al ${exercise.idExercise == 0 || exercise.idExercise == null ? 'crear' : 'actualizar'} el ejercicio');
