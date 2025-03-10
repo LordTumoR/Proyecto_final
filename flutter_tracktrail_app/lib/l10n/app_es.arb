@@ -110,5 +110,12 @@
   "exercise_weight": "Peso",
   "error_exercise_weight": "Por favor, introduce un peso válido",
   "exercise_repetitions": "Repeticiones",
-  "error_exercise_repetitions": "Por favor, introduce un número válido de repeticiones"
+  "error_exercise_repetitions": "Por favor, introduce un número válido de repeticiones",
+  "exercise_sets":"Series del Ejercicio",
+  "error_exercise_sets": "Por favor, introduce un número válido de series",
+  "exercise_muscleGroup":"Grupo muscular",
+  "error_exercise_muscleGroup": "Algo a fallado al crear el grupo muscular"
+
+  
+
 }

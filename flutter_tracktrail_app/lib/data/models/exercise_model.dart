@@ -8,22 +8,28 @@ class ExerciseModel {
   final DateTime? dateTime;
   final int? repetitions;
   final double? weight;
+  final String? muscleGroup;
+  final int? sets;
 
-  ExerciseModel(
-      {int? idExercise,
-      String? name,
-      String? description,
-      String? image,
-      DateTime? dateTime,
-      int? repetitions,
-      double? weight})
-      : idExercise = idExercise ?? 0,
+  ExerciseModel({
+    int? idExercise,
+    String? name,
+    String? description,
+    String? image,
+    DateTime? dateTime,
+    int? repetitions,
+    double? weight,
+    String? muscleGroup,
+    int? sets,
+  })  : idExercise = idExercise ?? 0,
         name = name ?? '',
         description = description ?? '',
         image = image ?? '',
         dateTime = dateTime,
         repetitions = repetitions,
-        weight = weight;
+        weight = weight,
+        muscleGroup = muscleGroup ?? '',
+        sets = sets ?? 0;
 
   @override
   String toString() {
@@ -41,6 +47,8 @@ class ExerciseModel {
           : DateTime.now(),
       repetitions: json['repetitions'] ?? 0,
       weight: json['weight'] ?? 0,
+      muscleGroup: json['muscleGroup'],
+      sets: json['sets'] ?? 0,
     );
   }
 
@@ -53,6 +61,8 @@ class ExerciseModel {
       'dateTime': dateTime?.toIso8601String(),
       'repetitions': repetitions,
       'weight': weight,
+      'muscleGroup': muscleGroup,
+      'sets': sets,
     };
   }
 
@@ -65,6 +75,8 @@ class ExerciseModel {
       dateTime: dateTime,
       repetitions: repetitions ?? 0,
       weight: weight ?? 0,
+      muscleGroup: muscleGroup,
+      sets: sets ?? 0,
     );
   }
 }

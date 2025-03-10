@@ -15,14 +15,15 @@ class ExercisesRepositoryImpl implements ExercisesRepository {
 
       final exerciseEntities = exercises.map((exercise) {
         return ExerciseEntity(
-          id: exercise.idExercise,
-          name: exercise.name,
-          description: exercise.description,
-          image: exercise.image,
-          dateTime: exercise.dateTime,
-          repetitions: exercise.repetitions,
-          weight: exercise.weight,
-        );
+            id: exercise.idExercise,
+            name: exercise.name,
+            description: exercise.description,
+            image: exercise.image,
+            dateTime: exercise.dateTime,
+            repetitions: exercise.repetitions,
+            weight: exercise.weight,
+            muscleGroup: exercise.muscleGroup,
+            sets: exercise.sets);
       }).toList();
 
       return Right(exerciseEntities);

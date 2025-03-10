@@ -6,14 +6,17 @@ class ExerciseEntity {
   final DateTime? dateTime;
   final int? repetitions;
   final double? weight;
+  final String? muscleGroup;
+  final int? sets;
 
-  ExerciseEntity({
-    this.id,
-    this.name,
-    this.description,
-    this.image,
-    this.dateTime,
-    this.repetitions,
-    this.weight,
-  });
+  ExerciseEntity(
+      {this.id,
+      this.name,
+      this.description,
+      this.image,
+      this.dateTime,
+      this.repetitions,
+      this.weight,
+      this.muscleGroup,
+      this.sets});
 }

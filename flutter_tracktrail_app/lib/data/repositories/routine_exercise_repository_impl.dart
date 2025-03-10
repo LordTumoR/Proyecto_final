@@ -30,7 +30,9 @@ class RoutineExerciseRepositoryImpl implements RoutineExerciseRepository {
         image: entity.image ?? '',
         dateTime: entity.dateTime,
         repetitions: entity.repetitions,
-        weight: entity.weight);
+        weight: entity.weight,
+        muscleGroup: entity.muscleGroup,
+        sets: entity.sets);
   }
 
   @override
