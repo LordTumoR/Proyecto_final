@@ -5,6 +5,7 @@ import 'package:flutter_tracktrail_app/data/datasources/firebase_auth_datasource
 import 'package:flutter_tracktrail_app/data/datasources/food_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/nutrition_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/openfoodfacts_datasource.dart';
+import 'package:flutter_tracktrail_app/data/datasources/progress_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routine_exercises_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/routines_datasource.dart';
 import 'package:flutter_tracktrail_app/data/datasources/users_datasource.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_tracktrail_app/data/repositories/get_users_info_reposito
 import 'package:flutter_tracktrail_app/data/repositories/image_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/nutrition_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/openfoodfacts_repository_impl.dart';
+import 'package:flutter_tracktrail_app/data/repositories/progress_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/routine_exercise_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/routines_repository_impl.dart';
 import 'package:flutter_tracktrail_app/data/repositories/sign_in_repository_impl.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_tracktrail_app/domain/repositories/get_users_info_reposi
 import 'package:flutter_tracktrail_app/domain/repositories/image_repositoriy.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/nutrition_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/openfoodfacts_repository.dart';
+import 'package:flutter_tracktrail_app/domain/repositories/progress_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routine_exercise_reporitory.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/routines_repository.dart';
 import 'package:flutter_tracktrail_app/domain/repositories/sign_in_repository.dart';
@@ -37,13 +40,17 @@ import 'package:flutter_tracktrail_app/domain/usecases/delete_routine_usecase.da
 import 'package:flutter_tracktrail_app/domain/usecases/fetch_image_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_completion_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_current_user_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_evolution_rep_sets_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_evolution_weight_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_foods_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_nutrition_record_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_openfoodfacts_food_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_personal_records_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_product_by_barcode.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routine_exercises_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_routines_usecase.dart';
+import 'package:flutter_tracktrail_app/domain/usecases/get_training_streak_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_user_routines_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/get_users_usecase.dart';
 import 'package:flutter_tracktrail_app/domain/usecases/register_user_usecase.dart';
@@ -65,6 +72,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/food/food_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_event.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/progress/progress_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
@@ -81,6 +89,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerFactory<RoutinesBloc>(
     () => RoutinesBloc(sl(), sl(), sl(), sl(), sl(), sl(), sl()),
+  );
+  sl.registerFactory<ProgressBloc>(
+    () => ProgressBloc(sl(), sl(), sl(), sl()),
   );
   sl.registerFactory<ExercisesBloc>(
     () => ExercisesBloc(sl(), sl()),
@@ -111,7 +122,9 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<FirebaseAuthDataSource>(
     () => FirebaseAuthDataSource(auth: sl<FirebaseAuth>()),
   );
-
+  sl.registerLazySingleton<ProgressRemoteDataSource>(
+    () => ProgressRemoteDataSourceImpl(sl<http.Client>()),
+  );
   sl.registerLazySingleton<FoodRemoteDataSource>(
     () => FoodRemoteDataSourceImpl(sl<http.Client>()),
   );
@@ -144,6 +157,9 @@ Future<void> configureDependencies() async {
   );
   sl.registerLazySingleton<NutritionRepository>(
     () => NutritionRepositoryImpl(sl<NutritionRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<ProgressRepository>(
+    () => ProgressRepositoryImpl(sl<ProgressRemoteDataSource>()),
   );
   sl.registerLazySingleton<FoodDatabaseRepository>(
     () => FoodDatabaseRepositoryImpl(sl<FoodDatabaseRemoteDataSource>()),
@@ -189,6 +205,19 @@ Future<void> configureDependencies() async {
   sl.registerLazySingleton<GetCompletionUseCase>(
     () => GetCompletionUseCase(sl()),
   );
+  sl.registerLazySingleton<GetEvolutionRepsSetsUseCase>(
+    () => GetEvolutionRepsSetsUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetPersonalRecordsUseCase>(
+    () => GetPersonalRecordsUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetEvolutionWeightUseCase>(
+    () => GetEvolutionWeightUseCase(sl()),
+  );
+  sl.registerLazySingleton<GetTrainingStreakUseCase>(
+    () => GetTrainingStreakUseCase(sl()),
+  );
+
   sl.registerLazySingleton<UpdateExerciseCompletionStatus>(
     () => UpdateExerciseCompletionStatus(sl()),
   );

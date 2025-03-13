@@ -10,6 +10,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/language/language_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/language/language_state.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_bloc.dart';
+import 'package:flutter_tracktrail_app/presentation/blocs/progress/progress_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routine_exercises/routine_exercises_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(create: (_) => sl<LanguageBloc>()),
           BlocProvider(create: (_) => sl<NutritionBloc>()),
           BlocProvider(create: (_) => sl<FoodBloc>()),
+          BlocProvider(create: (_) => sl<ProgressBloc>()),
         ],
         child:
             BlocBuilder<LanguageBloc, LanguageState>(builder: (context, state) {
