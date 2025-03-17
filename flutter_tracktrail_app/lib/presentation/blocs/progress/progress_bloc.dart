@@ -27,7 +27,7 @@ class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
   Future<void> _onFetchEvolutionWeight(
       FetchEvolutionWeight event, Emitter<ProgressState> emit) async {
     emit(ProgressState.loading());
-    final result = await getEvolutionWeightUseCase(event.exerciseId);
+    final result = await getEvolutionWeightUseCase(event.muscleGroup);
     result.fold(
       (error) => emit(ProgressState.failure(error)),
       (data) => emit(state.copyWith(evolutionWeight: data, isLoading: false)),
@@ -37,7 +37,7 @@ class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
   Future<void> _onFetchEvolutionRepsSets(
       FetchEvolutionRepsSets event, Emitter<ProgressState> emit) async {
     emit(ProgressState.loading());
-    final result = await getEvolutionRepsSetsUseCase(event.exerciseId);
+    final result = await getEvolutionRepsSetsUseCase(event.muscleGroup);
     result.fold(
       (error) => emit(ProgressState.failure(error)),
       (data) => emit(state.copyWith(evolutionRepsSets: data, isLoading: false)),
@@ -57,7 +57,7 @@ class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
   Future<void> _onFetchTrainingStreak(
       FetchTrainingStreak event, Emitter<ProgressState> emit) async {
     emit(ProgressState.loading());
-    final result = await getTrainingStreakUseCase(event.userId);
+    final result = await getTrainingStreakUseCase();
     result.fold(
       (error) => emit(ProgressState.failure(error)),
       (streak) =>

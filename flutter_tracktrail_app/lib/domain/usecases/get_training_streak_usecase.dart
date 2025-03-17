@@ -7,9 +7,9 @@ class GetTrainingStreakUseCase {
 
   GetTrainingStreakUseCase(this.repository);
 
-  Future<Either<String, int>> call(int userId) async {
+  Future<Either<String, int>> call() async {
     try {
-      int result = await repository.getTrainingStreak(userId);
+      int result = await repository.getTrainingStreak();
       return Right(result);
     } catch (e) {
       return Left("Error occurred: $e");

@@ -7,18 +7,18 @@ class ProgressRepositoryImpl implements ProgressRepository {
   ProgressRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<List<dynamic>> getEvolutionWeight(int exerciseId) async {
+  Future<List<dynamic>> getEvolutionWeight(String muscleGroup) async {
     try {
-      return await remoteDataSource.getEvolutionWeight(exerciseId);
+      return await remoteDataSource.getEvolutionWeight(muscleGroup);
     } catch (e) {
       throw Exception('Error al obtener evolución de peso: $e');
     }
   }
 
   @override
-  Future<List<dynamic>> getEvolutionRepsSets(int exerciseId) async {
+  Future<List<dynamic>> getEvolutionRepsSets(String muscleGroup) async {
     try {
-      return await remoteDataSource.getEvolutionRepsSets(exerciseId);
+      return await remoteDataSource.getEvolutionRepsSets(muscleGroup);
     } catch (e) {
       throw Exception('Error al obtener evolución de repeticiones y sets: $e');
     }
@@ -34,9 +34,9 @@ class ProgressRepositoryImpl implements ProgressRepository {
   }
 
   @override
-  Future<int> getTrainingStreak(int userId) async {
+  Future<int> getTrainingStreak() async {
     try {
-      return await remoteDataSource.getTrainingStreak(userId);
+      return await remoteDataSource.getTrainingStreak();
     } catch (e) {
       throw Exception('Error al obtener la racha de entrenamiento: $e');
     }

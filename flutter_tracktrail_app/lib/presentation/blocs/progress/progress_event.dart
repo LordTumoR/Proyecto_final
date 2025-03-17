@@ -8,21 +8,21 @@ abstract class ProgressEvent extends Equatable {
 }
 
 class FetchEvolutionWeight extends ProgressEvent {
-  final int exerciseId;
+  final String muscleGroup;
 
-  FetchEvolutionWeight(this.exerciseId);
+  FetchEvolutionWeight(this.muscleGroup);
 
   @override
-  List<Object?> get props => [exerciseId];
+  List<Object?> get props => [muscleGroup];
 }
 
 class FetchEvolutionRepsSets extends ProgressEvent {
-  final int exerciseId;
+  final String muscleGroup;
 
-  FetchEvolutionRepsSets(this.exerciseId);
+  FetchEvolutionRepsSets(this.muscleGroup);
 
   @override
-  List<Object?> get props => [exerciseId];
+  List<Object?> get props => [muscleGroup];
 }
 
 class FetchPersonalRecords extends ProgressEvent {
@@ -31,10 +31,8 @@ class FetchPersonalRecords extends ProgressEvent {
 }
 
 class FetchTrainingStreak extends ProgressEvent {
-  final int userId;
-
-  FetchTrainingStreak(this.userId);
+  FetchTrainingStreak();
 
   @override
-  List<Object?> get props => [userId];
+  List<Object?> get props => [];
 }

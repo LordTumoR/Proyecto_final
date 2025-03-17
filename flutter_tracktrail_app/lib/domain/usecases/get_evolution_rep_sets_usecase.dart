@@ -6,9 +6,9 @@ class GetEvolutionRepsSetsUseCase {
 
   GetEvolutionRepsSetsUseCase(this.repository);
 
-  Future<Either<String, List<dynamic>>> call(int exerciseId) async {
+  Future<Either<String, List<dynamic>>> call(String muscleGroup) async {
     try {
-      List<dynamic> result = await repository.getEvolutionRepsSets(exerciseId);
+      List<dynamic> result = await repository.getEvolutionRepsSets(muscleGroup);
       return Right(result);
     } catch (e) {
       return Left("Error occurred: $e");
