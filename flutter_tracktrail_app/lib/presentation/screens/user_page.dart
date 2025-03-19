@@ -5,6 +5,8 @@ import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/auth/login_state.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/maps_display/maps_generate.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/maps_display/maps_menu.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_tab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/progress_display/progress_menu.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/routine_menu.dart';
@@ -304,7 +306,23 @@ class _UserPageState extends State<UserPage> {
               ),
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () async {
+                    await _checkIfUserIsRegistered();
+                    if (isUserRegistered) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const UserInfoDialog();
+                        },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RutasMapasScreen()),
+                      );
+                    }
+                  },
                   child: MouseRegion(
                     cursor: SystemMouseCursors.click,
                     child: AnimatedContainer(
