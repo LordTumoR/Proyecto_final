@@ -64,7 +64,7 @@ class _MapsScreenState extends State<MapsScreen> {
   }
 
   double _calculateDistance(LatLng point1, LatLng point2) {
-    const double R = 6371000; // Radio de la Tierra en metros
+    const double R = 6371000;
     double lat1 = point1.latitude * pi / 180;
     double lon1 = point1.longitude * pi / 180;
     double lat2 = point2.latitude * pi / 180;

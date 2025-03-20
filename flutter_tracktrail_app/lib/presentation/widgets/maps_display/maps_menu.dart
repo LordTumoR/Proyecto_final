@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/maps_display/Consult_routes_map.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/maps_display/maps_follow_route.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/maps_display/maps_generate.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/maps_display/maps_generate_manual.dart';
 
 class RutasMapasScreen extends StatelessWidget {
   @override
@@ -24,9 +27,15 @@ class RutasMapasScreen extends StatelessWidget {
                     context,
                     title: 'Seguir Ruta',
                     icon: Icons.directions_walk,
-                    description: 'Sigue una ruta previamente guardada.',
+                    description: 'Empieza a Registrar Tu ruta.',
                     color: Colors.green.shade700,
-                    onTap: () {},
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LiveTrackingScreen()),
+                      );
+                    },
                   ),
                   _buildOptionTile(
                     context,
@@ -47,7 +56,13 @@ class RutasMapasScreen extends StatelessWidget {
                     icon: Icons.edit_location_alt,
                     description: 'Dibuja tu propia ruta en el mapa.',
                     color: Colors.purple.shade700,
-                    onTap: () {},
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DrawRouteScreen()),
+                      );
+                    },
                   ),
                   _buildOptionTile(
                     context,
@@ -55,7 +70,13 @@ class RutasMapasScreen extends StatelessWidget {
                     icon: Icons.map,
                     description: 'Visualiza mapas y explora rutas disponibles.',
                     color: Colors.blue.shade700,
-                    onTap: () {},
+                    onTap: () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ConsultarMapaScreen()),
+                      );
+                    },
                   ),
                 ],
               ),

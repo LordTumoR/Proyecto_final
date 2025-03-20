@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tracktrail_app/data/datasources/openai_service.dart';
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
@@ -34,6 +35,9 @@ class _CreateExerciseDrawerState extends State<CreateExerciseDrawer> {
     "Piernas",
     "Glúteos"
   ];
+
+  // Crea una instancia del servicio OpenAI
+  final OpenAIService openAIService = OpenAIService();
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +158,98 @@ class _CreateExerciseDrawerState extends State<CreateExerciseDrawer> {
                   Navigator.pop(context);
                 }
               },
-              child: Text(AppLocalizations.of(context)!.create_exercise_button),
+              child: Text('Crear ejercicio'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                // Abre un diálogo para que el usuario elija el grupo muscular y la cantidad
+                final muscleGroupController = TextEditingController();
+                final quantityController = TextEditingController();
+                await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Generar ejercicios'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        DropdownButtonFormField<String>(
+                          value: selectedMuscleGroup,
+                          decoration:
+                              InputDecoration(labelText: 'Grupo muscular'),
+                          items: muscleGroups.map((String group) {
+                            return DropdownMenuItem<String>(
+                              value: group,
+                              child: Text(group),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedMuscleGroup = newValue;
+                            });
+                          },
+                        ),
+                        TextFormField(
+                          controller: quantityController,
+                          decoration: InputDecoration(
+                              labelText: 'Cantidad de ejercicios'),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancelar'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final muscleGroup = selectedMuscleGroup;
+                          final quantity =
+                              int.tryParse(quantityController.text) ?? 0;
+                          if (muscleGroup != null && quantity > 0) {
+                            openAIService
+                                .generarEjerciciosYGenerarJson(
+                                    muscleGroup, quantity)
+                                .then((ejerciciosGeneradosJson) {
+                              // Convertir el JSON generado a objetos ExerciseEntity
+                              final List<ExerciseEntity> ejercicios =
+                                  ejerciciosGeneradosJson
+                                      .map<ExerciseEntity>((json) {
+                                return ExerciseEntity(
+                                  id: 0, // Puedes asignar un ID si es necesario
+                                  name: json['name'],
+                                  description: json['description'],
+                                  image: json['image'] ?? '',
+                                  dateTime: DateTime.parse(json['dateTime']),
+                                  weight: json['weight'],
+                                  repetitions: json['repetitions'],
+                                  sets: json['sets'],
+                                  muscleGroup: json['muscleGroup'],
+                                );
+                              }).toList();
+
+                              // Crear los ejercicios usando la función onCreate
+                              for (var ejercicio in ejercicios) {
+                                widget.onCreate(ejercicio);
+                              }
+
+                              Navigator.pop(context);
+                            }).catchError((error) {
+                              // Manejar el error si ocurre
+                              print("Error al generar los ejercicios: $error");
+                            });
+                          }
+                        },
+                        child: Text('Generar'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+              child: Text('Generar ejercicios'),
             ),
           ],
         ),
