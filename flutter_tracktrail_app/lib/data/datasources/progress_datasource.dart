@@ -11,7 +11,7 @@ abstract class ProgressRemoteDataSource {
 
 class ProgressRemoteDataSourceImpl implements ProgressRemoteDataSource {
   final http.Client client;
-  final String baseUrl = 'http://192.168.1.141:8080/progress';
+  final String baseUrl = 'http://192.168.1.142:8080/progress';
   final String token = 'admin';
 
   ProgressRemoteDataSourceImpl(this.client);
@@ -110,7 +110,7 @@ class ProgressRemoteDataSourceImpl implements ProgressRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.141:8080/users'),
+      Uri.parse('http://192.168.1.142:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

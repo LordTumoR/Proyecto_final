@@ -36,7 +36,6 @@ class _CreateExerciseDrawerState extends State<CreateExerciseDrawer> {
     "Glúteos"
   ];
 
-  // Crea una instancia del servicio OpenAI
   final OpenAIService openAIService = OpenAIService();
 
   @override
@@ -163,7 +162,6 @@ class _CreateExerciseDrawerState extends State<CreateExerciseDrawer> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () async {
-                // Abre un diálogo para que el usuario elija el grupo muscular y la cantidad
                 final muscleGroupController = TextEditingController();
                 final quantityController = TextEditingController();
                 await showDialog(
@@ -214,12 +212,11 @@ class _CreateExerciseDrawerState extends State<CreateExerciseDrawer> {
                                 .generarEjerciciosYGenerarJson(
                                     muscleGroup, quantity)
                                 .then((ejerciciosGeneradosJson) {
-                              // Convertir el JSON generado a objetos ExerciseEntity
                               final List<ExerciseEntity> ejercicios =
                                   ejerciciosGeneradosJson
                                       .map<ExerciseEntity>((json) {
                                 return ExerciseEntity(
-                                  id: 0, // Puedes asignar un ID si es necesario
+                                  id: 0,
                                   name: json['name'],
                                   description: json['description'],
                                   image: json['image'] ?? '',
@@ -231,14 +228,12 @@ class _CreateExerciseDrawerState extends State<CreateExerciseDrawer> {
                                 );
                               }).toList();
 
-                              // Crear los ejercicios usando la función onCreate
                               for (var ejercicio in ejercicios) {
                                 widget.onCreate(ejercicio);
                               }
 
                               Navigator.pop(context);
                             }).catchError((error) {
-                              // Manejar el error si ocurre
                               print("Error al generar los ejercicios: $error");
                             });
                           }
