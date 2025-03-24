@@ -69,7 +69,13 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                   style: const TextStyle(color: Colors.red, fontSize: 16),
                 ),
               );
-            } else if (state is NutritionLoaded) {
+            } else if (state is NutritionLoaded){
+              if (state.nutritionRecords.isEmpty) {
+return Center(
+      child: Text(AppLocalizations.of(context)!.no_records_found),
+    );
+              }
+              
               final nutritionRecords = state.nutritionRecords;
 
               return ListView.builder(
@@ -213,6 +219,11 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                 },
               );
             }
+          else if (state is NutritionOperationFailure) {
+  return Center(
+                child: Text(AppLocalizations.of(context)!.no_records_found));
+}
+
 
             return Center(
                 child: Text(AppLocalizations.of(context)!.no_records_found));

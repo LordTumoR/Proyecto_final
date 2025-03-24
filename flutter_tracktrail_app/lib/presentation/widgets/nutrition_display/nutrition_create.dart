@@ -19,6 +19,7 @@ class _CreateNutritionRecordDialogState
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -58,6 +59,7 @@ class _CreateNutritionRecordDialogState
             ),
           ],
         ),
+      ),
       ),
     );
   }

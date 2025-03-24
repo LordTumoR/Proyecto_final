@@ -55,18 +55,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
               },
             ),
           ],
-          bottom: TabBar(
-            indicatorColor: Colors.white,
-            indicatorWeight: 4.0,
-            labelColor: Colors.white,
-            unselectedLabelColor: Colors.white70,
-            tabs: [
-              Tab(
-                icon: const Icon(Icons.fitness_center, size: 30),
-                text: AppLocalizations.of(context)!.my_exercises,
-              ),
-            ],
-          ),
+         
         ),
         body: Column(
           children: [

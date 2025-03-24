@@ -113,11 +113,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
     );
   }
 }
-
 class ProgressView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProgressBloc, ProgressState>(
+    return BlocBuilder<ProgressBloc, ProgressState>(  
       builder: (context, state) {
         if (state.isLoading) {
           return const Center(
@@ -129,18 +128,18 @@ class ProgressView extends StatelessWidget {
                   style: const TextStyle(color: Colors.red, fontSize: 18)));
         }
 
-        return GridView.builder(
+        return ListView.builder(
           padding: const EdgeInsets.all(16.0),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16.0,
-            mainAxisSpacing: 16.0,
-            childAspectRatio: 1.0,
-          ),
           itemCount: 4,
           itemBuilder: (context, index) {
             switch (index) {
               case 0:
+
+                //map: Es recorre cada element de la llista.
+
+                // e is Map && e.containsKey('message'): Si l'element és un Map i té la clau 'message', es pilla el valor que té eixa clau (e['message']).
+
+                // Si no té la clau 'message', es pilla el valor de la clau 'weight' i es converteix en una cadena amb el sufix "KG" ('${e['weight']} KG').
                 return ProgressCard(
                   title: 'Peso Evolutivo ⚖️',
                   value: state.evolutionWeight is List
@@ -186,6 +185,7 @@ class ProgressView extends StatelessWidget {
     );
   }
 }
+
 
 class ProgressCard extends StatelessWidget {
   final String title;

@@ -24,31 +24,41 @@ class NutritionBloc extends Bloc<NutritionEvent, NutritionState> {
     on<UpdateNutritionRecord>(_onUpdateNutritionRecord);
     on<DeleteNutritionRecord>(_onDeleteNutritionRecord);
   }
+Future<void> _onFetchNutritionRecords(
+    FetchNutritionRecords event, Emitter<NutritionState> emit) async {
+  emit(NutritionLoading());
 
-  Future<void> _onFetchNutritionRecords(
-      FetchNutritionRecords event, Emitter<NutritionState> emit) async {
-    emit(NutritionLoading());
+  final result = await nutritionRecordUseCase();
 
-    final result = await nutritionRecordUseCase();
+  result.fold(
+    (error) {
+      if (error == 'Error al obtener los registros de nutrición: Exception: SIN DIETAS') {
+        emit(NutritionOperationFailure(error: 'SIN DIETAS'));
+      } else {
+        emit(NutritionOperationFailure(error: error));
+      }
+    },
+    (nutritionRecords) {
+      final filteredRecords = nutritionRecords.where((record) {
+        final matchesName =
+            record.name.toLowerCase().contains(event.name.toLowerCase());
+        final matchesDescription = record.description
+            .toLowerCase()
+            .contains(event.description.toLowerCase());
+        final matchesDate = event.date == null || record.date == event.date;
 
-    result.fold(
-      (error) => emit(NutritionOperationFailure(error: error)),
-      (nutritionRecords) {
-        final filteredRecords = nutritionRecords.where((record) {
-          final matchesName =
-              record.name.toLowerCase().contains(event.name.toLowerCase());
-          final matchesDescription = record.description
-              .toLowerCase()
-              .contains(event.description.toLowerCase());
-          final matchesDate = event.date == null || record.date == event.date;
+        return matchesName && matchesDescription && matchesDate;
+      }).toList();
 
-          return matchesName && matchesDescription && matchesDate;
-        }).toList();
-
+      if (filteredRecords.isEmpty) {
+        emit(NutritionOperationFailure(error: 'SIN DIETAS'));
+      } else {
         emit(NutritionLoaded(nutritionRecords: filteredRecords));
-      },
-    );
-  }
+      }
+    },
+  );
+}
+
 
   Future<void> _onCreateNutritionRecord(
       CreateNutritionRecord event, Emitter<NutritionState> emit) async {

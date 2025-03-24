@@ -14,7 +14,7 @@ class FoodDatabaseRemoteDataSourceImpl implements FoodDatabaseRemoteDataSource {
 
   FoodDatabaseRemoteDataSourceImpl(this.client);
 
-  static const String baseUrl = 'http://192.168.1.142:8080';
+  static const String baseUrl = 'http://192.168.170.140:8080';
 
   @override
   Future<List<FoodModelDatabase>> getNutritionFoods(int dietId) async {
@@ -101,7 +101,7 @@ class FoodDatabaseRemoteDataSourceImpl implements FoodDatabaseRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.142:8080/users'),
+      Uri.parse('http://192.168.170.140:8080/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

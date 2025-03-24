@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/domain/entities/food_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 
 class EditFoodDialog extends StatefulWidget {
   final FoodEntityDatabase food;
@@ -31,7 +32,9 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
   late final TextEditingController _sugarController;
   late final TextEditingController _sodiumController;
   late final TextEditingController _cholesterolController;
+    final fechaSeleccionada = DateManager().selectedDate.value;
 
+  String selectedMealType = 'Desayuno'; 
   bool _showFullForm = false;
 
   @override
@@ -84,6 +87,23 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
                 controller: _caloriesController,
                 decoration: const InputDecoration(labelText: 'Calorías'),
                 keyboardType: TextInputType.number,
+              ),
+              DropdownButtonFormField<String>(
+                value: selectedMealType,
+                items: ['Desayuno', 'Comida', 'Merienda', 'Cena']
+                    .map((meal) => DropdownMenuItem<String>(
+                          value: meal,
+                          child: Text(meal),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedMealType = value;
+                    });
+                  }
+                },
+                decoration: const InputDecoration(labelText: 'Tipo de Comida'),
               ),
               if (!_showFullForm)
                 TextButton(
@@ -164,6 +184,8 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
                 sugar: double.tryParse(_sugarController.text),
                 sodium: double.tryParse(_sodiumController.text),
                 cholesterol: double.tryParse(_cholesterolController.text),
+                mealtype: selectedMealType,  
+                date: fechaSeleccionada,
               );
 
               context

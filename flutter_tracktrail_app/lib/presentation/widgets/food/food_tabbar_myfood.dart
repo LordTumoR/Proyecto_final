@@ -8,6 +8,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/food/edit_food_dialog.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseFoodsTab extends StatefulWidget {
   final int dietId;
@@ -20,7 +21,7 @@ class DatabaseFoodsTab extends StatefulWidget {
 
 class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
   final DatePickerController _controller = DatePickerController();
-  String selectedMealType = 'Desayuno'; // Estado inicial del dropdown
+  String selectedMealType = 'Desayuno'; 
 
   @override
   void initState() {
@@ -52,10 +53,6 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
     final selectedDate = context.watch<DateManager>().selectedDate;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Seguimiento de Dietas"),
-        backgroundColor: const Color.fromARGB(255, 252, 224, 179),
-      ),
       body: Column(
         children: [
           Padding(
@@ -76,38 +73,44 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
             padding: const EdgeInsets.all(8.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey, width: 1),
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: selectedMealType,
-                    items: ['Desayuno', 'Comida', 'Merienda', 'Cena']
-                        .map((meal) => DropdownMenuItem(
-                              value: meal,
-                              child: Text(
-                                meal,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      if (value != null) {
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: ['Desayuno', 'Comida', 'Merienda', 'Cena'].map((meal) {
+                    return GestureDetector(
+                      onTap: () {
                         setState(() {
-                          selectedMealType = value;
+                          selectedMealType = meal;
                           _loadFoods();
                         });
-                      }
-                    },
-                    icon:
-                        const Icon(Icons.arrow_drop_down, color: Colors.black),
-                    dropdownColor: Colors.white,
-                  ),
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        decoration: BoxDecoration(
+                          color: selectedMealType == meal
+                              ? Colors.blueAccent
+                              : Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: selectedMealType == meal
+                                ? Colors.blue
+                                : Colors.grey,
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          meal,
+                          style: TextStyle(
+                            color: selectedMealType == meal
+                                ? Colors.white
+                                : Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
             ),
@@ -125,11 +128,15 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                     ),
                   );
                 } else if (state is FoodDatabaseLoaded) {
+                  final selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate.value); 
+
                   final filteredFoodList = state.foodList
-                      .where((food) =>
-                          food.date == selectedDate.value &&
-                          food.mealtype == selectedMealType)
+                      .where((food) {
+                        final foodDateString = DateFormat('yyyy-MM-dd').format(food.date!);
+                        return foodDateString == selectedDateString && food.mealtype == selectedMealType;
+                      })
                       .toList();
+
 
                   if (filteredFoodList.isEmpty) {
                     return const Center(

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/domain/entities/food_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 
 class CreateFoodDialog extends StatefulWidget {
   final int dietId;
@@ -28,8 +29,10 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
   final _sugarController = TextEditingController();
   final _sodiumController = TextEditingController();
   final _cholesterolController = TextEditingController();
+  final fechaSeleccionada = DateManager().selectedDate.value;
 
   bool _showFullForm = false;
+  String selectedMealType = 'Desayuno'; // Meal type state
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +61,29 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
                 decoration: const InputDecoration(labelText: 'Calorías'),
                 keyboardType: TextInputType.number,
               ),
+              // Dropdown for meal type
+              DropdownButtonFormField<String>(
+                value: selectedMealType,
+                items: ['Desayuno', 'Comida', 'Merienda', 'Cena']
+                    .map((meal) => DropdownMenuItem<String>(
+                          value: meal,
+                          child: Text(meal),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedMealType = value;
+                    });
+                  }
+                },
+                decoration: const InputDecoration(labelText: 'Tipo de Comida'),
+              ),
               if (!_showFullForm)
                 TextButton(
                   onPressed: () {
                     setState(() {
-                      _showFullForm = true; // Mostrar el formulario completo
+                      _showFullForm = true;
                     });
                   },
                   child: const Row(
@@ -137,6 +158,8 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
                 sugar: double.tryParse(_sugarController.text),
                 sodium: double.tryParse(_sodiumController.text),
                 cholesterol: double.tryParse(_cholesterolController.text),
+                mealtype: selectedMealType,  
+                date: fechaSeleccionada,
               );
 
               context.read<FoodBloc>().add(CreateFoodEvent(

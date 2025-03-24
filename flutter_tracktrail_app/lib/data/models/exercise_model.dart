@@ -46,7 +46,7 @@ class ExerciseModel {
           ? DateTime.parse(json['dateTime'])
           : DateTime.now(),
       repetitions: json['repetitions'] ?? 0,
-      weight: json['weight'] ?? 0,
+      weight: (json['weight'] as num?)?.toDouble() ?? 0.0,
       muscleGroup: json['muscleGroup'],
       sets: json['sets'] ?? 0,
     );

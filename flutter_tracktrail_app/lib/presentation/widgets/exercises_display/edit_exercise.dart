@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tracktrail_app/domain/entities/exercises_entity.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 
 class EditExerciseDialog extends StatefulWidget {
   final ExerciseEntity exercise;
@@ -18,6 +19,7 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
   final TextEditingController _weightController = TextEditingController();
   final TextEditingController _repetitionsController = TextEditingController();
   final TextEditingController _setsController = TextEditingController();
+    final fechaSeleccionada = DateManager().selectedDate.value;
   String? selectedMuscleGroup;
 
   final List<String> muscleGroups = [
@@ -46,6 +48,7 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -99,6 +102,7 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
                     id: widget.exercise.id,
                     name: exerciseName,
                     description: exerciseDescription,
+                    dateTime: fechaSeleccionada,
                     image: widget.exercise.image,
                     weight: double.tryParse(_weightController.text) ?? 0,
                     repetitions: int.tryParse(_repetitionsController.text) ?? 0,
@@ -121,6 +125,7 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
             ),
           ],
         ),
+      ),
       ),
     );
   }

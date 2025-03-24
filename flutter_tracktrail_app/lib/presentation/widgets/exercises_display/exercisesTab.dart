@@ -29,21 +29,27 @@ class _ExercisesTabState extends State<ExercisesTab> {
         .fetchRoutineExercises(widget.routineId, fechaSeleccionada);
   }
 
-  void _openCreateExerciseDrawer() {
-    final fechaSeleccionada = DateManager().selectedDate.value;
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return CreateExerciseDrawer(
-          routineId: widget.routineId,
-          onCreate: (newExercise) {
-            context.read<RoutineExercisesBloc>().add(AddExerciseToRoutine(
-                widget.routineId, newExercise, fechaSeleccionada));
-          },
-        );
-      },
-    );
-  }
+void _openCreateExerciseDialog() {
+  final fechaSeleccionada = DateManager().selectedDate.value;
+  showDialog(
+    context: context,
+    builder: (context) {
+      return CreateExerciseDialog(
+        routineId: widget.routineId,
+        onCreate: (newExercise) {
+          context.read<RoutineExercisesBloc>().add(
+            AddExerciseToRoutine(
+              widget.routineId,
+              newExercise,
+              fechaSeleccionada,
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -207,7 +213,7 @@ class _ExercisesTabState extends State<ExercisesTab> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _openCreateExerciseDrawer,
+        onPressed: _openCreateExerciseDialog,
         backgroundColor: Colors.green,
         child: const Icon(Icons.add),
       ),

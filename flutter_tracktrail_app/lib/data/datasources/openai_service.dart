@@ -54,7 +54,8 @@ class OpenAIService {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+    final decodedUtf8Body = utf8.decode(response.bodyBytes);
+    final data = jsonDecode(decodedUtf8Body);
       final rawContent = data['choices'][0]['message']['content'];
       print('Contenido IA (crudo):\n$rawContent');
 
