@@ -1,0 +1,2 @@
+C:/Users/Usuario/Documents/tracktrail/Proyecto_final/flutter_tracktrail_app/android/app/.cxx/Debug/n2l3j456/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Usuario/Documents/tracktrail/Proyecto_final/flutter_tracktrail_app/android/app/.cxx/Debug/n2l3j456/arm64-v8a/CMakeFiles/rebuild_cache.dir

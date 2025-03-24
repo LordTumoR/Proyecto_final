@@ -24,7 +24,8 @@ class _MapsScreenState extends State<MapsScreen> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    _getCurrentLocation().then((_) => _startLocationUpdates());
+
   }
 
   Future<void> _getCurrentLocation() async {
@@ -62,129 +63,113 @@ class _MapsScreenState extends State<MapsScreen> {
 
     return LatLng(lat2, lon2);
   }
+List<LatLng> generarPuntosAleatorios(LatLng centro, double radio, int cantidad) {
+  final List<LatLng> puntos = [];
 
-  double _calculateDistance(LatLng point1, LatLng point2) {
-    const double R = 6371000;
-    double lat1 = point1.latitude * pi / 180;
-    double lon1 = point1.longitude * pi / 180;
-    double lat2 = point2.latitude * pi / 180;
-    double lon2 = point2.longitude * pi / 180;
+  for (int i = 0; i < cantidad; i++) {
+    double angulo = (2 * pi * i) / cantidad;
 
-    double dLat = lat2 - lat1;
-    double dLon = lon2 - lon1;
+    double deltaLat = (radio / 6371000) * cos(angulo);
+    double deltaLon = (radio / 6371000) * sin(angulo) / cos(centro.latitude * pi / 180);
 
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(lat1) * cos(lat2) * sin(dLon / 2) * sin(dLon / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    double lat = centro.latitude + deltaLat * (180 / pi);
+    double lon = centro.longitude + deltaLon * (180 / pi);
 
-    return R * c;
+    puntos.add(LatLng(lat, lon));
   }
 
-  Future<void> _generateRoute() async {
-    if (currentPosition == null) {
-      print("No se ha obtenido la posición actual.");
-      return;
-    }
+  return puntos;
+}
 
-    double? distanceKm = double.tryParse(_distanceController.text);
-    if (distanceKm == null || distanceKm <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Por favor, ingresa una distancia válida.")),
-      );
-      return;
-    }
+List<LatLng> generarPuntosCirculares(LatLng centro, double distanciaMetros, int cantidadPuntos) {
+  List<LatLng> puntos = [];
 
-    double startLongitude = currentPosition!.longitude;
-    double startLatitude = currentPosition!.latitude;
+  for (int i = 0; i < cantidadPuntos; i++) {
+    double angulo = 2 * pi * i / cantidadPuntos;
+    double dx = distanciaMetros * cos(angulo);
+    double dy = distanciaMetros * sin(angulo);
 
-    LatLng destino =
-        calcularPuntoDistancia(currentPosition!, distanceKm * 1000);
+    double deltaLat = (dy / 111320); // 1 grado latitud ~ 111.32 km
+    double deltaLng = (dx / (111320 * cos(centro.latitude * pi / 180)));
 
-    try {
-      Response response = await Dio().post(
-        orsUrl,
-        options: Options(headers: {
-          "Authorization": "Bearer $apiKey",
-          "Content-Type": "application/json"
-        }),
-        data: {
-          "coordinates": [
-            [startLongitude, startLatitude],
-            [destino.longitude, destino.latitude]
-          ],
-          "geometry": "true",
-          "instructions": "false",
-          "preference": "shortest",
-        },
-      );
-
-      if (response.data != null &&
-          response.data['routes'] != null &&
-          response.data['routes'].isNotEmpty) {
-        var route = response.data['routes'][0];
-
-        if (route['summary'] != null && route['summary']['distance'] != null) {
-          double routeDistance = route['summary']['distance'] / 1000;
-          print("Distancia total de la ruta: $routeDistance km");
-
-          if (routeDistance > distanceKm) {
-            String encodedPolyline = route['geometry'];
-            PolylinePoints polylinePoints = PolylinePoints();
-            List<PointLatLng> decodedPolyline =
-                polylinePoints.decodePolyline(encodedPolyline);
-
-            double totalDistance = 0.0;
-            List<PointLatLng> truncatedPolyline = [];
-
-            for (int i = 0; i < decodedPolyline.length - 1; i++) {
-              double distance = _calculateDistance(
-                LatLng(
-                    decodedPolyline[i].latitude, decodedPolyline[i].longitude),
-                LatLng(decodedPolyline[i + 1].latitude,
-                    decodedPolyline[i + 1].longitude),
-              );
-
-              totalDistance += distance;
-
-              truncatedPolyline.add(decodedPolyline[i]);
-
-              if (totalDistance >= distanceKm * 1000) {
-                break;
-              }
-            }
-
-            setState(() {
-              routePoints = truncatedPolyline
-                  .map((point) => LatLng(point.latitude, point.longitude))
-                  .toList();
-            });
-
-            print("Ruta recortada a ${distanceKm} km.");
-          } else {
-            String encodedPolyline = route['geometry'];
-            PolylinePoints polylinePoints = PolylinePoints();
-            List<PointLatLng> decodedPolyline =
-                polylinePoints.decodePolyline(encodedPolyline);
-
-            setState(() {
-              routePoints = decodedPolyline
-                  .map((point) => LatLng(point.latitude, point.longitude))
-                  .toList();
-            });
-          }
-        } else {
-          print("No se encontró la distancia en la sección 'summary'.");
-        }
-      }
-    } catch (e) {
-      print("Error al generar la ruta: $e");
-    }
+    puntos.add(LatLng(centro.latitude + deltaLat, centro.longitude + deltaLng));
   }
+
+  return puntos;
+}
+void _startLocationUpdates() {
+  Geolocator.getPositionStream(
+    locationSettings: const LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 5, // actualiza cada 5 metros
+    ),
+  ).listen((Position position) {
+    setState(() {
+      currentPosition = LatLng(position.latitude, position.longitude);
+    });
+  });
+}
+
+List<List<double>> armarCoordenadasORS(LatLng inicio, List<LatLng> intermedios) {
+  final coords = [
+    [inicio.longitude, inicio.latitude], // Punto de inicio
+    ...intermedios.map((p) => [p.longitude, p.latitude]), // Puntos alrededor
+    [inicio.longitude, inicio.latitude], // Punto final igual que el inicial
+  ];
+  return coords;
+}Future<void> _generarRutaCircular(double distanciaKm) async {
+  if (currentPosition == null) return;
+
+  final puntos = generarPuntosCirculares(currentPosition!, distanciaKm * 500, 12); // 6 puntos alrededor
+  final coordenadas = armarCoordenadasORS(currentPosition!, puntos);
+
+  try {
+    Response response = await Dio().post(
+      orsUrl,
+      options: Options(headers: {
+        "Authorization": apiKey,
+        "Content-Type": "application/json"
+      }),
+      data: {
+        "coordinates": coordenadas,
+        "geometry": true,
+        "instructions": false,
+        "preference": "shortest",
+        "radiuses": List.filled(coordenadas.length, 10000),
+
+      },
+    );
+
+    if (response.data != null && response.data['routes'] != null) {
+      final geometry = response.data['routes'][0]['geometry'];
+      final polylinePoints = PolylinePoints().decodePolyline(geometry);
+      final latLngs = polylinePoints
+          .map((p) => LatLng(p.latitude, p.longitude))
+          .toList();
+
+      setState(() {
+        routePoints = latLngs;
+      });
+    }
+  } catch (e) {
+    print("Error generando ruta circular: $e");
+  }
+}
+
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Generar Ruta")),
+      appBar: AppBar(
+  title: const Row(
+    children: [
+      Icon(Icons.terrain),  
+      SizedBox(width: 10), 
+      Text("Generar Ruta"),
+    ],
+  ),
+),
       body: Column(
         children: [
           Padding(
@@ -195,23 +180,51 @@ class _MapsScreenState extends State<MapsScreen> {
                   child: TextField(
                     controller: _distanceController,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "Distancia en km",
                       border: OutlineInputBorder(),
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: _generateRoute,
-                  child: Text("Generar"),
-                ),
+  onPressed: () {
+    final km = double.tryParse(_distanceController.text);
+    if (km != null && km > 0) {
+      _generarRutaCircular(km);
+    }
+  },
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.blue,      
+    foregroundColor: Colors.white,    
+    padding: const EdgeInsets.symmetric(horizontal: 27, vertical: 12), 
+    shape: RoundedRectangleBorder(  
+      borderRadius: BorderRadius.circular(30),  
+    ),
+    elevation: 5,              
+    // ignore: deprecated_member_use
+    shadowColor: Colors.black.withOpacity(0.3), 
+    side: const BorderSide(
+      color: Colors.blueAccent,  
+      width: 2,                 
+    ),
+  ),
+  child: const Text(
+    "Generar",
+    style: TextStyle(
+      fontSize: 18,           
+      fontWeight: FontWeight.bold, 
+    ),
+  ),
+)
+
+
               ],
             ),
           ),
           Expanded(
             child: currentPosition == null
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : FlutterMap(
                     options: MapOptions(
                       initialCenter: currentPosition!,
@@ -222,6 +235,21 @@ class _MapsScreenState extends State<MapsScreen> {
                         urlTemplate:
                             "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                       ),
+                        MarkerLayer(
+                      markers: [
+                        if (currentPosition != null)
+                          Marker(
+                            width: 40.0,
+                            height: 40.0,
+                            point: currentPosition!,
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 40,
+                            ),
+                          ),
+                      ],
+                    ),
                       if (routePoints.isNotEmpty)
                         PolylineLayer(
                           polylines: [

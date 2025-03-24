@@ -51,14 +51,14 @@ class _ConsultarMapaScreenState extends State<ConsultarMapaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Consultar Mapa")),
+      appBar: AppBar(title: const Text("Consultar Mapa")),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField<String>(
               value: rutaSeleccionada,
-              hint: Text("Selecciona una ruta"),
+              hint: const Text("Selecciona una ruta"),
               onChanged: (value) {
                 setState(() {
                   rutaSeleccionada = value;
@@ -79,13 +79,14 @@ class _ConsultarMapaScreenState extends State<ConsultarMapaScreen> {
             child: FlutterMap(
               options: MapOptions(
                 initialCenter:
-                    routePoints.isNotEmpty ? routePoints.first : LatLng(0, 0),
+                    routePoints.isNotEmpty ? routePoints.first : const LatLng(0, 0),
                 initialZoom: 13.0,
               ),
               children: [
                 TileLayer(
                   urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 ),
+                
                 if (routePoints.isNotEmpty)
                   PolylineLayer(
                     polylines: [

@@ -97,6 +97,21 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                         urlTemplate:
                             "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                       ),
+                      MarkerLayer(
+                      markers: [
+                        if (currentPosition != null)
+                          Marker(
+                            width: 40.0,
+                            height: 40.0,
+                            point: currentPosition!,
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 40,
+                            ),
+                          ),
+                      ],
+                    ),
                       PolylineLayer(
                         polylines: [
                           Polyline(

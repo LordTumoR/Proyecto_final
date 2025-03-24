@@ -77,6 +77,21 @@ class _DrawRouteScreenState extends State<DrawRouteScreen> {
                         urlTemplate:
                             "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
                       ),
+                      MarkerLayer(
+                      markers: [
+                        if (currentPosition != null)
+                          Marker(
+                            width: 40.0,
+                            height: 40.0,
+                            point: currentPosition!,
+                            child: const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 40,
+                            ),
+                          ),
+                      ],
+                    ),
                       if (routePoints.isNotEmpty)
                         PolylineLayer(
                           polylines: [
