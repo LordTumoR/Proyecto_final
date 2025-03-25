@@ -11,7 +11,7 @@ class FoodEntityDatabase {
   final double? sugar;
   final double? sodium;
   final double? cholesterol;
-  final String? mealtype;
+  String? mealtype;
   final DateTime? date;
 
   FoodEntityDatabase({

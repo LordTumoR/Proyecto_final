@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_tracktrail_app/data/datasources/openai_service.dart';
 import 'package:flutter_tracktrail_app/domain/entities/food_entity.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateFoodDialog extends StatefulWidget {
   final int dietId;
@@ -32,7 +36,8 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
   final fechaSeleccionada = DateManager().selectedDate.value;
 
   bool _showFullForm = false;
-  String selectedMealType = 'Desayuno'; // Meal type state
+  String selectedMealType = 'Desayuno';
+  final OpenAIService openAIService = OpenAIService();
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +163,7 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
                 sugar: double.tryParse(_sugarController.text),
                 sodium: double.tryParse(_sodiumController.text),
                 cholesterol: double.tryParse(_cholesterolController.text),
-                mealtype: selectedMealType,  
+                mealtype: selectedMealType,
                 date: fechaSeleccionada,
               );
 
@@ -173,6 +178,68 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
           },
           child: const Text('Crear'),
         ),
+        ElevatedButton(
+          onPressed: () async {
+            // Mostrar un diálogo de advertencia
+            bool? confirm = await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Atención'),
+                  content: const Text(
+                    'El valor seleccionado de MEALTYPE afectará a la automatización de los alimentos. ¿Estás seguro de continuar?',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false); // No continuar
+                      },
+                      child: const Text('Cancelar'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true); // Confirmar continuar
+                      },
+                      child: const Text('Aceptar'),
+                    ),
+                  ],
+                );
+              },
+            );
+
+            if (confirm != true) return; // Si no es afirmativo, no continuamos
+
+            final ImagePicker picker = ImagePicker();
+            final XFile? image =
+                await picker.pickImage(source: ImageSource.gallery);
+
+            if (image != null) {
+              final file = File(image.path);
+
+              try {
+                final List<FoodEntityDatabase> alimentos =
+                    await openAIService.analizarImagenYGuardarAlimentos(file);
+
+                for (var comida in alimentos) {
+                  comida.mealtype = selectedMealType;
+
+                  context.read<FoodBloc>().add(CreateFoodEvent(
+                        comida,
+                        widget.dietId,
+                        loadRandomFoods: false,
+                      ));
+                }
+
+                Navigator.pop(context);
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Error al analizar la imagen")),
+                );
+              }
+            }
+          },
+          child: const Text('Subir imagen'),
+        )
       ],
     );
   }
