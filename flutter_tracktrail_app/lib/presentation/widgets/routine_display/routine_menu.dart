@@ -4,6 +4,7 @@ import 'package:flutter_tracktrail_app/presentation/blocs/routines/routines_bloc
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/MisRutinasTab.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/TabContent.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/search_routines.dart';
 
 class RoutineMenu extends StatefulWidget {
   @override
@@ -55,11 +56,7 @@ class _RoutineMenuState extends State<RoutineMenu> {
         body: TabBarView(
           children: [
             MisRutinasTab(),
-            TabContent(
-              title: AppLocalizations.of(context)!.search_routines,
-              icon: Icons.search,
-              content: AppLocalizations.of(context)!.search_new_routines,
-            ),
+            SearchRoutine(),
             TabContent(
               title: AppLocalizations.of(context)!.favorites,
               icon: Icons.favorite,

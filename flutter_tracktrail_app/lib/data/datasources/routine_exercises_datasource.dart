@@ -44,7 +44,12 @@ class RoutineExerciseRemoteDataSourceImpl
       );
     }
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
+    if (response.statusCode == 201) {
+      final List<dynamic> decodedResponse = json.decode(response.body);
+      return decodedResponse
+          .map((json) => ExerciseModel.fromJson(json))
+          .toList();
+    } else if (response.statusCode == 200) {
       final Map<String, dynamic> decodedResponse = json.decode(response.body);
       return [ExerciseModel.fromJson(decodedResponse)];
     } else {

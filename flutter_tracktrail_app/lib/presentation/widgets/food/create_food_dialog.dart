@@ -192,13 +192,13 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(false); // No continuar
+                        Navigator.of(context).pop(false);
                       },
                       child: const Text('Cancelar'),
                     ),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop(true); // Confirmar continuar
+                        Navigator.of(context).pop(true);
                       },
                       child: const Text('Aceptar'),
                     ),
@@ -207,7 +207,7 @@ class _CreateFoodDialogState extends State<CreateFoodDialog> {
               },
             );
 
-            if (confirm != true) return; // Si no es afirmativo, no continuamos
+            if (confirm != true) return;
 
             final ImagePicker picker = ImagePicker();
             final XFile? image =

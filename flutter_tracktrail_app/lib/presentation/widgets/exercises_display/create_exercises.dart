@@ -8,7 +8,8 @@ class CreateExerciseDialog extends StatefulWidget {
   final int routineId;
   final Function(ExerciseEntity) onCreate;
 
-  const CreateExerciseDialog({super.key, required this.routineId, required this.onCreate});
+  const CreateExerciseDialog(
+      {super.key, required this.routineId, required this.onCreate});
 
   @override
   _CreateExerciseDialogState createState() => _CreateExerciseDialogState();
@@ -64,7 +65,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.error_exercise_name;
+                        return AppLocalizations.of(context)!
+                            .error_exercise_name;
                       }
                       return null;
                     },
@@ -72,11 +74,13 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                   TextFormField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.exercise_description,
+                      labelText:
+                          AppLocalizations.of(context)!.exercise_description,
                     ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.error_exercise_description;
+                        return AppLocalizations.of(context)!
+                            .error_exercise_description;
                       }
                       return null;
                     },
@@ -89,7 +93,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.error_exercise_weight;
+                        return AppLocalizations.of(context)!
+                            .error_exercise_weight;
                       }
                       return null;
                     },
@@ -97,12 +102,14 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                   TextFormField(
                     controller: _repetitionsController,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.exercise_repetitions,
+                      labelText:
+                          AppLocalizations.of(context)!.exercise_repetitions,
                     ),
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.error_exercise_repetitions;
+                        return AppLocalizations.of(context)!
+                            .error_exercise_repetitions;
                       }
                       return null;
                     },
@@ -115,7 +122,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                     keyboardType: TextInputType.number,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.error_exercise_sets;
+                        return AppLocalizations.of(context)!
+                            .error_exercise_sets;
                       }
                       return null;
                     },
@@ -123,7 +131,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                   DropdownButtonFormField<String>(
                     value: selectedMuscleGroup,
                     decoration: InputDecoration(
-                      labelText: AppLocalizations.of(context)!.exercise_muscleGroup,
+                      labelText:
+                          AppLocalizations.of(context)!.exercise_muscleGroup,
                     ),
                     items: muscleGroups.map((String group) {
                       return DropdownMenuItem<String>(
@@ -138,7 +147,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return AppLocalizations.of(context)!.error_exercise_muscleGroup;
+                        return AppLocalizations.of(context)!
+                            .error_exercise_muscleGroup;
                       }
                       return null;
                     },
@@ -160,7 +170,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                         image: '',
                         dateTime: fechaSeleccionada,
                         weight: double.tryParse(_weightController.text) ?? 0,
-                        repetitions: int.tryParse(_repetitionsController.text) ?? 0,
+                        repetitions:
+                            int.tryParse(_repetitionsController.text) ?? 0,
                         sets: int.tryParse(_setsController.text) ?? 0,
                         muscleGroup: selectedMuscleGroup!,
                       );
@@ -182,7 +193,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                           children: [
                             DropdownButtonFormField<String>(
                               value: selectedMuscleGroup,
-                              decoration: const InputDecoration(labelText: 'Grupo muscular'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Grupo muscular'),
                               items: muscleGroups.map((String group) {
                                 return DropdownMenuItem<String>(
                                   value: group,
@@ -197,7 +209,8 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                             ),
                             TextFormField(
                               controller: quantityController,
-                              decoration: const InputDecoration(labelText: 'Cantidad de ejercicios'),
+                              decoration: const InputDecoration(
+                                  labelText: 'Cantidad de ejercicios'),
                               keyboardType: TextInputType.number,
                             ),
                           ],
@@ -210,39 +223,49 @@ class _CreateExerciseDialogState extends State<CreateExerciseDialog> {
                           TextButton(
                             onPressed: () {
                               final muscleGroup = selectedMuscleGroup;
-                              final quantity = int.tryParse(quantityController.text) ?? 0;
+                              final quantity =
+                                  int.tryParse(quantityController.text) ?? 0;
                               if (muscleGroup != null && quantity > 0) {
                                 openAIService
-                                    .generarEjerciciosYGenerarJson(muscleGroup, quantity)
+                                    .generarEjerciciosYGenerarJson(
+                                        muscleGroup, quantity)
                                     .then((ejerciciosGeneradosJson) {
-                                  final List<ExerciseEntity> ejercicios = ejerciciosGeneradosJson
-                                      .map<ExerciseEntity>((json) {
+                                  final List<ExerciseEntity> ejercicios =
+                                      ejerciciosGeneradosJson
+                                          .map<ExerciseEntity>((json) {
                                     return ExerciseEntity(
-                                       id: 0,
-                                          name: json['name'],
-                                          description: json['description'],
-                                          image: json['image'] ?? '',
-                                          dateTime: DateTime.parse(json['dateTime']),
-                                          weight: (json['weight'] is int)
-                                              ? (json['weight'] as int).toDouble()
-                                              : json['weight'] as double?, 
-                                          repetitions: json['repetitions'] is int
-                                              ? json['repetitions'] as int
-                                              : int.tryParse(json['repetitions'].toString()) ?? 0,
-                                          sets: json['sets'] is int
-                                              ? json['sets'] as int
-                                              : int.tryParse(json['sets'].toString()) ?? 0, 
-                                          muscleGroup: json['muscleGroup'],
+                                      id: 0,
+                                      name: json['name'],
+                                      description: json['description'],
+                                      image: json['image'] ?? '',
+                                      dateTime:
+                                          DateTime.parse(json['dateTime']),
+                                      weight: (json['weight'] is int)
+                                          ? (json['weight'] as int).toDouble()
+                                          : json['weight'] as double?,
+                                      repetitions: json['repetitions'] is int
+                                          ? json['repetitions'] as int
+                                          : int.tryParse(json['repetitions']
+                                                  .toString()) ??
+                                              0,
+                                      sets: json['sets'] is int
+                                          ? json['sets'] as int
+                                          : int.tryParse(
+                                                  json['sets'].toString()) ??
+                                              0,
+                                      muscleGroup: json['muscleGroup'],
                                     );
                                   }).toList();
 
                                   for (var ejercicio in ejercicios) {
+                                    print('Insertando: ${ejercicio.name}');
                                     widget.onCreate(ejercicio);
                                   }
 
                                   Navigator.pop(context);
                                 }).catchError((error) {
-                                  print("Error al generar los ejercicios: $error");
+                                  print(
+                                      "Error al generar los ejercicios: $error");
                                 });
                               }
                             },

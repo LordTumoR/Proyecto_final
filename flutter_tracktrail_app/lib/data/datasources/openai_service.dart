@@ -20,7 +20,7 @@ class OpenAIService {
 
     final prompt = """
       Eres un asistente experto en planificación de entrenamientos. 
-      Genera $cantidad ejercicios para el grupo muscular "$muscleGroup" en formato JSON con la siguiente estructura, ademas Devuélveme solo un JSON plano, sin explicaciones ni formato Markdown. No pongas ```json ni ningún otro texto alrededor:
+      Genera $cantidad ejercicios para el grupo muscular "$muscleGroup" en formato JSON con la siguiente estructura, ademas Devuélveme solo un JSON plano, sin explicaciones ni formato Markdown. No pongas ```json ni ningún otro texto alrededor, En español Castellano:
       [
         {
           "idExercise": null,
