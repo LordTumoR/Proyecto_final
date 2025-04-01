@@ -11,12 +11,12 @@ import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/filt
 import 'package:flutter_tracktrail_app/presentation/widgets/routine_display/progress_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MisRutinasTab extends StatefulWidget {
+class MisRutinasTabFavorite extends StatefulWidget {
   @override
   _MisRutinasTabState createState() => _MisRutinasTabState();
 }
 
-class _MisRutinasTabState extends State<MisRutinasTab> {
+class _MisRutinasTabState extends State<MisRutinasTabFavorite> {
   File? _selectedImage;
 
   Future<void> _pickImage(int routineId) async {
@@ -64,7 +64,8 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                 ),
               );
             } else if (state.routines != null && state.routines!.isNotEmpty) {
-              final routines = state.routines!;
+              final routines =
+                  state.routines!.where((r) => r.isFavorite ?? false).toList();
 
               return ListView.builder(
                 itemCount: routines.length,
@@ -142,9 +143,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                         fontSize: 20,
                                       ),
                                     ),
-                                    const SizedBox(
-                                        height:
-                                            8.0), // Espacio entre el texto y la fila
+                                    const SizedBox(height: 8.0),
                                     Text(
                                       routine.goal ?? '',
                                       style: const TextStyle(
@@ -152,9 +151,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                         fontSize: 16,
                                       ),
                                     ),
-                                    const SizedBox(
-                                        height:
-                                            8.0), // Espacio entre el texto y la fila
+                                    const SizedBox(height: 8.0),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
@@ -166,8 +163,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                           const Icon(Icons.lock_open,
                                               color: Colors.deepPurple),
                                         ],
-                                        const SizedBox(
-                                            width: 8.0), // Espacio entre íconos
+                                        const SizedBox(width: 8.0),
                                         GestureDetector(
                                           onTap: () {
                                             showDialog(
@@ -181,8 +177,7 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                           child: const Icon(Icons.percent,
                                               color: Colors.deepPurple),
                                         ),
-                                        const SizedBox(
-                                            width: 8.0), // Espacio entre íconos
+                                        const SizedBox(width: 8.0),
                                         GestureDetector(
                                           onTap: () {
                                             showDialog(
@@ -196,23 +191,10 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                           child:
                                               const Icon(Icons.arrow_forward),
                                         ),
-                                        const SizedBox(
-                                            width: 8.0), // Espacio entre íconos
+                                        const SizedBox(width: 8.0),
                                         GestureDetector(
                                           onTap: () => _pickImage(routine.id!),
-                                          child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                  color: Colors.grey),
-                                            ),
-                                            child:
-                                                const Icon(Icons.add_a_photo),
-                                          ),
+                                          child: const Icon(Icons.add_a_photo),
                                         ),
                                         IconButton(
                                           icon: Icon(
@@ -244,46 +226,11 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                 },
               );
             }
-
             return Center(
                 child:
                     Text(AppLocalizations.of(context)!.no_routines_available));
           },
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.filter_alt),
-            label: 'Filtrar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Añadir Rutina',
-          ),
-        ],
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider.value(
-                    value: BlocProvider.of<RoutinesBloc>(context),
-                    child: FilterRoutineForm(),
-                  ),
-                ));
-          } else if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlocProvider.value(
-                  value: BlocProvider.of<RoutinesBloc>(context),
-                  child: CreateRoutineForm(),
-                ),
-              ),
-            );
-          }
-        },
       ),
     );
   }

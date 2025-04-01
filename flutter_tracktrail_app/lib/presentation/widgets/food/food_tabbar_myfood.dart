@@ -12,8 +12,10 @@ import 'package:intl/intl.dart';
 
 class DatabaseFoodsTab extends StatefulWidget {
   final int dietId;
+  final bool isUserDiet;
 
-  const DatabaseFoodsTab({required this.dietId, super.key});
+  const DatabaseFoodsTab(
+      {required this.dietId, required this.isUserDiet, super.key});
 
   @override
   _DatabaseFoodsTabState createState() => _DatabaseFoodsTabState();
@@ -21,7 +23,7 @@ class DatabaseFoodsTab extends StatefulWidget {
 
 class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
   final DatePickerController _controller = DatePickerController();
-  String selectedMealType = 'Desayuno'; 
+  String selectedMealType = 'Desayuno';
 
   @override
   void initState() {
@@ -76,7 +78,8 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: ['Desayuno', 'Comida', 'Merienda', 'Cena'].map((meal) {
+                  children:
+                      ['Desayuno', 'Comida', 'Merienda', 'Cena'].map((meal) {
                     return GestureDetector(
                       onTap: () {
                         setState(() {
@@ -86,7 +89,8 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
                         decoration: BoxDecoration(
                           color: selectedMealType == meal
                               ? Colors.blueAccent
@@ -128,15 +132,15 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                     ),
                   );
                 } else if (state is FoodDatabaseLoaded) {
-                  final selectedDateString = DateFormat('yyyy-MM-dd').format(selectedDate.value); 
+                  final selectedDateString =
+                      DateFormat('yyyy-MM-dd').format(selectedDate.value);
 
-                  final filteredFoodList = state.foodList
-                      .where((food) {
-                        final foodDateString = DateFormat('yyyy-MM-dd').format(food.date!);
-                        return foodDateString == selectedDateString && food.mealtype == selectedMealType;
-                      })
-                      .toList();
-
+                  final filteredFoodList = state.foodList.where((food) {
+                    final foodDateString =
+                        DateFormat('yyyy-MM-dd').format(food.date!);
+                    return foodDateString == selectedDateString &&
+                        food.mealtype == selectedMealType;
+                  }).toList();
 
                   if (filteredFoodList.isEmpty) {
                     return const Center(
@@ -180,13 +184,16 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                                 ),
                               ],
                             ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.edit,
-                                  color: Color.fromARGB(255, 45, 18, 143)),
-                              onPressed: () {
-                                _showEditFoodDialog(context, foodItem);
-                              },
-                            ),
+                            trailing: widget.isUserDiet
+                                ? IconButton(
+                                    icon: const Icon(Icons.edit,
+                                        color:
+                                            Color.fromARGB(255, 45, 18, 143)),
+                                    onPressed: () {
+                                      _showEditFoodDialog(context, foodItem);
+                                    },
+                                  )
+                                : null,
                           ),
                         );
                       },

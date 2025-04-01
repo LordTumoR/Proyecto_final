@@ -6,6 +6,8 @@ class NutritionModel {
   final String? description;
   final DateTime? date;
   final int? userId;
+  final String? imageUrl;
+  final bool? isFavorite;
 
   NutritionModel({
     this.id,
@@ -13,6 +15,8 @@ class NutritionModel {
     this.description,
     this.date,
     this.userId,
+    this.imageUrl,
+    this.isFavorite,
   });
 
   @override
@@ -27,6 +31,8 @@ class NutritionModel {
       description: json['description'],
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
       userId: json['user_id'],
+      imageUrl: json['imageurl'],
+      isFavorite: json['isFavorite'] ?? true,
     );
   }
 
@@ -37,6 +43,8 @@ class NutritionModel {
       'description': description,
       'date': date?.toIso8601String(),
       'user_id': userId,
+      'imageurl': imageUrl,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -47,6 +55,8 @@ class NutritionModel {
       description: description ?? '',
       date: date,
       userId: userId,
+      imageUrl: imageUrl ?? '',
+      isFavorite: isFavorite ?? true,
     );
   }
 }

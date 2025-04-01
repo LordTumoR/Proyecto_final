@@ -36,6 +36,7 @@ class NutritionRepositoryImpl implements NutritionRepository {
     String description,
     DateTime date,
     int userId,
+    String imageUrl,
   ) async {
     try {
       final nutritionModel = await remoteDataSource.createNutritionRecord(
@@ -43,6 +44,7 @@ class NutritionRepositoryImpl implements NutritionRepository {
         description,
         date,
         userId,
+        imageUrl,
       );
       return Right(nutritionModel.toEntity());
     } catch (e) {
@@ -57,6 +59,8 @@ class NutritionRepositoryImpl implements NutritionRepository {
     String? description,
     DateTime? date,
     int? userId,
+    String? imageUrl,
+    bool? isFavorite,
   ) async {
     try {
       final nutritionModel = await remoteDataSource.updateNutritionRecord(
@@ -65,6 +69,8 @@ class NutritionRepositoryImpl implements NutritionRepository {
         description,
         date,
         userId,
+        imageUrl,
+        isFavorite,
       );
       return Right(nutritionModel.toEntity());
     } catch (e) {

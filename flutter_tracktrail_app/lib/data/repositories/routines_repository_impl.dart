@@ -26,6 +26,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
           progress: routine.progress,
           idUser: routine.idUser,
           imageUrl: routine.imageUrl,
+          isFavorite: routine.isFavorite,
         );
       }).toList();
 
@@ -47,6 +48,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
     String? progress,
     int? routineId,
     String? imageUrl,
+    bool? isFavorite,
   ) async {
     try {
       final routine = await dataSource.createRoutine(
@@ -58,6 +60,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
         progress ?? '',
         routineId ?? 0,
         imageUrl ?? '',
+        isFavorite ?? true,
       );
 
       final routineEntity = RoutineEntity(
@@ -70,6 +73,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
         progress: routine.progress,
         idUser: routine.idUser,
         imageUrl: routine.imageUrl,
+        isFavorite: routine.isFavorite,
       );
       return Right(routineEntity);
     } catch (e) {
@@ -95,6 +99,7 @@ class RoutinesRepositoryImpl implements RoutinesRepository {
           progress: routine.progress,
           idUser: routine.idUser,
           imageUrl: routine.imageUrl,
+          isFavorite: routine.isFavorite,
         );
       }).toList();
 

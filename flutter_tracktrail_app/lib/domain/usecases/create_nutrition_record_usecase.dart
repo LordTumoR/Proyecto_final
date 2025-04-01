@@ -12,12 +12,14 @@ class CreateNutritionRecordUseCase {
     String description,
     DateTime date,
     int userId,
+    String imageUrl,
   ) {
     return repository.createNutritionRecord(
       name,
       description,
       date,
       userId,
+      imageUrl,
     );
   }
 }

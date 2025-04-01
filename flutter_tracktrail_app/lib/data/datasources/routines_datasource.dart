@@ -15,6 +15,7 @@ abstract class RoutineRemoteDataSource {
     String? progress,
     int? routineId,
     String? imageUrl,
+    bool? isFavorite,
   );
   Future<List<RoutineModel>> getRoutinesByUserEmail(String email);
   Future<double> getCompletion(int routineId);
@@ -80,6 +81,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
     String? progress,
     int? routineId,
     String? imageUrl,
+    bool? isFavorite,
   ) async {
     const String token = 'admin';
 
@@ -115,6 +117,7 @@ class RoutineRemoteDataSourceImpl implements RoutineRemoteDataSource {
           if (progress?.isNotEmpty ?? false) 'progress': progress,
           'id_user': userId,
           if (imageUrl?.isNotEmpty ?? false) 'image_url': imageUrl,
+          'isFavorite': isFavorite,
         }),
       );
 

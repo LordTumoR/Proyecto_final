@@ -43,6 +43,7 @@ class CreateRoutineEvent extends RoutinesEvent {
   final String? difficulty;
   final String? progress;
   final int? routineId;
+  final bool? isFavorite;
 
   CreateRoutineEvent({
     this.name,
@@ -52,6 +53,7 @@ class CreateRoutineEvent extends RoutinesEvent {
     this.difficulty,
     this.progress,
     this.routineId,
+    this.isFavorite,
   });
 
   @override
@@ -62,7 +64,8 @@ class CreateRoutineEvent extends RoutinesEvent {
         isPrivate ?? true,
         difficulty ?? '',
         progress ?? '',
-        routineId ?? 0
+        routineId ?? 0,
+        isFavorite ?? true,
       ];
 }
 

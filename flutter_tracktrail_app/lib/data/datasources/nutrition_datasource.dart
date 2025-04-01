@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_tracktrail_app/data/models/nutrition_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +12,7 @@ abstract class NutritionRemoteDataSource {
     String description,
     DateTime date,
     int userId,
+    String imageUrl,
   );
   Future<NutritionModel> updateNutritionRecord(
     int? id,
@@ -18,6 +20,8 @@ abstract class NutritionRemoteDataSource {
     String? description,
     DateTime? date,
     int? userId,
+    String? imageUrl,
+    bool? isFavorite,
   );
 }
 
@@ -25,7 +29,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   final http.Client client;
 
   NutritionRemoteDataSourceImpl(this.client);
-
+  static const String deleteurl = 'http://192.168.1.138:8080/nutrition-records';
   static const String baseUrl =
       'http://192.168.1.138:8080/nutrition-records/user/';
   static const String CreateUrl = 'http://192.168.1.138:8080/nutrition-records';
@@ -53,7 +57,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
 
   @override
   Future<void> deleteNutritionRecord(int id) async {
-    final response = await client.delete(Uri.parse('$baseUrl/$id'));
+    final response = await client.delete(Uri.parse('$deleteurl/$id'));
 
     if (response.statusCode != 200) {
       throw Exception('Failed to delete nutrition record');
@@ -92,6 +96,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
     String description,
     DateTime date,
     int userId,
+    String imageUrl,
   ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -101,7 +106,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
         throw Exception("Email no encontrado en SharedPreferences");
       }
 
-      final userId = await _getUserIdByEmail(email);
+      final userIdd = await _getUserIdByEmail(email);
 
       final response = await client.post(
         Uri.parse(CreateUrl),
@@ -110,7 +115,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
           'name': name,
           'description': description,
           'date': date.toIso8601String(),
-          'user_id': userId,
+          'user_id': userIdd,
         }),
       );
 
@@ -132,6 +137,8 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
     String? description,
     DateTime? date,
     int? userId,
+    dynamic imageFile,
+    bool? isFavorite,
   ) async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -143,6 +150,18 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
 
       final userId = await _getUserIdByEmail(email);
 
+      String? imageUrl;
+
+      if (imageFile != null) {
+        final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('imagenes_comida/$fileName.jpg');
+        await ref.putFile(imageFile);
+        imageUrl = await ref.getDownloadURL();
+        print("Imagen subida correctamente: $imageUrl");
+      }
+
       final response = await client.put(
         Uri.parse('$CreateUrl/$id'),
         headers: {'Content-Type': 'application/json'},
@@ -151,13 +170,15 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
           'description': description,
           'date': date?.toIso8601String(),
           'user_id': userId,
+          if (imageUrl != null) 'imageurl': imageUrl,
+          'isFavorite': isFavorite,
         }),
       );
 
       if (response.statusCode == 200) {
         return NutritionModel.fromJson(json.decode(response.body));
       } else {
-        throw Exception('Failed to update nutrition record');
+        throw Exception('Failed to update nutrition record: ${response.body}');
       }
     } catch (e) {
       print('Error: $e');

@@ -10,6 +10,7 @@ class RoutineEntity {
   final String? progress;
   final UserDatabaseModel? idUser;
   final String? imageUrl;
+  final bool? isFavorite;
 
   RoutineEntity({
     this.id,
@@ -21,6 +22,7 @@ class RoutineEntity {
     this.progress,
     this.idUser,
     this.imageUrl,
+    this.isFavorite,
   });
   @override
   String toString() {

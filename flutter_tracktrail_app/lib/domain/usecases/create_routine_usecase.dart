@@ -15,6 +15,7 @@ class CreateRoutineUseCase {
     String progress = '',
     int? routineId,
     String? imageUrl,
+    bool? isFavorite,
   }) async {
     return await repository.createRoutine(
       name,
@@ -25,6 +26,7 @@ class CreateRoutineUseCase {
       progress,
       routineId,
       imageUrl,
+      isFavorite,
     );
   }
 }

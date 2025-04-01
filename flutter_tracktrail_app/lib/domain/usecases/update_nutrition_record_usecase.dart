@@ -13,6 +13,8 @@ class UpdateNutritionRecordUseCase {
     String? description,
     DateTime? date,
     int? userId,
+    String? imageUrl,
+    bool? isFavorite,
   ) async {
     return await nutritionRepository.updateNutritionRecord(
       id,
@@ -20,6 +22,8 @@ class UpdateNutritionRecordUseCase {
       description,
       date,
       userId,
+      imageUrl,
+      isFavorite,
     );
   }
 }

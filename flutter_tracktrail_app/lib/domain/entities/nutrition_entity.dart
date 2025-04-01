@@ -6,6 +6,8 @@ class NutritionEntity {
   final String description;
   final DateTime? date;
   final int? userId;
+  final String? imageUrl;
+  final bool? isFavorite;
 
   NutritionEntity({
     required this.id,
@@ -13,6 +15,8 @@ class NutritionEntity {
     required this.description,
     required this.date,
     required this.userId,
+    this.imageUrl,
+    this.isFavorite,
   });
 
   @override

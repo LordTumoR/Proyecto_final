@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutririon_search.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_create.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_favorites.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_filter.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_listview.dart';
 
@@ -65,8 +67,8 @@ class _NutritionMenuState extends State<NutritionMenu> {
         body: TabBarView(
           children: [
             NutritionDisplayTab(),
-            const Center(child: Text('Buscar nuevas dietas')),
-            const Center(child: Text('Tus dietas favoritas')),
+            NutritionDisplayTabSearch(),
+            NutritionDisplayTabFavorites(),
           ],
         ),
         backgroundColor: const Color(0xFFB0E57C),

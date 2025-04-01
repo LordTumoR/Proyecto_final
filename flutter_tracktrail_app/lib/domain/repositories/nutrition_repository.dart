@@ -8,6 +8,7 @@ abstract class NutritionRepository {
     String description,
     DateTime date,
     int userId,
+    String imageUrl,
   );
   Future<Either<String, NutritionEntity>> updateNutritionRecord(
     int? id,
@@ -15,6 +16,8 @@ abstract class NutritionRepository {
     String? description,
     DateTime? date,
     int? userId,
+    String? imageUrl,
+    bool? isFavorite,
   );
   Future<Either<String, void>> deleteNutritionRecord(int id);
 }

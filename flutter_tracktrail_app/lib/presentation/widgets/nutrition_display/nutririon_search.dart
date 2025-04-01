@@ -1,7 +1,5 @@
 import 'dart:io';
 import 'package:flutter_tracktrail_app/presentation/widgets/food/food_menu.dart';
-import 'package:flutter_tracktrail_app/presentation/widgets/nutrition_display/nutrition_update.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_bloc.dart';
@@ -10,15 +8,12 @@ import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_st
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
 
-class NutritionDisplayTab extends StatefulWidget {
+class NutritionDisplayTabSearch extends StatefulWidget {
   @override
   _NutritionDisplayTabState createState() => _NutritionDisplayTabState();
 }
 
-class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
-  File? _selectedImage;
-  late UserDatabaseModel _user;
-
+class _NutritionDisplayTabState extends State<NutritionDisplayTabSearch> {
   @override
   void initState() {
     super.initState();
@@ -31,21 +26,15 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
     );
   }
 
-  Future<void> _pickImage(int nutritionRecordId) async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-      });
-      context.read<NutritionBloc>().add(
-            UpdateNutritionRecord(
-              id: nutritionRecordId,
-              imageUrl: _selectedImage!.path,
-            ),
-          );
-    }
+  void _createNutritionRecord(String name, String description, DateTime date) {
+    BlocProvider.of<NutritionBloc>(context).add(
+      CreateNutritionRecord(
+        name: name,
+        description: description,
+        date: date,
+        userId: 0,
+      ),
+    );
   }
 
   @override
@@ -109,11 +98,6 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                                 ),
                                 color: Colors.grey[300],
                               ),
-                              child: (_selectedImage == null &&
-                                      (record.imageUrl == null ||
-                                          record.imageUrl!.isEmpty))
-                                  ? const Icon(Icons.image, size: 40)
-                                  : null,
                             ),
                           ),
                           Expanded(
@@ -149,50 +133,6 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          _pickImage(record.id);
-                                        },
-                                        child: Container(
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border:
-                                                Border.all(color: Colors.grey),
-                                          ),
-                                          child: const Icon(Icons.add_a_photo),
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.delete),
-                                        onPressed: () {
-                                          BlocProvider.of<NutritionBloc>(
-                                                  context)
-                                              .add(
-                                            DeleteNutritionRecord(
-                                                id: record.id),
-                                          );
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return EditNutritionRecordDialog(
-                                                id: record.id,
-                                                initialName: record.name,
-                                                initialDescription:
-                                                    record.description,
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
                                       IconButton(
                                         icon: const Icon(Icons.fastfood),
                                         onPressed: () {
@@ -201,28 +141,20 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
                                             builder: (BuildContext context) {
                                               return FoodTab(
                                                 dietId: record.id,
-                                                isUserDiet: true,
+                                                isUserDiet: false,
                                               );
                                             },
                                           );
                                         },
                                       ),
                                       IconButton(
-                                        icon: Icon(
-                                          Icons.favorite,
-                                          color: record.isFavorite ?? false
-                                              ? Colors.red
-                                              : Colors.grey,
-                                        ),
+                                        icon: const Icon(Icons.add),
                                         onPressed: () {
-                                          context.read<NutritionBloc>().add(
-                                                UpdateNutritionRecord(
-                                                  id: record.id,
-                                                  isFavorite:
-                                                      !(record.isFavorite ??
-                                                          false),
-                                                ),
-                                              );
+                                          _createNutritionRecord(
+                                            record.name,
+                                            record.description,
+                                            record.date ?? DateTime.now(),
+                                          );
                                         },
                                       ),
                                     ],

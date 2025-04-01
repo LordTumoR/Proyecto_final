@@ -116,6 +116,7 @@ class RoutinesBloc extends Bloc<RoutinesEvent, RoutinesState> {
       difficulty: event.difficulty ?? '',
       progress: event.progress ?? '',
       routineId: event.routineId,
+      isFavorite: event.isFavorite ?? true,
     );
 
     result.fold(

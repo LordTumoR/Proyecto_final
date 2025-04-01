@@ -11,6 +11,7 @@ class RoutineModel {
   final String? progress;
   final UserDatabaseModel? idUser;
   final String? imageUrl;
+  final bool? isFavorite;
 
   RoutineModel({
     this.idRoutine,
@@ -22,6 +23,7 @@ class RoutineModel {
     this.progress,
     this.idUser,
     this.imageUrl,
+    this.isFavorite,
   });
 
   @override
@@ -42,6 +44,7 @@ class RoutineModel {
           ? UserDatabaseModel.fromJson(json['user'])
           : null,
       imageUrl: json['imageurl'],
+      isFavorite: json['isFavorite'] ?? true,
     );
   }
 
@@ -56,6 +59,7 @@ class RoutineModel {
       'progress': progress,
       'id_user': idUser?.toJson(),
       'imageurl': imageUrl,
+      'isFavorite': isFavorite,
     };
   }
 
@@ -70,6 +74,7 @@ class RoutineModel {
       progress: progress ?? 'Unknown',
       idUser: idUser,
       imageUrl: imageUrl,
+      isFavorite: isFavorite ?? true,
     );
   }
 }

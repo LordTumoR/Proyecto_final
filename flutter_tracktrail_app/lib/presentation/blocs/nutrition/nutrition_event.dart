@@ -19,12 +19,14 @@ class CreateNutritionRecord extends NutritionEvent {
   final String description;
   final DateTime date;
   final int userId;
+  final String? imageUrl;
 
   CreateNutritionRecord({
     required this.name,
     required this.description,
     required this.date,
     required this.userId,
+    this.imageUrl,
   });
 }
 
@@ -34,6 +36,8 @@ class UpdateNutritionRecord extends NutritionEvent {
   final String? description;
   final DateTime? date;
   final int? userId;
+  final String? imageUrl;
+  final bool? isFavorite;
 
   UpdateNutritionRecord({
     this.id,
@@ -41,6 +45,8 @@ class UpdateNutritionRecord extends NutritionEvent {
     this.description,
     this.date,
     this.userId,
+    this.imageUrl,
+    this.isFavorite,
   });
 }
 

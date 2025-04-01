@@ -12,6 +12,7 @@ abstract class RoutinesRepository {
     String? progress,
     int? routineId,
     String? imageUrl,
+    bool? isFavorite,
   );
   Future<Either<String, List<RoutineEntity>>> getRoutinesByUserEmail(
       String email);
