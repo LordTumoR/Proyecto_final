@@ -8,7 +8,7 @@ class UserDatabaseEntity {
   final DateTime dateOfBirth;
   final String sex;
   final double height;
-  final int role;
+  final double role;
   final String? avatar;
 
   UserDatabaseEntity({

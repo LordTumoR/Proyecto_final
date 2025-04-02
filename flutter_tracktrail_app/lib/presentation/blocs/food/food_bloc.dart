@@ -67,6 +67,7 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
               food.brand.toLowerCase() != event.brand!.toLowerCase()) {
             return false;
           }
+
           return true;
         }).toList();
 
@@ -95,7 +96,8 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
               category: null,
               brand: null,
               mealType: null,
-              date: null),
+              date: null,
+              imageUrl: null),
         );
       }
     } catch (e) {
@@ -111,14 +113,16 @@ class FoodBloc extends Bloc<FoodEvent, FoodState> {
       emit(FoodUpdated(updatedFood));
       add(
         LoadDatabaseFoods(
-            dietId: event.dietId,
-            name: null,
-            minCalories: null,
-            maxCalories: null,
-            category: null,
-            brand: null,
-            mealType: null,
-            date: null),
+          dietId: event.dietId,
+          name: null,
+          minCalories: null,
+          maxCalories: null,
+          category: null,
+          brand: null,
+          mealType: null,
+          date: null,
+          imageUrl: null,
+        ),
       );
     } catch (e) {
       emit(FoodError('Error al actualizar el alimento: $e'));

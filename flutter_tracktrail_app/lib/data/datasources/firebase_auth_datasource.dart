@@ -101,9 +101,15 @@ class FirebaseAuthDataSource {
     if (surname != null && surname.isNotEmpty) body['surname'] = surname;
     if (password != null && password.isNotEmpty) body['password'] = password;
     if (weight != null && weight > 0.0) body['weight'] = weight;
+
     if (dateOfBirth != null) {
-      body['dateOfBirth'] = dateOfBirth.toIso8601String();
+      // Convierte la fecha de nacimiento al formato 'YYYY-MM-DDTHH:mm:ss.sss'
+      // Si no necesitas la hora exacta, puedes ponerla a las 00:00:00.000
+      String formattedDate = dateOfBirth
+          .toIso8601String(); // Esto da el formato 'YYYY-MM-DDTHH:mm:ss.sssZ'
+      body['dateOfBirth'] = formattedDate; // Incluye la fecha con la hora
     }
+
     if (sex != null && sex.isNotEmpty) body['sex'] = sex;
     if (height != null && height > 0.0) body['height'] = height;
     if (avatar != null && avatar.isNotEmpty) body['avatar'] = avatar;

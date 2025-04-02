@@ -15,6 +15,7 @@ class FoodModelDatabase {
   final double? cholesterol;
   final String? mealtype;
   final DateTime? date;
+  final String? imageUrl;
 
   FoodModelDatabase({
     this.id,
@@ -31,6 +32,7 @@ class FoodModelDatabase {
     this.cholesterol,
     this.mealtype,
     this.date,
+    this.imageUrl,
   });
 
   factory FoodModelDatabase.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class FoodModelDatabase {
       cholesterol: (json['cholesterol'] as num?)?.toDouble(),
       mealtype: json['mealtype'],
       date: json['date'] != null ? DateTime.parse(json['date']) : null,
+      imageUrl: json['imageurl'] ?? '',
     );
   }
 
@@ -68,6 +71,7 @@ class FoodModelDatabase {
       'cholesterol': cholesterol,
       'mealtype': mealtype,
       'date': date?.toIso8601String(),
+      'imageurl': imageUrl,
     };
   }
 
@@ -87,6 +91,7 @@ class FoodModelDatabase {
       cholesterol: cholesterol ?? 0.0,
       mealtype: mealtype ?? '',
       date: date ?? DateTime.now(),
+      imageUrl: imageUrl ?? '',
     );
   }
 }

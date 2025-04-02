@@ -14,7 +14,7 @@ class FoodRemoteDataSourceImpl implements FoodRemoteDataSource {
   @override
   Future<List<Map<String, dynamic>>> getRandomFoods() async {
     final url = Uri.parse(
-        'https://world.openfoodfacts.org/cgi/search.pl?search_terms=&page_size=20&json=1&lc=es');
+        'https://world.openfoodfacts.org/api/v2/search?fields=product_name,brands,categories,image_url,nutriments&lc=es');
 
     final response = await client.get(url).timeout(const Duration(seconds: 40));
 
@@ -22,27 +22,27 @@ class FoodRemoteDataSourceImpl implements FoodRemoteDataSource {
       final Map<String, dynamic> data = json.decode(response.body);
       final List<dynamic> products = data['products'];
 
-      final List<Map<String, dynamic>> filteredProducts = products
-          .where((product) =>
-              product['product_name_es'] != '' &&
-                  product['product_name_es'] != null ||
-              product['product_name_en'] != '' &&
-                  product['product_name_en'] != null)
-          .map((product) {
+      final List<Map<String, dynamic>> filteredProducts =
+          products.where((product) {
+        // Verifica que el producto tenga al menos un nombre válido
+        final hasValidName =
+            (product['product_name_es']?.isNotEmpty ?? false) ||
+                (product['product_name_en']?.isNotEmpty ?? false) ||
+                (product['product_name']?.isNotEmpty ?? false);
+        return hasValidName;
+      }).map((product) {
         return {
           'name': product['product_name_es'] ??
               product['product_name_en'] ??
+              product['product_name'] ??
               'Desconocido',
           'brand': product['brands'] ?? 'Desconocido',
           'category': product['categories'] ?? 'Desconocido',
           'imageUrl': product['image_url'] ?? '',
-          'nutritionInfo': (product['nutriments'] != null &&
-                  product['nutriments']['energy-kcal'] != null)
-              ? product['nutriments']['energy-kcal'].toDouble()
-              : 0.0,
+          'nutritionInfo': product['nutriments'] ?? {},
         };
       }).toList();
-
+      print(products);
       return filteredProducts;
     } else {
       throw Exception('Error al cargar los alimentos: ${response.statusCode}');
@@ -65,6 +65,7 @@ class FoodRemoteDataSourceImpl implements FoodRemoteDataSource {
         return {
           'name': product['product_name_es'] ??
               product['product_name_en'] ??
+              product['product_name'] ??
               'Desconocido',
           'brand': product['brands'] ?? 'Desconocido',
           'category': product['categories'] ?? 'Desconocido',

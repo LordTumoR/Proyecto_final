@@ -34,7 +34,7 @@ class PersonalInfoDialog extends StatelessWidget {
                 _formatDate(user.dateOfBirth)),
             _buildInfoRow(AppLocalizations.of(context)!.sex, user.sex),
             _buildInfoRow(
-                AppLocalizations.of(context)!.height, "${user.height} cm"),
+                AppLocalizations.of(context)!.height, "${user.height} mtrs"),
             _buildInfoRow(AppLocalizations.of(context)!.avatar,
                 user.avatar ?? AppLocalizations.of(context)!.not_available),
             const SizedBox(height: 20),

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_tracktrail_app/data/models/food_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,17 +128,59 @@ class FoodDatabaseRemoteDataSourceImpl implements FoodDatabaseRemoteDataSource {
 
   @override
   Future<FoodModelDatabase> updateFood(FoodModelDatabase food) async {
-    final url = Uri.parse('$baseUrl/foods/${food.id}');
-    final headers = {'Content-Type': 'application/json'};
-    final body = json.encode(food.toJson());
+    try {
+      // Si hay una imagen para subir, subimos la imagen a Firebase y obtenemos la URL
+      String? imageUrl;
 
-    final response = await client.put(url, headers: headers, body: body);
+      if (food.imageUrl != null) {
+        // Verificar si la URL es un archivo local (String o File)
+        File imageFile;
+        if (food.imageUrl!.startsWith('http')) {
+          // Si la URL es ya una URL de Firebase, no la subimos
+          imageUrl = food.imageUrl;
+        } else {
+          // Si la URL es una ruta local, convertimos el String en un File
+          imageFile = File(food
+              .imageUrl!); // Se supone que food.imageUrl es una ruta de archivo
 
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> responseJson = json.decode(response.body);
-      return FoodModelDatabase.fromJson(responseJson);
-    } else {
-      throw Exception('Failed to update food: ${response.statusCode}');
+          // Subir la imagen a Firebase
+          final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          final ref = FirebaseStorage.instance
+              .ref()
+              .child('imagenes_comida/$fileName.jpg');
+
+          await ref.putFile(imageFile);
+
+          // Obtener la URL de la imagen subida a Firebase
+          imageUrl = await ref.getDownloadURL();
+        }
+      }
+
+      // Crear el cuerpo de la solicitud con los datos actualizados
+      final Map<String, dynamic> updatedFood = {
+        ...food.toJson(),
+        if (imageUrl != null) 'imageurl': imageUrl,
+      };
+
+      // Hacer la petición PUT para actualizar el registro de comida
+      final url = Uri.parse('$baseUrl/foods/${food.id}');
+      final headers = {'Content-Type': 'application/json'};
+      final body = json.encode(updatedFood);
+
+      final response = await client
+          .put(url, headers: headers, body: body)
+          .timeout(Duration(seconds: 10));
+      ;
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseJson = json.decode(response.body);
+        return FoodModelDatabase.fromJson(responseJson);
+      } else {
+        throw Exception('Failed to update food: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to update food');
     }
   }
 }

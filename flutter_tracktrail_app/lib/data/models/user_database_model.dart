@@ -5,11 +5,11 @@ class UserDatabaseModel {
   final String? name;
   final String? surname;
   final String email;
-  final int? weight;
+  final double? weight;
   final DateTime? dateOfBirth;
   final String? sex;
-  final int? height;
-  final int? role;
+  final double? height;
+  final double? role;
   final String? avatar;
 
   UserDatabaseModel({
@@ -31,13 +31,17 @@ class UserDatabaseModel {
         name: json['name'],
         surname: json['surname'],
         email: json['email'],
-        weight: json['weight'],
+        weight: (json['weight'] is int)
+            ? (json['weight'] as int).toDouble()
+            : json['weight'],
         dateOfBirth: json['dateofbirth'] != null
             ? DateTime.tryParse(json['dateofbirth']) ?? DateTime(1900)
             : null,
         sex: json['sex'],
         height: json['height'],
-        role: json['role'],
+        role: (json['role'] is int)
+            ? (json['role'] as int).toDouble()
+            : json['role'],
         avatar: json['avatar']);
   }
 
@@ -63,11 +67,11 @@ class UserDatabaseModel {
       surname: surname ?? '',
       email: email,
       password: '',
-      weight: weight?.toDouble() ?? 0.0,
+      weight: weight ?? 0.0,
       dateOfBirth: dateOfBirth ?? DateTime(1900, 1, 1),
       sex: sex ?? '',
-      height: height?.toDouble() ?? 0.0,
-      role: role ?? 0,
+      height: height ?? 0.0,
+      role: role ?? 0.0,
       avatar: avatar ?? '',
     );
   }

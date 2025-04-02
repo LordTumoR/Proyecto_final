@@ -32,9 +32,9 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
   late final TextEditingController _sugarController;
   late final TextEditingController _sodiumController;
   late final TextEditingController _cholesterolController;
-    final fechaSeleccionada = DateManager().selectedDate.value;
+  final fechaSeleccionada = DateManager().selectedDate.value;
 
-  String selectedMealType = 'Desayuno'; 
+  String selectedMealType = 'Desayuno';
   bool _showFullForm = false;
 
   @override
@@ -184,8 +184,9 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
                 sugar: double.tryParse(_sugarController.text),
                 sodium: double.tryParse(_sodiumController.text),
                 cholesterol: double.tryParse(_cholesterolController.text),
-                mealtype: selectedMealType,  
+                mealtype: selectedMealType,
                 date: fechaSeleccionada,
+                imageUrl: widget.food.imageUrl,
               );
 
               context

@@ -5,6 +5,7 @@ import 'package:flutter_tracktrail_app/domain/entities/openfoodfacts_entity.dart
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_state.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 
 class SearchFoodsTab extends StatefulWidget {
   final int dietId;
@@ -15,6 +16,7 @@ class SearchFoodsTab extends StatefulWidget {
 }
 
 class _SearchFoodsTabState extends State<SearchFoodsTab> {
+  String selectedMealType = 'Desayuno';
   @override
   void initState() {
     super.initState();
@@ -125,7 +127,29 @@ class _SearchFoodsTabState extends State<SearchFoodsTab> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Añadir alimento'),
-          content: Text('¿Deseas añadir ${foodItem.name} a tu lista?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('¿Deseas añadir ${foodItem.name} a tu lista?'),
+              DropdownButtonFormField<String>(
+                value: 'Desayuno',
+                items: ['Desayuno', 'Comida', 'Merienda', 'Cena']
+                    .map((meal) => DropdownMenuItem<String>(
+                          value: meal,
+                          child: Text(meal),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedMealType = value;
+                    });
+                  }
+                },
+                decoration: const InputDecoration(labelText: 'Tipo de Comida'),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -135,6 +159,8 @@ class _SearchFoodsTabState extends State<SearchFoodsTab> {
             ),
             TextButton(
               onPressed: () {
+                final fechaSeleccionada = DateManager().selectedDate.value;
+
                 final foodEntity = FoodEntityDatabase(
                   id: 0,
                   name: foodItem.name ?? '',
@@ -148,11 +174,16 @@ class _SearchFoodsTabState extends State<SearchFoodsTab> {
                   sugar: 0,
                   sodium: 0,
                   cholesterol: 0,
+                  mealtype: selectedMealType,
+                  date: fechaSeleccionada,
                 );
 
                 context.read<FoodBloc>().add(CreateFoodEvent(
-                    foodEntity, widget.dietId,
-                    loadRandomFoods: true));
+                      foodEntity,
+                      widget.dietId,
+                      loadRandomFoods: false,
+                    ));
+
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

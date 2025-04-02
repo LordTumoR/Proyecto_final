@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_tracktrail_app/data/models/nutrition_model.dart';
@@ -32,7 +33,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   static const String deleteurl = 'http://192.168.1.138:8080/nutrition-records';
   static const String baseUrl =
       'http://192.168.1.138:8080/nutrition-records/user/';
-  static const String CreateUrl = 'http://192.168.1.138:8080/nutrition-records';
+  static const String createUrl = 'http://192.168.1.138:8080/nutrition-records';
 
   @override
   Future<List<NutritionModel>> getNutritionRecords() async {
@@ -109,7 +110,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
       final userIdd = await _getUserIdByEmail(email);
 
       final response = await client.post(
-        Uri.parse(CreateUrl),
+        Uri.parse(createUrl),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
           'name': name,
@@ -152,30 +153,52 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
 
       String? imageUrl;
 
+      // Verificar si se ha recibido un archivo de imagen
       if (imageFile != null) {
+        // Si es una ruta de archivo (String), convertirla a File
+        File imageFileObject;
+        if (imageFile is String) {
+          imageFileObject = File(imageFile); // Convertir la ruta en un archivo
+        } else if (imageFile is File) {
+          imageFileObject = imageFile; // Ya es un archivo
+        } else {
+          throw Exception("Tipo de archivo no válido");
+        }
+
+        // Crear un nombre único para la imagen usando la fecha actual
         final fileName = DateTime.now().millisecondsSinceEpoch.toString();
         final ref = FirebaseStorage.instance
             .ref()
             .child('imagenes_comida/$fileName.jpg');
-        await ref.putFile(imageFile);
+
+        // Subir el archivo a Firebase Storage
+        await ref.putFile(imageFileObject);
+
+        // Obtener la URL de descarga del archivo subido
         imageUrl = await ref.getDownloadURL();
         print("Imagen subida correctamente: $imageUrl");
       }
 
-      final response = await client.put(
-        Uri.parse('$CreateUrl/$id'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
-          'name': name,
-          'description': description,
-          'date': date?.toIso8601String(),
-          'user_id': userId,
-          if (imageUrl != null) 'imageurl': imageUrl,
-          'isFavorite': isFavorite,
-        }),
-      );
+      // Hacer la petición PUT para actualizar el registro de nutrición
+      final Map<String, dynamic> requestBody = {};
 
-      if (response.statusCode == 200) {
+      if (name != null) requestBody['name'] = name;
+      if (description != null) requestBody['description'] = description;
+      if (date != null) requestBody['date'] = date?.toIso8601String();
+      if (userId != null) requestBody['user_id'] = userId;
+      if (imageUrl != null) requestBody['imageurl'] = imageUrl;
+      if (isFavorite != null) requestBody['isFavorite'] = isFavorite;
+
+      final response = await client
+          .put(
+            Uri.parse('$createUrl/$id'),
+            headers: {'Content-Type': 'application/json'},
+            body: json.encode(requestBody),
+          )
+          .timeout(Duration(seconds: 10));
+
+      // Verificar la respuesta del servidor
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return NutritionModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to update nutrition record: ${response.body}');

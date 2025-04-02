@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/users/users_bloc.dart';
@@ -67,18 +69,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       children: [
                         CircleAvatar(
                           radius: 25,
-                          backgroundImage: NetworkImage(
-                            user.avatar ??
-                                'https://www.example.com/default-avatar.png',
-                          ),
+                          backgroundImage: user.avatar != null &&
+                                  user.avatar!.startsWith('http')
+                              ? NetworkImage(user.avatar!)
+                              : (user.avatar != null
+                                      ? FileImage(File(user.avatar!))
+                                      : AssetImage(
+                                          'assets/images/default-avatar.png'))
+                                  as ImageProvider,
                         ),
                         const SizedBox(height: 10),
-                        Text(
-                          '${AppLocalizations.of(context)!.welcome} ${user.name} ${user.surname}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            '${AppLocalizations.of(context)!.welcome} ${user.name} ${user.surname}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],

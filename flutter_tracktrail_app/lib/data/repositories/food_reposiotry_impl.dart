@@ -66,6 +66,7 @@ class FoodDatabaseRepositoryImpl implements FoodDatabaseRepository {
         cholesterol: food.cholesterol,
         mealtype: food.mealtype,
         date: food.date,
+        imageUrl: food.imageUrl,
       );
 
       final updatedFood = await remoteDataSource.updateFood(foodModel);

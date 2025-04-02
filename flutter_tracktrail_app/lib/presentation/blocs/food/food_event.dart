@@ -19,6 +19,7 @@ class LoadDatabaseFoods extends FoodEvent {
   final String? brand;
   final String? mealType;
   final DateTime? date;
+  final String? imageUrl;
 
   const LoadDatabaseFoods({
     required this.dietId,
@@ -29,6 +30,7 @@ class LoadDatabaseFoods extends FoodEvent {
     this.brand,
     this.mealType,
     this.date,
+    this.imageUrl,
   });
 
   @override

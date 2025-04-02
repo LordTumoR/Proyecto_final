@@ -25,15 +25,18 @@ class FoodModel {
 
   factory FoodModel.fromJson(Map<String, dynamic> json) {
     return FoodModel(
-      name: json['product_name'] ?? 'Desconocido',
+      name: json['product_name_es'] ?? json['product_name'] ?? 'Desconocido',
       brand: json['brands'] ?? 'Desconocido',
       category: json['categories'] ?? 'Desconocido',
       imageUrl: json['image_url'] ?? '',
+      // Si necesitas los ingredientes en español, agrégalo:
       // ingredients: json['ingredients_text_es'] ?? 'No disponible',
-      nutritionInfo: (json['nutriments'] != null &&
-              json['nutriments']['energy-kcal'] != null)
-          ? json['nutriments']['energy-kcal']
-          : 0.0, // Asignar 0.0 si no está presente
+      nutritionInfo: json['nutriments']?['energy-kcal'] != null
+          ? (json['nutriments']['energy-kcal'] is num
+              ? json['nutriments']['energy-kcal'].toDouble()
+              : double.tryParse(json['nutriments']['energy-kcal'].toString()) ??
+                  0.0)
+          : 0.0, // Si no existe, asigna 0.0
     );
   }
 

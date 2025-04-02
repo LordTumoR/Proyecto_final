@@ -13,6 +13,7 @@ class FoodEntityDatabase {
   final double? cholesterol;
   String? mealtype;
   final DateTime? date;
+  final String? imageUrl;
 
   FoodEntityDatabase({
     required this.id,
@@ -29,6 +30,7 @@ class FoodEntityDatabase {
     this.cholesterol,
     this.mealtype,
     this.date,
+    this.imageUrl,
   });
 
   @override

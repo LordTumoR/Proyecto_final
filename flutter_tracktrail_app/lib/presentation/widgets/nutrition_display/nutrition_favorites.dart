@@ -45,7 +45,7 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTabFavorites> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.nutrition_records),
+        title: Text("Favoritas"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -127,77 +127,89 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTabFavorites> {
                                       style: const TextStyle(
                                           color: Colors.black54, fontSize: 16)),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () => _pickImage(record.id),
-                                        child: Container(
-                                          width: 30,
-                                          height: 30,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            border:
-                                                Border.all(color: Colors.grey),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            _pickImage(record.id);
+                                          },
+                                          child: Container(
+                                            width: 30,
+                                            height: 30,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  color: Colors.grey),
+                                            ),
+                                            child:
+                                                const Icon(Icons.add_a_photo),
                                           ),
-                                          child: const Icon(Icons.add_a_photo),
                                         ),
-                                      ),
-                                      IconButton(
+                                        IconButton(
                                           icon: const Icon(Icons.delete),
-                                          onPressed: () =>
-                                              BlocProvider.of<NutritionBloc>(
-                                                      context)
-                                                  .add(DeleteNutritionRecord(
-                                                      id: record.id))),
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return EditNutritionRecordDialog(
-                                              id: record.id,
-                                              initialName: record.name,
-                                              initialDescription:
-                                                  record.description,
+                                          onPressed: () {
+                                            BlocProvider.of<NutritionBloc>(
+                                                    context)
+                                                .add(
+                                              DeleteNutritionRecord(
+                                                  id: record.id),
                                             );
                                           },
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.fastfood),
-                                        onPressed: () => showDialog(
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return FoodTab(
-                                                dietId: record.id,
-                                                isUserDiet: true);
+                                        IconButton(
+                                          icon: const Icon(Icons.edit),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return EditNutritionRecordDialog(
+                                                  id: record.id,
+                                                  initialName: record.name,
+                                                  initialDescription:
+                                                      record.description,
+                                                );
+                                              },
+                                            );
                                           },
                                         ),
-                                      ),
-                                      IconButton(
-                                        icon: Icon(
-                                          record.isFavorite ?? false
-                                              ? Icons.favorite
-                                              : Icons.favorite_border,
-                                          color: record.isFavorite ?? false
-                                              ? Colors.red
-                                              : Colors.grey,
+                                        IconButton(
+                                          icon: const Icon(Icons.fastfood),
+                                          onPressed: () {
+                                            showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return FoodTab(
+                                                  dietId: record.id,
+                                                  isUserDiet: true,
+                                                );
+                                              },
+                                            );
+                                          },
                                         ),
-                                        onPressed: () {
-                                          context.read<NutritionBloc>().add(
-                                                UpdateNutritionRecord(
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.favorite,
+                                            color: record.isFavorite ?? false
+                                                ? Colors.red
+                                                : Colors.grey,
+                                          ),
+                                          onPressed: () {
+                                            context.read<NutritionBloc>().add(
+                                                  UpdateNutritionRecord(
                                                     id: record.id,
                                                     isFavorite:
                                                         !(record.isFavorite ??
-                                                            false)),
-                                              );
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                                            false),
+                                                  ),
+                                                );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             ),

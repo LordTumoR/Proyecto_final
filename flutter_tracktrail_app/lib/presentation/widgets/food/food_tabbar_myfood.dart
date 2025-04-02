@@ -9,6 +9,8 @@ import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_state.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/food/edit_food_dialog.dart';
 import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class DatabaseFoodsTab extends StatefulWidget {
   final int dietId;
@@ -24,6 +26,8 @@ class DatabaseFoodsTab extends StatefulWidget {
 class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
   final DatePickerController _controller = DatePickerController();
   String selectedMealType = 'Desayuno';
+  final ImagePicker _picker = ImagePicker();
+  Map<int, File?> _foodImages = {};
 
   @override
   void initState() {
@@ -48,6 +52,37 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
             mealType: selectedMealType,
           ),
         );
+  }
+
+  Future<void> _pickImage(FoodEntityDatabase foodItem) async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        _foodImages[foodItem.id] = File(pickedFile.path);
+      });
+
+      final updatedFood = FoodEntityDatabase(
+        id: foodItem.id,
+        name: foodItem.name,
+        brand: foodItem.brand,
+        category: foodItem.category,
+        date: foodItem.date,
+        calories: foodItem.calories,
+        protein: foodItem.protein,
+        carbohydrates: foodItem.carbohydrates,
+        fat: foodItem.fat,
+        fiber: foodItem.fiber,
+        sugar: foodItem.sugar,
+        sodium: foodItem.sodium,
+        cholesterol: foodItem.cholesterol,
+        mealtype: foodItem.mealtype,
+        imageUrl: _foodImages[foodItem.id]?.path,
+      );
+      print('Picked file path: ${pickedFile.path}');
+
+      context.read<FoodBloc>().add(UpdateFoodEvent(updatedFood, widget.dietId));
+    }
   }
 
   @override
@@ -137,7 +172,7 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
 
                   final filteredFoodList = state.foodList.where((food) {
                     final foodDateString =
-                        DateFormat('yyyy-MM-dd').format(food.date!);
+                        DateFormat('yyyy-MM-dd').format(food.date!.toLocal());
                     return foodDateString == selectedDateString &&
                         food.mealtype == selectedMealType;
                   }).toList();
@@ -164,6 +199,51 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                           ),
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(10),
+                            leading: Stack(
+                              children: [
+                                Container(
+                                  width: 60,
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.grey[200],
+                                    image: foodItem.imageUrl != null &&
+                                            foodItem.imageUrl!.isNotEmpty
+                                        ? DecorationImage(
+                                            image: NetworkImage(
+                                                foodItem.imageUrl!),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
+                                  ),
+                                  child: foodItem.imageUrl == null ||
+                                          foodItem.imageUrl!.isEmpty
+                                      ? const Icon(Icons.fastfood, size: 30)
+                                      : null,
+                                ),
+                                if (widget.isUserDiet)
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () => _pickImage(foodItem),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: const Icon(
+                                          Icons.camera_alt,
+                                          size: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -177,6 +257,27 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
                                 ),
                                 Text(
                                   'Calorías: ${foodItem.calories?.toStringAsFixed(2) ?? 'N/A'} kcal',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Marca: ${foodItem.brand} ',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Categoria: ${foodItem.category} ',
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Text(
+                                  'Carbohidratos: ${foodItem.carbohydrates} ',
                                   style: const TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,
@@ -235,6 +336,8 @@ class _DatabaseFoodsTabState extends State<DatabaseFoodsTab> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (foodItem.imageUrl != null && foodItem.imageUrl!.isNotEmpty)
+                  Image.network(foodItem.imageUrl!),
                 Text(
                     'Calorías: ${foodItem.calories?.toStringAsFixed(2) ?? 'N/A'} kcal'),
                 Text(

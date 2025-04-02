@@ -4,6 +4,7 @@ import 'package:flutter_tracktrail_app/domain/entities/openfoodfacts_entity.dart
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/Food/food_state.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/exercises_display/date_manager.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,7 @@ class ScannerTab extends StatefulWidget {
 }
 
 class _ScannerTabState extends State<ScannerTab> {
+  String selectedMealType = 'Desayuno';
   String _scannedCode = "";
 
   Future<String?> _scanBarcode() async {
@@ -75,46 +77,45 @@ class _ScannerTabState extends State<ScannerTab> {
           Expanded(
             child: BlocBuilder<FoodBloc, FoodState>(
               builder: (context, state) {
-                if (state is FoodLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (state is FoodError) {
-                  return const Center(child: Text('Error al cargar los datos'));
-                } else if (state is FoodLoaded) {
-                  final foodList = state.foodList;
-                  return ListView.builder(
-                    itemCount: foodList.length,
-                    itemBuilder: (context, index) {
-                      final product = foodList[index];
-                      return Card(
-                        margin: const EdgeInsets.all(8.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Nombre: ${product.name}'),
-                              Text('Marca: ${product.brand}'),
-                              Text('Categoría: ${product.category}'),
-                              Text(
-                                  'Información Nutricional: ${product.nutritionInfo} kcal'),
-                              if (product.imageUrl!.isNotEmpty)
-                                Image.network(product.imageUrl!),
-                              IconButton(
-                                icon: const Icon(Icons.add,
-                                    color: Color.fromARGB(255, 0, 0, 0)),
-                                onPressed: () {
-                                  _addFoodItem(product);
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
+                // if (state is FoodLoading) {
+                //   return const Center(child: CircularProgressIndicator());
+                // } else if (state is FoodError) {
+                //   return const Center(child: Text('Error al cargar los datos'));
+                // } else if (state is FoodLoaded) {
+                //   final foodList = state.foodList;
+                //   return ListView.builder(
+                //     itemCount: foodList.length,
+                //     itemBuilder: (context, index) {
+                //       final product = foodList[index];
+                //       return Card(
+                //         margin: const EdgeInsets.all(8.0),
+                //         child: Padding(
+                //           padding: const EdgeInsets.all(16.0),
+                //           child: Column(
+                //             crossAxisAlignment: CrossAxisAlignment.start,
+                //             children: [
+                //               Text('Nombre: ${product.name}'),
+                //               Text('Marca: ${product.brand}'),
+                //               Text('Categoría: ${product.category}'),
+                //               Text(
+                //                   'Información Nutricional: ${product.nutritionInfo} kcal'),
+                //               if (product.imageUrl!.isNotEmpty)
+                //                 Image.network(product.imageUrl!),
+                //               IconButton(
+                //                 icon: const Icon(Icons.add,
+                //                     color: Color.fromARGB(255, 0, 0, 0)),
+                //                 onPressed: () {
+                //                   _addFoodItem(product);
+                //                 },
+                //               ),
+                //             ],
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //   );
+                // } else {
+                return const SizedBox.shrink();
               },
             ),
           ),
@@ -129,7 +130,29 @@ class _ScannerTabState extends State<ScannerTab> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Añadir alimento'),
-          content: Text('¿Deseas añadir ${foodItem.name} a tu lista?'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('¿Deseas añadir ${foodItem.name} a tu lista?'),
+              DropdownButtonFormField<String>(
+                value: 'Desayuno',
+                items: ['Desayuno', 'Comida', 'Merienda', 'Cena']
+                    .map((meal) => DropdownMenuItem<String>(
+                          value: meal,
+                          child: Text(meal),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      selectedMealType = value;
+                    });
+                  }
+                },
+                decoration: const InputDecoration(labelText: 'Tipo de Comida'),
+              ),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
@@ -139,6 +162,8 @@ class _ScannerTabState extends State<ScannerTab> {
             ),
             TextButton(
               onPressed: () {
+                final fechaSeleccionada = DateManager().selectedDate.value;
+
                 final foodEntity = FoodEntityDatabase(
                   id: 0,
                   name: foodItem.name ?? '',
@@ -152,11 +177,16 @@ class _ScannerTabState extends State<ScannerTab> {
                   sugar: 0,
                   sodium: 0,
                   cholesterol: 0,
+                  mealtype: selectedMealType,
+                  date: fechaSeleccionada,
                 );
 
                 context.read<FoodBloc>().add(CreateFoodEvent(
-                    foodEntity, widget.dietId,
-                    loadRandomFoods: true));
+                      foodEntity,
+                      widget.dietId,
+                      loadRandomFoods: false,
+                    ));
+
                 Navigator.of(context).pop();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
