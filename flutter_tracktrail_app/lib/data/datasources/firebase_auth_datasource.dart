@@ -31,7 +31,7 @@ class FirebaseAuthDataSource {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       final response = await http.post(
-        Uri.parse('http://192.168.1.138:8080/users'),
+        Uri.parse('https://tracktrail.me/users'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -115,7 +115,7 @@ class FirebaseAuthDataSource {
     if (avatar != null && avatar.isNotEmpty) body['avatar'] = avatar;
 
     final response = await http.put(
-      Uri.parse('http://192.168.1.138:8080/users/$userId'),
+      Uri.parse('https://tracktrail.me/users/$userId'),
       headers: {
         'Content-Type': 'application/json',
       },
@@ -138,7 +138,7 @@ class FirebaseAuthDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await http.get(
-      Uri.parse('http://192.168.1.138:8080/users'),
+      Uri.parse('https://tracktrail.me/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },

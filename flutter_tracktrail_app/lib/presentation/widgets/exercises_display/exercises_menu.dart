@@ -39,7 +39,7 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 189, 83, 213),
+          backgroundColor: const Color(0xFF9B59B6),
           title: Text(
             '${AppLocalizations.of(context)!.exercises_of} $name',
             style: const TextStyle(
@@ -49,32 +49,55 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.settings),
+              icon: const Icon(Icons.settings, color: Colors.white),
               onPressed: () {
                 _showRoutineSettingsDialog(context);
               },
             ),
           ],
-         
+          elevation: 5,
         ),
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(
-                height: 100,
-                child: DatePicker(
-                  DateTime.now(),
-                  controller: _controller,
-                  onDateChange: (date) {
-                    DateManager().updateDate(date);
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.deepPurpleAccent, width: 2),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 8,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: SizedBox(
+                  height: 120,
+                  child: DatePicker(
+                    DateTime.now(),
+                    controller: _controller,
+                    onDateChange: (date) {
+                      DateManager().updateDate(date);
+                      final updatedFechaSeleccionada = DateManager().selectedDate.value;
 
-                    final updatedFechaSeleccionada =
-                        DateManager().selectedDate.value;
-
-                    context.read<RoutineExercisesBloc>().fetchRoutineExercises(
-                        widget.routine.id ?? 0, updatedFechaSeleccionada);
-                  },
+                      context.read<RoutineExercisesBloc>().fetchRoutineExercises(
+                          widget.routine.id ?? 0, updatedFechaSeleccionada);
+                    },
+                    monthTextStyle: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: Colors.deepPurple,
+                    ),
+                    dayTextStyle: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    selectedTextColor: const Color(0xFF9B59B6),
+                  ),
                 ),
               ),
             ),
@@ -97,7 +120,9 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              '${AppLocalizations.of(context)!.modify_routine}: ${widget.routine.name}'),
+            '${AppLocalizations.of(context)!.modify_routine}: ${widget.routine.name}',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -137,7 +162,10 @@ class _ExercisesMenuState extends State<ExercisesMenu> {
                   ),
                 );
               },
-              child: Text(AppLocalizations.of(context)!.cancel),
+              child: Text(
+                AppLocalizations.of(context)!.cancel,
+                style: const TextStyle(color: Colors.deepPurple),
+              ),
             ),
           ],
         );

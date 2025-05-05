@@ -48,7 +48,12 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.create_and_filter_routines),
+        title: Text(
+          AppLocalizations.of(context)!.create_and_filter_routines,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        ),
+        backgroundColor: Colors.deepPurple,
+        elevation: 0,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -87,30 +92,37 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                   }
 
                   return SizedBox(
-                    height: 200,
+                    height: 220,
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10.0),
+                      margin: const EdgeInsets.symmetric(vertical: 12.0),
                       decoration: BoxDecoration(
-                        color: Colors.purple[100],
-                        borderRadius: BorderRadius.circular(12.0),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0),
+                        boxShadow: [
+                          const BoxShadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 4),
+                            blurRadius: 6,
+                          ),
+                        ],
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: 10.0,
+                            width: 12.0,
                             height: double.infinity,
                             decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               color: barraColor,
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(25.0),
+                            padding: const EdgeInsets.all(20.0),
                             child: Container(
                               width: 100.0,
                               height: 150.0,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3.0),
+                                borderRadius: BorderRadius.circular(10.0),
                                 image: DecorationImage(
                                   image: routine.imageUrl != null &&
                                           routine.imageUrl!.isNotEmpty
@@ -120,12 +132,15 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                           as ImageProvider,
                                   fit: BoxFit.cover,
                                 ),
-                                color: Colors.grey[300],
                               ),
                               child: (_selectedImage == null &&
                                       (routine.imageUrl == null ||
                                           routine.imageUrl!.isEmpty))
-                                  ? const Icon(Icons.image, size: 40)
+                                  ? const Icon(
+                                      Icons.image,
+                                      size: 40,
+                                      color: Colors.white70,
+                                    )
                                   : null,
                             ),
                           ),
@@ -139,100 +154,105 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
                                       routine.name ?? '',
                                       style: const TextStyle(
                                         color: Colors.deepPurple,
-                                        fontSize: 20,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    const SizedBox(
-                                        height:
-                                            8.0), // Espacio entre el texto y la fila
+                                    const SizedBox(height: 10.0),
                                     Text(
                                       routine.goal ?? '',
                                       style: const TextStyle(
-                                        color: Colors.black54,
+                                        color: Colors.black87,
                                         fontSize: 16,
                                       ),
                                     ),
-                                    const SizedBox(
-                                        height:
-                                            8.0), // Espacio entre el texto y la fila
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        if (routine.isPrivate ?? true) ...[
-                                          const Icon(Icons.lock,
-                                              color: Colors.deepPurple),
-                                        ] else ...[
-                                          const Icon(Icons.lock_open,
-                                              color: Colors.deepPurple),
-                                        ],
-                                        const SizedBox(
-                                            width: 8.0), // Espacio entre íconos
-                                        GestureDetector(
-                                          onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return ProgressDialog(
-                                                    routineId: routine.id!);
-                                              },
-                                            );
-                                          },
-                                          child: const Icon(Icons.percent,
-                                              color: Colors.deepPurple),
-                                        ),
-                                        const SizedBox(
-                                            width: 8.0), // Espacio entre íconos
-                                        GestureDetector(
-                                          onTap: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return ExercisesMenu(
-                                                    routine: routine);
-                                              },
-                                            );
-                                          },
-                                          child:
-                                              const Icon(Icons.arrow_forward),
-                                        ),
-                                        const SizedBox(
-                                            width: 8.0), // Espacio entre íconos
-                                        GestureDetector(
-                                          onTap: () => _pickImage(routine.id!),
-                                          child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[300],
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              border: Border.all(
-                                                  color: Colors.grey),
+                                    const SizedBox(height: 10.0),
+                                    SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        children: [
+                                          if (routine.isPrivate ?? true) ...[
+                                            const Icon(
+                                              Icons.lock,
+                                              color: Colors.deepPurple,
                                             ),
-                                            child:
-                                                const Icon(Icons.add_a_photo),
+                                          ] else ...[
+                                            const Icon(
+                                              Icons.lock_open,
+                                              color: Colors.deepPurple,
+                                            ),
+                                          ],
+                                          const SizedBox(width: 10.0),
+                                          GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return ProgressDialog(
+                                                      routineId: routine.id!);
+                                                },
+                                              );
+                                            },
+                                            child: const Icon(
+                                              Icons.percent,
+                                              color: Colors.deepPurple,
+                                            ),
                                           ),
-                                        ),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.favorite,
-                                            color: routine.isFavorite ?? false
-                                                ? Colors.red
-                                                : Colors.grey,
+                                          const SizedBox(width: 10.0),
+                                          GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext context) {
+                                                  return ExercisesMenu(
+                                                      routine: routine);
+                                                },
+                                              );
+                                            },
+                                            child: const Icon(
+                                              Icons.arrow_forward,
+                                              color: Colors.deepPurple,
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            context
-                                                .read<RoutinesBloc>()
-                                                .add(CreateRoutineEvent(
-                                                  isFavorite:
-                                                      !(routine.isFavorite ??
-                                                          false),
-                                                  routineId: routine.id,
-                                                ));
-                                          },
-                                        ),
-                                      ],
+                                          const SizedBox(width: 10.0),
+                                          GestureDetector(
+                                            onTap: () => _pickImage(routine.id!),
+                                            child: Container(
+                                              width: 35,
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[300],
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                border: Border.all(
+                                                    color: Colors.grey),
+                                              ),
+                                              child: const Icon(
+                                                Icons.add_a_photo,
+                                                color: Colors.deepPurple,
+                                              ),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.favorite,
+                                              color: routine.isFavorite ?? false
+                                                  ? Colors.red
+                                                  : Colors.grey,
+                                            ),
+                                            onPressed: () {
+                                              context
+                                                  .read<RoutinesBloc>()
+                                                  .add(CreateRoutineEvent(
+                                                    isFavorite:
+                                                        !(routine.isFavorite ??
+                                                            false),
+                                                    routineId: routine.id,
+                                                  ));
+                                            },
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 )),
@@ -252,6 +272,9 @@ class _MisRutinasTabState extends State<MisRutinasTab> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.deepPurple,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white70,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.filter_alt),

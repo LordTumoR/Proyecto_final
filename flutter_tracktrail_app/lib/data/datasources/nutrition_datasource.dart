@@ -30,10 +30,10 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   final http.Client client;
 
   NutritionRemoteDataSourceImpl(this.client);
-  static const String deleteurl = 'http://192.168.1.138:8080/nutrition-records';
+  static const String deleteurl = 'https://tracktrail.me/nutrition-records';
   static const String baseUrl =
-      'http://192.168.1.138:8080/nutrition-records/user/';
-  static const String createUrl = 'http://192.168.1.138:8080/nutrition-records';
+      'https://tracktrail.me/nutrition-records/user/';
+  static const String createUrl = 'https://tracktrail.me/nutrition-records';
 
   @override
   Future<List<NutritionModel>> getNutritionRecords() async {
@@ -68,7 +68,7 @@ class NutritionRemoteDataSourceImpl implements NutritionRemoteDataSource {
   Future<int> _getUserIdByEmail(String email) async {
     const String token = 'admin';
     final response = await client.get(
-      Uri.parse('http://192.168.1.138:8080/users'),
+      Uri.parse('https://tracktrail.me/users'),
       headers: {
         'Authorization': 'Bearer $token',
       },
