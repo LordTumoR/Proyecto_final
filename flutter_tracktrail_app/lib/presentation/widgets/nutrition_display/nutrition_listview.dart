@@ -23,18 +23,13 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
   void initState() {
     super.initState();
     BlocProvider.of<NutritionBloc>(context).add(
-      FetchNutritionRecords(
-        name: '',
-        description: '',
-        date: null,
-      ),
+      FetchNutritionRecords(name: '', description: '', date: null),
     );
   }
 
   Future<void> _pickImage(int nutritionRecordId) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
@@ -50,9 +45,15 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.nutrition_records),
+        title: Text(
+          AppLocalizations.of(context)!.nutrition_records,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.green[700],
+        elevation: 4,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -70,182 +71,187 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTab> {
             } else if (state is NutritionLoaded) {
               if (state.nutritionRecords.isEmpty) {
                 return Center(
-                  child: Text(AppLocalizations.of(context)!.no_records_found),
+                  child: Text(
+                    AppLocalizations.of(context)!.no_records_found,
+                    style: TextStyle(color: Colors.green[800]),
+                  ),
                 );
               }
 
               final nutritionRecords = state.nutritionRecords;
-
               return ListView.builder(
                 itemCount: nutritionRecords.length,
                 itemBuilder: (context, index) {
                   final record = nutritionRecords[index];
 
-                  return SizedBox(
+                  return Container(
                     height: 300,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green[100],
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(25.0),
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.green[50],
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.green.withOpacity(0.15),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
                             child: Container(
-                              width: 100.0,
-                              height: 150.0,
+                              width: 100,
+                              height: 150,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3.0),
-                                image: DecorationImage(
-                                  image: record.imageUrl != null &&
-                                          record.imageUrl!.isNotEmpty
-                                      ? NetworkImage(record.imageUrl!)
-                                      : const AssetImage(
-                                              'assets/placeholder.png')
-                                          as ImageProvider,
-                                  fit: BoxFit.cover,
-                                ),
                                 color: Colors.grey[300],
+                                border: Border.all(
+                                  color: Colors.green.shade300,
+                                  width: 2,
+                                ),
                               ),
-                              child: (_selectedImage == null &&
-                                      (record.imageUrl == null ||
-                                          record.imageUrl!.isEmpty))
-                                  ? const Icon(Icons.image, size: 40)
-                                  : null,
+                              child: record.imageUrl != null &&
+                                      record.imageUrl!.isNotEmpty
+                                  ? Image.network(
+                                      record.imageUrl!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const Icon(Icons.image, size: 40),
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Nombre: ${record.name}',
-                                    style: const TextStyle(
-                                      color: Colors.deepPurple,
-                                      fontSize: 20,
-                                    ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 20.0, horizontal: 8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Nombre: ${record.name}',
+                                  style: TextStyle(
+                                    color: Colors.green[900],
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    'Descripcion: ${record.description}',
-                                    style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 16,
-                                    ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Descripcion: ${record.description}',
+                                  style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 16,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    'Date: ${record.date}',
-                                    style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 16,
-                                    ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Fecha: ${record.date}',
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
                                   ),
-                                  const SizedBox(height: 8.0),
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            _pickImage(record.id);
-                                          },
-                                          child: Container(
-                                            width: 30,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  color: Colors.grey),
-                                            ),
-                                            child:
-                                                const Icon(Icons.add_a_photo),
-                                          ),
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () {
-                                            BlocProvider.of<NutritionBloc>(
-                                                    context)
-                                                .add(
+                                ),
+                                const SizedBox(height: 10),
+                                SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child:
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    IconButton(
+                                      tooltip: 'Subir imagen',
+                                      icon: const Icon(Icons.add_a_photo),
+                                      color: Colors.green[800],
+                                      onPressed: () => _pickImage(record.id),
+                                    ),
+                                    IconButton(
+                                      tooltip: 'Eliminar',
+                                      icon: const Icon(Icons.delete),
+                                      color: Colors.red[400],
+                                      onPressed: () {
+                                        context.read<NutritionBloc>().add(
                                               DeleteNutritionRecord(
                                                   id: record.id),
                                             );
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return EditNutritionRecordDialog(
-                                                  id: record.id,
-                                                  initialName: record.name,
-                                                  initialDescription:
-                                                      record.description,
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: const Icon(Icons.fastfood),
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return FoodTab(
-                                                  dietId: record.id,
-                                                  isUserDiet: true,
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.favorite,
-                                            color: record.isFavorite ?? false
-                                                ? Colors.red
-                                                : Colors.grey,
-                                          ),
-                                          onPressed: () {
-                                            context.read<NutritionBloc>().add(
-                                                  UpdateNutritionRecord(
-                                                    id: record.id,
-                                                    isFavorite:
-                                                        !(record.isFavorite ??
-                                                            false),
-                                                  ),
-                                                );
-                                          },
-                                        ),
-                                      ],
+                                      },
                                     ),
-                                  )
-                                ],
-                              ),
+                                    IconButton(
+                                      tooltip: 'Editar',
+                                      icon: const Icon(Icons.edit),
+                                      color: Colors.green[800],
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return EditNutritionRecordDialog(
+                                              id: record.id,
+                                              initialName: record.name,
+                                              initialDescription:
+                                                  record.description,
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      tooltip: 'Ver alimentos',
+                                      icon: const Icon(Icons.fastfood),
+                                      color: Colors.green[600],
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return FoodTab(
+                                              dietId: record.id,
+                                              isUserDiet: true,
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    IconButton(
+                                      tooltip: 'Favorito',
+                                      icon: Icon(
+                                        Icons.favorite,
+                                        color: record.isFavorite ?? false
+                                            ? Colors.red
+                                            : Colors.grey,
+                                      ),
+                                      onPressed: () {
+                                        context.read<NutritionBloc>().add(
+                                              UpdateNutritionRecord(
+                                                id: record.id,
+                                                isFavorite:
+                                                    !(record.isFavorite ??
+                                                        false),
+                                              ),
+                                            );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                            ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 },
               );
-            } else if (state is NutritionOperationFailure) {
-              return Center(
-                  child: Text(AppLocalizations.of(context)!.no_records_found));
             }
 
             return Center(
-                child: Text(AppLocalizations.of(context)!.no_records_found));
+              child: Text(
+                AppLocalizations.of(context)!.no_records_found,
+                style: TextStyle(color: Colors.green[800]),
+              ),
+            );
           },
         ),
       ),

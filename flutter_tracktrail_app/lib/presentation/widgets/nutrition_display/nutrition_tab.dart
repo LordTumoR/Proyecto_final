@@ -12,35 +12,34 @@ class NutritionMenu extends StatefulWidget {
 
 class _NutritionMenuState extends State<NutritionMenu> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
           backgroundColor: Colors.transparent,
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
                 colors: [
                   Color(0xFF6DBE45),
-                  Color(0xFFB0E57C),
+                   Color(0xFF6DBE45),
                 ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
             ),
           ),
-          title: const Text(
-            'Nutrición y Dietas',
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          title: const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              'Nutrición y Dietas',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
           ),
           bottom: const TabBar(
@@ -50,15 +49,15 @@ class _NutritionMenuState extends State<NutritionMenu> {
             unselectedLabelColor: Colors.white70,
             tabs: [
               Tab(
-                icon: Icon(Icons.restaurant, size: 30),
+                icon: Icon(Icons.restaurant, size: 26),
                 text: 'Mis Dietas',
               ),
               Tab(
-                icon: Icon(Icons.search, size: 30),
+                icon: Icon(Icons.search, size: 26),
                 text: 'Buscar Dietas',
               ),
               Tab(
-                icon: Icon(Icons.favorite, size: 30),
+                icon: Icon(Icons.favorite, size: 26),
                 text: 'Favoritas',
               ),
             ],
@@ -67,37 +66,37 @@ class _NutritionMenuState extends State<NutritionMenu> {
         body: TabBarView(
           children: [
             NutritionDisplayTab(),
-            NutritionDisplayTabSearch(),
-            NutritionDisplayTabFavorites(),
+             NutritionDisplayTabSearch(),
+             NutritionDisplayTabFavorites(),
           ],
         ),
-        backgroundColor: const Color(0xFFB0E57C),
+        backgroundColor: const Color(0xFFF0FFF0),
         bottomNavigationBar: BottomAppBar(
+          elevation: 10,
           color: const Color(0xFF6DBE45),
+          shape: const CircularNotchedRectangle(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   icon: const Icon(Icons.filter_list, color: Colors.white),
+                  tooltip: 'Filtrar dietas',
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return FilterNutritionDialog();
-                      },
+                      builder: (_) => FilterNutritionDialog(),
                     );
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add, color: Colors.white),
+                  icon: const Icon(Icons.add_circle_outline, color: Colors.white, size: 28),
+                  tooltip: 'Nueva dieta',
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return CreateNutritionRecordDialog();
-                      },
+                      builder: (_) => CreateNutritionRecordDialog(),
                     );
                   },
                 ),

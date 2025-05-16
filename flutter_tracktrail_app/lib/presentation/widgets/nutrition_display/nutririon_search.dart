@@ -1,28 +1,22 @@
-import 'dart:io';
-import 'package:flutter_tracktrail_app/presentation/widgets/food/food_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_bloc.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_event.dart';
 import 'package:flutter_tracktrail_app/presentation/blocs/nutrition/nutrition_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_tracktrail_app/data/models/user_database_model.dart';
+import 'package:flutter_tracktrail_app/presentation/widgets/food/food_menu.dart';
 
 class NutritionDisplayTabSearch extends StatefulWidget {
   @override
-  _NutritionDisplayTabState createState() => _NutritionDisplayTabState();
+  _NutritionDisplayTabSearchState createState() => _NutritionDisplayTabSearchState();
 }
 
-class _NutritionDisplayTabState extends State<NutritionDisplayTabSearch> {
+class _NutritionDisplayTabSearchState extends State<NutritionDisplayTabSearch> {
   @override
   void initState() {
     super.initState();
     BlocProvider.of<NutritionBloc>(context).add(
-      FetchNutritionRecords(
-        name: '',
-        description: '',
-        date: null,
-      ),
+      FetchNutritionRecords(name: '', description: '', date: null),
     );
   }
 
@@ -40,11 +34,18 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTabSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFE8F5E9), // fondo verde claro
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.nutrition_records),
+        elevation: 2,
+        backgroundColor: const Color(0xFF4CAF50),
+        title: Text(
+          AppLocalizations.of(context)!.nutrition_records,
+          style: const TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: BlocBuilder<NutritionBloc, NutritionState>(
           builder: (context, state) {
             if (state is NutritionLoading) {
@@ -59,7 +60,10 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTabSearch> {
             } else if (state is NutritionLoaded) {
               if (state.nutritionRecords.isEmpty) {
                 return Center(
-                  child: Text(AppLocalizations.of(context)!.no_records_found),
+                  child: Text(
+                    AppLocalizations.of(context)!.no_records_found,
+                    style: TextStyle(color: Colors.green[900]),
+                  ),
                 );
               }
 
@@ -70,112 +74,126 @@ class _NutritionDisplayTabState extends State<NutritionDisplayTabSearch> {
                 itemBuilder: (context, index) {
                   final record = nutritionRecords[index];
 
-                  return SizedBox(
-                    height: 300,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.green[100],
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(25.0),
+                  return Container(
+                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.green[50],
+                      borderRadius: BorderRadius.circular(16.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.green.withOpacity(0.15),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
                             child: Container(
-                              width: 100.0,
-                              height: 150.0,
+                              width: 100,
+                              height: 140,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(3.0),
-                                image: DecorationImage(
-                                  image: record.imageUrl != null &&
-                                          record.imageUrl!.isNotEmpty
-                                      ? NetworkImage(record.imageUrl!)
-                                      : const AssetImage(
-                                              'assets/placeholder.png')
-                                          as ImageProvider,
-                                  fit: BoxFit.cover,
+                                color: Colors.green.shade100,
+                                border: Border.all(
+                                  color: Colors.green.shade300,
+                                  width: 2,
                                 ),
-                                color: Colors.grey[300],
                               ),
+                              child: record.imageUrl != null &&
+                                      record.imageUrl!.isNotEmpty
+                                  ? Image.network(
+                                      record.imageUrl!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : const Icon(Icons.image, size: 40),
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Nombre: ${record.name}',
-                                    style: const TextStyle(
-                                      color: Colors.deepPurple,
-                                      fontSize: 20,
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                right: 16.0, top: 16.0, bottom: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  record.name,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green[900],
+                                  ),
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  record.description,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  '📅 ${record.date?.toLocal().toString().split(' ')[0] ?? '-'}',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.green.shade800,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.fastfood),
+                                      color: Colors.green[700],
+                                      tooltip: 'Ver alimentos',
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (_) => FoodTab(
+                                            dietId: record.id,
+                                            isUserDiet: false,
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    'Descripcion: ${record.description}',
-                                    style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 16,
+                                    IconButton(
+                                      icon: const Icon(Icons.copy),
+                                      color: Colors.green[600],
+                                      tooltip: 'Copiar registro',
+                                      onPressed: () {
+                                        _createNutritionRecord(
+                                          record.name,
+                                          record.description,
+                                          record.date ?? DateTime.now(),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    'Date: ${record.date}',
-                                    style: const TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.fastfood),
-                                        onPressed: () {
-                                          showDialog(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return FoodTab(
-                                                dietId: record.id,
-                                                isUserDiet: false,
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      IconButton(
-                                        icon: const Icon(Icons.add),
-                                        onPressed: () {
-                                          _createNutritionRecord(
-                                            record.name,
-                                            record.description,
-                                            record.date ?? DateTime.now(),
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   );
                 },
               );
-            } else if (state is NutritionOperationFailure) {
-              return Center(
-                  child: Text(AppLocalizations.of(context)!.no_records_found));
             }
 
             return Center(
-                child: Text(AppLocalizations.of(context)!.no_records_found));
+              child: Text(
+                AppLocalizations.of(context)!.no_records_found,
+                style: TextStyle(color: Colors.green[900]),
+              ),
+            );
           },
         ),
       ),
